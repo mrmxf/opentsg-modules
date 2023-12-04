@@ -1,12 +1,12 @@
 # Core
 
-## Factories and M
+## Factories
 
 The input file for OpenTSG is called a factory, and can contain 1 or more references to other files.
 With nesting available for the files.
 
 When generating the widgets, the factories are processed in a depth first manner. That means every time a URI is
-encountered its children and any further children are processed, before its siblings in the factory.
+encountered its children and any further children are processed, before processing its siblings in the factory.
 
 Each factory or widget declares which metadata keys it uses, with the "args" key
 (this can be no keys).
@@ -22,9 +22,28 @@ metadata with more specific as you proceed along the parents.
 Locally declared metadata for the update will then overwrite this base metadata layer.
 
 Wdigets can inherit any metadata that matches the declared argument keys, from their parents.
-With more specific metadata overwriting previous values.
+With more specific metadata overwriting previous values. e.g. The first factory decalres a
+title with `{"title":"exmaple"}`, then any child that has the argument `child` will use
+value of `"example"`
 
 Then as the dotpath and array updates are applied, they will use these metadata values, unless
 a new metadata value is called as part of that dot path.
 
-The input factory does not have declared metadata.
+### Input File Search Order
+
+When referencing importing files using the `"uri":"example.json"` method the file is searched for
+in several locations. It takes the following steps:
+
+1. It searches for the path as a url.
+2. It searches relative to the main json that was called.
+3. It searches in age order (oldest first) the folders that other factory files
+were called from.
+4. it searches relative to the folder the executable was called from
+5. it searches relative to the environment variable `OPENTSG_HOME`
+
+Then if no file is found then an error is returned.
+
+For step 3 the factories are searched depth first, so only folder locations
+that are parents of the factory are included. No width based searches occur.
+
+## TPIG

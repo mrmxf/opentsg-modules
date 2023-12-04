@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"slices"
 	"sync"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/validator"
@@ -52,7 +53,8 @@ func FileImport(inputFile, profile string, debug bool, httpKeys ...string) (cont
 	holder := base{importedFactories: make(map[string]factory), importedWidgets: make(map[string]json.RawMessage),
 		jsonFileLines: data, authBody: authDecoder, metadataParams: map[string][]string{}}
 
-	err = holder.factoryInit(inputFactory, filepath.Dir(inputFile), "", []int{})
+	baseDir := filepath.Dir(inputFile)
+	err = holder.factoryInit(inputFactory, baseDir, "", []string{baseDir}, []int{})
 	if err != nil {
 		return cont, 0, err
 	}
@@ -71,36 +73,16 @@ func FileImport(inputFile, profile string, debug bool, httpKeys ...string) (cont
 
 // Make a map of all the factories and their information
 // so that are all open at once and there is no reopening of files and changing of data
-func (b *base) factoryInit(jsonFactory factory, path, parent string, positions []int) error {
+func (b *base) factoryInit(jsonFactory factory, mainPath, parent string, factoryPaths []string, positions []int) error {
 
 	if len(positions) > 30 {
 		return fmt.Errorf("0004 recursive set initialisation file detected, the maximum dotpath depth of 30 has been reached")
 	}
 
 	for i, f := range jsonFactory.Include {
-		fileBytes, errHTTP := b.authBody.Decode(f.URI)
-		// run the inputPath without a the end of ../ to trim the file
 
-		var err error
-		// generate the input path per run to stop overwriting errors
-		inputPath := path
-		if errHTTP != nil {
-			// check again as an extension of the url
-			oldpath := inputPath
-			inputPath, _ = url.JoinPath(inputPath, f.URI)
-			// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
-
-			fileBytes, errHTTP = b.authBody.Decode(inputPath)
-
-			// then check the local files
-			if errHTTP != nil {
-				//retry the file as a path
-				inputPath = filepath.Join(oldpath, f.URI)
-				inputPath, _ = filepath.Abs(inputPath)
-				// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
-				fileBytes, err = os.ReadFile(inputPath)
-			}
-		}
+		// can we find the file
+		fileBytes, path, err := FileSearch(b.authBody, f.URI, mainPath, factoryPaths)
 
 		if err == nil {
 
@@ -108,7 +90,7 @@ func (b *base) factoryInit(jsonFactory factory, path, parent string, positions [
 			var newF factory
 			err := yaml.Unmarshal(fileBytes, &newF)
 			if err != nil {
-				return fmt.Errorf("0005 error parsing %s: %v", inputPath, err)
+				return fmt.Errorf("0005 error parsing %s: %v", path, err)
 			}
 
 			if _, ok := b.importedWidgets[parent+f.Name]; ok {
@@ -119,7 +101,7 @@ func (b *base) factoryInit(jsonFactory factory, path, parent string, positions [
 
 			// schema validation to sort between widgets and factories
 			factLines := make(validator.JSONLines)
-			err = validator.Liner(fileBytes, inputPath, "factory", factLines) // treat it as a factory update
+			err = validator.Liner(fileBytes, path, "factory", factLines) // treat it as a factory update
 			if err != nil {
 				return err
 			}
@@ -128,11 +110,11 @@ func (b *base) factoryInit(jsonFactory factory, path, parent string, positions [
 			if err := validator.SchemaValidator(incschema, fileBytes, parent, factLines); err != nil {
 				// @TODO include a better error handling method
 				b.importedWidgets[parent+f.Name] = fileBytes
-				validatorError = validator.Liner(fileBytes, inputPath, "widget", b.jsonFileLines)
+				validatorError = validator.Liner(fileBytes, path, "widget", b.jsonFileLines)
 			} else {
 				// schema check here?
 				b.importedFactories[parent+f.Name] = newF
-				validatorError = validator.Liner(fileBytes, inputPath, "factory", b.jsonFileLines)
+				validatorError = validator.Liner(fileBytes, path, "factory", b.jsonFileLines)
 			}
 
 			if validatorError != nil {
@@ -141,7 +123,15 @@ func (b *base) factoryInit(jsonFactory factory, path, parent string, positions [
 			}
 
 			// pass thorugh the factory as it won't run for length 0
-			err = b.factoryInit(newF, filepath.Dir(inputPath), parent+f.Name+".", append(positions, i))
+			// append the path of where this was found
+			parents := factoryPaths
+			if !slices.Contains(parents, path) {
+				// only append if its not an older path. As this will not effect the search order
+				// search the depth of your tree. not the neighbours
+				parents = append(factoryPaths, path)
+			}
+
+			err = b.factoryInit(newF, path, parent+f.Name+".", parents, append(positions, i))
 			if err != nil { // return the error up the chain
 				return err
 			}
@@ -157,53 +147,64 @@ func (b *base) factoryInit(jsonFactory factory, path, parent string, positions [
 	return nil
 }
 
-/*
 // The resource search algorthim
-func (b *base) FileSearch(URI, path string) ([]byte, error) {
-	fileBytes, errHTTP := b.authBody.Decode(URI)
+func FileSearch(authBody credentials.Decoder, URI, mainPath string, parentPaths []string) (fileBytes []byte, folderFilePath string, fileErr error) {
+	fileBytes, fileErr = authBody.Decode(URI)
 
-
-	/* If they find it they use it.
-
-We're searching for, path/name.ext
-
-	1 . look relative to _main.json look for path(main)/path/name.ext
-	2. relative to path(parent)/path/name.ext
-	3. while parent(path)^n/path/name.ext. 
-
-	look relative to wd of the executable
-    
-    look relative to the prefix specified in env OPENTSG_HOME
-	*/
-
-	/*
-	file.Abs(URI + path)
-	
-	
-	// compare to any os.Getwd()
-	
-
-	var err error
 	// generate the input path per run to stop overwriting errors
-	inputPath := path
-	if errHTTP != nil {
-		// check again as an extension of the url
-		oldpath := inputPath
-		inputPath, _ = url.JoinPath(inputPath, URI)
+
+	if fileErr == nil {
+
+		return fileBytes, URI, nil
+	}
+
+	inputPath, _ := url.JoinPath(mainPath, URI)
+	// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
+	fileBytes, fileErr = authBody.Decode(inputPath)
+
+	if fileErr == nil {
+		return fileBytes, mainPath, nil
+	}
+
+	for _, path := range parentPaths {
+
+		// Check relative to the mainjson
+		inputPath, _ = filepath.Abs(filepath.Join(path, URI))
 		// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
+		fileBytes, fileErr = os.ReadFile(inputPath)
 
-		fileBytes, errHTTP = b.authBody.Decode(inputPath)
+		destFolder := filepath.Dir(inputPath)
 
-		// then check the local files
-		if errHTTP != nil {
-			//retry the file as a path
-			inputPath = filepath.Join(oldpath, f.URI)
-			inputPath, _ = filepath.Abs(inputPath)
-			// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
-			fileBytes, err = os.ReadFile(inputPath)
+		if fileErr == nil {
+			return fileBytes, destFolder, nil
 		}
 	}
-	fmt.Println(err)
-	return fileBytes, errHTTP
+
+	// check relative to the location of the executable
+	inputPath, _ = filepath.Abs(URI)
+	// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
+	fileBytes, fileErr = os.ReadFile(inputPath)
+	destFolder := filepath.Dir(inputPath)
+
+	if fileErr == nil {
+		return fileBytes, destFolder, nil
+	}
+
+	// finally check for OPENTSG_HOME
+	TSGHome := os.Getenv("OPENTSG_HOME")
+	if TSGHome != "" {
+		// check for it
+		inputPath, _ = filepath.Abs(filepath.Join(TSGHome, URI))
+		// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
+		fileBytes, fileErr = os.ReadFile(inputPath)
+
+		destFolder := filepath.Dir(inputPath)
+
+		if fileErr == nil {
+			return fileBytes, destFolder, nil
+		}
+	}
+
+	// add searched locations
+	return fileBytes, "", fileErr
 }
-*/
