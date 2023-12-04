@@ -38,7 +38,7 @@ func TestStringGen(t *testing.T) {
 			myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{33, 33}})
 			genErr := yesFrame.Generate(myImage, &c)
 
-			examplejson.SaveExampleJson(yesFrame, widgetType, explanation[i])
+			examplejson.SaveExampleJson(yesFrame, widgetType, explanation[i], false)
 
 			// Assign the colour to the correct type of image NGRBA64 and replace the colour values
 			file, _ := os.Open("./testdata/framecount" + expecResult[i] + ".png")
@@ -93,7 +93,7 @@ func TestFonts(t *testing.T) {
 			myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{100, 100}})
 			genErr := mockFrame.Generate(myImage, &c)
 
-			examplejson.SaveExampleJson(mockFrame, widgetType, explanation[i])
+			examplejson.SaveExampleJson(mockFrame, widgetType, explanation[i], false)
 			// Save these images when we can test for them
 			//	f, _ := os.Create("./testdata/framecount" + fmt.Sprintf("%v", i) + "2.png")
 			//	png.Encode(f, myImage)

@@ -23,7 +23,7 @@ func TestBars(t *testing.T) {
 	for i, size := range sizes {
 		mock := nearblackJSON{GridLoc: config.Grid{Alias: "testlocation"}}
 		myImage := image.NewNRGBA64(image.Rect(0, 0, size[0], size[1]))
-		examplejson.SaveExampleJson(mock, widgetType, explanation[i])
+		examplejson.SaveExampleJson(mock, widgetType, explanation[i], false)
 		// Generate the ramp image
 		genErr := mock.Generate(myImage)
 		// Open the image to compare to

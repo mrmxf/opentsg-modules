@@ -49,7 +49,7 @@ func TestQrGen(t *testing.T) {
 		// Assign the colour to the correct type of image NGRBA64 and replace the colour values
 		c := context.Background()
 		genErr := qrmock.Generate(readImage, &c)
-		examplejson.SaveExampleJson(qrmock, widgetType, explanation[i])
+		examplejson.SaveExampleJson(qrmock, widgetType, explanation[i], false)
 		// Make a hash of the pixels of each image
 		hnormal := sha256.New()
 		htest := sha256.New()
@@ -74,7 +74,7 @@ func TestQrGen(t *testing.T) {
 	base := image.NewNRGBA64(image.Rect(0, 0, 1000, 1000))
 	c := context.Background()
 	genErr := qrmock.Generate(base, &c)
-	examplejson.SaveExampleJson(qrmock, widgetType, "full")
+	examplejson.SaveExampleJson(qrmock, widgetType, "full", false)
 
 	file, _ := os.Open("./testdata/full.png")
 	baseVals, _ := png.Decode(file)

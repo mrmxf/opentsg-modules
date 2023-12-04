@@ -24,7 +24,7 @@ func TestTemp(t *testing.T) {
 	tester := image.NewNRGBA64(image.Rect(0, 0, 1024, 1000)) //960))
 	mock.Generate(tester)
 
-	examplejson.SaveExampleJson(mock, widgetType, "demo")
+	examplejson.SaveExampleJson(mock, widgetType, "demo", false)
 
 	f, _ := os.Create("./testdata/tester.png")
 	png.Encode(f, tester)
@@ -91,7 +91,7 @@ func TestRotation(t *testing.T) {
 		mock.WidgetProperties.CwRotation = angle
 
 		angleImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{4096, 2000}})
-		examplejson.SaveExampleJson(mock, widgetType, explanationRight[i])
+		examplejson.SaveExampleJson(mock, widgetType, explanationRight[i], false)
 		genErr := mock.Generate(angleImage)
 		// Generate the ramp image
 		// genErr := mock.Generate(myImage)
@@ -128,7 +128,7 @@ func TestRotation(t *testing.T) {
 	for i, angle := range anglesOffRight {
 		mock.WidgetProperties.CwRotation = angle
 		angleImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{4096, 2000}})
-		examplejson.SaveExampleJson(mock, widgetType, explanation[i])
+		examplejson.SaveExampleJson(mock, widgetType, explanation[i], false)
 		// Generate the ramp image
 		genErr := mock.Generate(angleImage)
 		// Open the image to compare to

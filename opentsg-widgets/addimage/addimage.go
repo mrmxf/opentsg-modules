@@ -90,8 +90,11 @@ func (i addimageJSON) Generate(canvas draw.Image, opts ...any) error {
 	}
 
 	// newImg64 := gridgen.ImageGenerator(*c, image.Rect(0, 0, newImage.Bounds().Max.X, newImage.Bounds().Max.Y))
+	if i.ColourSpace == nil {
+		i.ColourSpace = &colour.ColorSpace{}
+	}
 
-	newImg64 := colour.NewNRGBA64(i.ColourSpace, newImage.Bounds())
+	newImg64 := colour.NewNRGBA64(*i.ColourSpace, newImage.Bounds())
 
 	if depth == 8 {
 		b := newImg64.Bounds().Max

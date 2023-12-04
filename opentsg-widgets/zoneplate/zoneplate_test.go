@@ -31,7 +31,7 @@ func TestZoneGenAngle(t *testing.T) {
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{1000, 1000}})
 		mockZone.Angle = angleDummies[i]
 
-		examplejson.SaveExampleJson(mockZone, widgetType, explanation[i])
+		examplejson.SaveExampleJson(mockZone, widgetType, explanation[i], false)
 		// Generate the ramp image
 		genErr := mockZone.Generate(myImage)
 		// Open the image to compare to
@@ -74,7 +74,7 @@ func TestZoneGenMask(t *testing.T) {
 	for i := range testF {
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{1000, 1000}})
 
-		examplejson.SaveExampleJson(mockZone, widgetType, explanation[i])
+		examplejson.SaveExampleJson(mockZone, widgetType, explanation[i], false)
 		// Generate the ramp image
 		genErr := mockZone.Generate(myImage)
 		// Reapply the mask because for somereason it is not transferred across the test suiteS?

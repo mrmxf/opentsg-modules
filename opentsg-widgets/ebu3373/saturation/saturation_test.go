@@ -24,7 +24,7 @@ func TestBars(t *testing.T) {
 	for i, c := range colours {
 		s.Colours = c
 		genErr := s.Generate(myImage)
-		examplejson.SaveExampleJson(s, widgetType, explanation[i])
+		examplejson.SaveExampleJson(s, widgetType, explanation[i], false)
 
 		f, _ := os.Open(fmt.Sprintf("./testdata/ordertest%v.png", i))
 

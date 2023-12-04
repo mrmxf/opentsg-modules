@@ -32,7 +32,7 @@ func TestLines(t *testing.T) {
 		myImage := colour.NewNRGBA64(colour.ColorSpace{}, image.Rectangle{image.Point{0, 0}, image.Point{1024, 240}})
 		mockTB.Text = str
 		genErr := mockTB.Generate(myImage, &mockContext)
-		examplejson.SaveExampleJson(mockTB, widgetType, explanation[i])
+		examplejson.SaveExampleJson(mockTB, widgetType, explanation[i], false)
 		file, _ := os.Open(original[i])
 		// Decode to get the colour values
 		baseVals, _ := png.Decode(file)
@@ -89,7 +89,7 @@ func TestFontImport(t *testing.T) {
 		//	bc := context.Background()
 		//	vase := image.NewNRGBA64(image.Rect(0, 0, 1000, 100))
 		//	tests[i].Generate(vase, bc)
-		examplejson.SaveExampleJson(tests[i], widgetType, e)
+		examplejson.SaveExampleJson(tests[i], widgetType, e, false)
 		// f, _ := os.Create(e + ".png")
 		// colour.PngEncode(f, vase)
 	}
