@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/mrmxf/opentsg-modules/opentsg-core/credentials"
 	. "github.com/smartystreets/goconvey/convey"
 	"gopkg.in/yaml.v3"
 )
@@ -215,4 +216,73 @@ func TestYamlRead(t *testing.T) {
 			})
 		})
 	}
+}
+
+func TestSearchOrder(t *testing.T) {
+
+	/*
+
+		tests to run
+		- the current search order
+		- test the LastInFirst out
+		- check working directory
+
+		hash the bytes of the expected body file
+
+		test set up
+
+		make some files in a folder system. Give a bunch of paths
+		as path parents
+
+	*/
+	expectedResult := []string{"./testdata/searchpath/first/first.json", "./testdata/searchpath/second/second.json", "./testdata/searchpath/third/third.json"}
+
+	mockCredentials, _ := credentials.AuthInit("")
+	parentFolders := []string{"./testdata/searchpath/", "./testdata/searchpath/first/", "./testdata/searchpath/second/", "./testdata/searchpath/third/"}
+	URIList := []string{"first.json", "second.json", "third.json"}
+
+	for i, URI := range URIList {
+
+		expectedRes, _ := os.ReadFile(expectedResult[i])
+		res, _, err := FileSearch(mockCredentials, URI, "", parentFolders)
+
+		Convey("Checking the search order runs in the correct order", t, func() {
+			Convey(fmt.Sprintf("Looking for %s, this should be found in %s", URI, expectedResult[i]), func() {
+				Convey("The file is found and no error is returned ", func() {
+					So(err, ShouldBeNil)
+					So(res, ShouldResemble, expectedRes)
+				})
+			})
+		})
+	}
+
+	expectedResWrkDir, _ := os.ReadFile("./testdata/searchpath/wrkdir.json")
+	resWrkDir, _, errWrkDir := FileSearch(mockCredentials, "./testdata/searchpath/wrkdir.json", "", parentFolders)
+
+	Convey("Checking the search order checks relative to the location of the executable", t, func() {
+		Convey("Looking for ./testdata/searchpath/wrkdir.json", func() {
+			Convey("The file is found and no error is returned ", func() {
+				So(errWrkDir, ShouldBeNil)
+				So(resWrkDir, ShouldResemble, expectedResWrkDir)
+			})
+		})
+	})
+
+	// ENVIROMENT TEST
+
+	holder := os.Getenv("OPENTSG_HOME")
+	os.Setenv("OPENTSG_HOME", "./testdata/searchpath/env")
+	expectedResEnv, _ := os.ReadFile("./testdata/searchpath/env/env.json")
+	resEnv, _, errEnv := FileSearch(mockCredentials, "./env.json", "", parentFolders)
+
+	Convey("Checking the search order checks relative to ENV value", t, func() {
+		Convey("Looking for env.json relative to the environment of ./testdata/searchpath/env ", func() {
+			Convey("The file is found and no error is returned ", func() {
+				So(errEnv, ShouldBeNil)
+				So(resEnv, ShouldResemble, expectedResEnv)
+			})
+		})
+	})
+
+	os.Setenv("OPENTSG_HOME", holder)
 }
