@@ -1,0 +1,107 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Test Card Schema",
+    "description": "The Schmea for the add image section of the test card generator",
+    "type": "object",
+    "properties": {
+        "grid": {
+            "$ref": "#/$defs/gridschema"
+        },
+        "image": {
+                "oneOf": [
+                    {
+                        "$ref": "#/$defs/fileinput/png"
+                    },
+                    {
+                        "$ref": "#/$defs/fileinput/tiff"
+                    }
+                ],
+                "description": "The complete filename and location of the file to be added"
+        },
+        "imageFill":{
+            "type": "string",
+            "enum": ["x scale", "y scale", "xy scale", "fill"],
+            "description": "This describes the scaling method for the image"
+        },
+        "imagesize": {
+            "type": "object",
+            "properties": {
+                "w": {
+                    "$ref": "#/$defs/dimensions"
+                },
+                "h": {
+                    "$ref": "#/$defs/dimensions"
+                }
+            },
+            "additionalProperties": false,
+            "description": "The width and height of the image in pixels, if left empty then the original image size is used. If the size is changed the there may be slight changes due to interpolation of the new image size"
+        },
+        "position": {
+            "type": "object",
+            "properties": {
+                "x": {
+                    "$ref": "#/$defs/locations"
+                },
+                "y": {
+                    "$ref": "#/$defs/locations"
+                }
+            },
+            "additionalProperties": false,
+            "description": "The x y location of image in pixels, where 0,0 is in the top left point of the image, if left empty then it is added to the top left of the testcard."
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "fileinput": {
+            "png": {
+                "type": "string",
+                "pattern": "^[\\w\\W]{1,255}\\.[pP][nN][gG]$"
+            },
+            "tiff": {
+                "type": "string",
+                "pattern": "^[\\w\\W]{1,255}\\.[tT][iI][fF]{1,2}$"
+            }
+        },
+        "locations": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535
+        },
+        "dimensions": {
+            "type": "integer",
+            "minimum": 24,
+            "maximum": 65535
+        },
+        "gridschema": {
+            "properties": {
+                "location": {
+                    "anyOf": [
+                        {
+                            "grid": {
+                                "type": "string",
+                                "pattern": "^[a-pA-P]{1}[0-8]{1}$"
+                            }
+                        },
+                        {
+                            "alias": {
+                                "type": "string",
+                                "pattern": "^[\\w\\W]{1,30}$"
+                            }
+                        }
+                    ],
+                    "description": "The location of the module to be added to the test card"
+                },
+                "alias": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "description": "The name to refer to the chosen grid location for the module, these are reset for each section in the array and are optional"
+                }
+            },
+            "required": [
+                "location"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

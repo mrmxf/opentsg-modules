@@ -1,0 +1,8 @@
+{
+    "type":"testsuite",
+    "string": "string",
+    "number":6,
+    "float": 6.01,
+    "map":{"some":"map"},
+    "array" : [3,4,"5"]
+}

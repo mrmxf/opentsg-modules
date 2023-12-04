@@ -1,0 +1,25 @@
+{
+    "documentation": [
+      "## MSG Swatch widget",
+      "",
+      "Render a matrix of pyramid squares over a background (possibly",
+      "",
+      "`swatchParams` property is set by parent"
+    ],
+    "include": [
+      { "uri": "pyramid.json", "name": "pyramid" },
+      { "uri": "pyramid-data-new.json", "name": "d" }
+    ],
+    "generate": [
+      {
+        "_COMMENT": "We should probably have a better syntax for mapping an N dimensional array of data to objects!",
+          "name": [{"R":"[:]"}, {"CD":"[:]"}, {"B":"[:]"}],
+          "action": {
+           "pyramid" : {
+           "d.{{swatchType}}": ["grid.location","backgroundcolor"]}
+          }
+       
+      }
+    ]
+  }
+  

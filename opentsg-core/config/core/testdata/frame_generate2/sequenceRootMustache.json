@@ -1,0 +1,17 @@
+{
+    "include":[
+        {"uri": "canvasRoot.json", "name":"canvas", "args":["Title"]},
+        {"uri": "intermediateRoot.json", "name":"mid", "args":["Title"]},
+        {"uri": "dummyRoot.json", "name":"dummy", "args":["Title"]}
+    ],
+    "create":[{
+        "canvas":{"Title":"test"},
+        "dummy":{"Title":"test"}
+  } , {
+    "canvas":{"Title":"test"},
+    "mid":{"Title":"test"}
+
+  }
+        
+    ]
+}

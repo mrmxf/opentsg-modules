@@ -1,0 +1,24 @@
+{
+
+    "include": [
+        {"uri":"pyramids.json", "name":"swatch"}
+    ],
+    "create":[
+       {"swatch":{}},
+          {
+            "swatch.pyramid1":{"testadder": "nest"},
+            "swatch[3:5]":{"testadder": "nest array"}
+        }
+    ]
+}
+,
+{
+    "include":[
+        {"uri": "./frame.json", "name":"frame"}
+    ],
+    "create":[
+        {"frame": {"swatchType":"blue"}
+    frame.swatch.pyramid1},
+        {"frame": {"swatchType":"green"}}
+    ]
+}

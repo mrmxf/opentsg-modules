@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hashlist version="2.0" xmlns="urn:ASC:MHL:v2.0">
+   <creatorinfo>
+      <creationdate>2023-12-04T12:04:58+00:00</creationdate>
+      <hostname>Tristan-HPENVY13</hostname>
+      <tool version="0.0.1">ascmhl.go</tool>
+   </creatorinfo>
+   <processinfo>
+      <process>in-place</process>
+      <ignore>
+         <pattern>.DS_Store</pattern>
+         <pattern>ascmhl</pattern>
+         <pattern>ascmhl/</pattern>
+      </ignore>
+   </processinfo>
+   <hashes>
+      <hash>
+         <path size="75" lastmodificationdate="2023-12-04T12:04:57+00:00">space file.png</path>
+         <c4 action="original" hashdate="2023-12-04T12:04:58+00:00">c42YZS2vrZsn2NnXnJyU5fo8o3FQsHy2Ba35UBYe1SUEK3upjU3XYv1KYZujVG6pprYSG31QUDc4ezLDCmPvjyuHTS</c4>
+         <md5 action="original" hashdate="2023-12-04T12:04:58+00:00">a7f31794f7d323f8319efa2ea0c23c15</md5>
+         <xxh128 action="original" hashdate="2023-12-04T12:04:58+00:00">c684fbd46f8322b6533be2a2311c616b</xxh128>
+         <crc16RGB action="original" hashdate="2023-12-04T12:04:58+00:00">885</crc16RGB>
+         <crc32RGB action="original" hashdate="2023-12-04T12:04:58+00:00">a3c1ca20</crc32RGB>
+      </hash>
+   </hashes>
+</hashlist>

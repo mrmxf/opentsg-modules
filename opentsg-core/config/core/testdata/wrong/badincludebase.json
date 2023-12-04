@@ -1,0 +1,12 @@
+[
+    {
+        "factory include": [
+            {
+                "badinclude": "badincluderec.json",
+                "alias": "inter"
+            }
+        ]
+    },
+    {
+    }
+]

@@ -1,0 +1,56 @@
+type: builtin.ramps
+minimum: 0
+maximum: 4095
+depth: 12
+fillType: fill
+stripes:
+  groupHeader:
+    color:
+    - 27
+    height: 80
+  interstripes:
+    color:
+    - black
+    height: 1
+  ramps:
+    fill: gradient
+    bitdepth:
+    - 10
+    - 8
+    labels:
+    - 10b
+    - 8b
+    height: 10
+    rampGroups:
+      ared:
+        color: red
+        rampstart: 0
+        direction: 1
+      bgreen:
+        color: green
+        rampstart: 0
+        direction: 1
+      cblue:
+        color: blue
+        rampstart: 0
+        direction: 1
+      dred:
+        color: red
+        rampstart: 0
+        direction: -1
+      egreen:
+        color: green
+        rampstart: 0
+        direction: -1
+      fblue:
+        color: blue
+        rampstart: 0
+        direction: -1
+text:
+  textyPosition: top
+  textxPosition: center
+  textHeight: 50
+  textColor: "#C2A649"
+grid:
+  location: a5:p8
+  alias: bottom

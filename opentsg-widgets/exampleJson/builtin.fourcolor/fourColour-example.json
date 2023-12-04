@@ -1,0 +1,19 @@
+{
+    "colors": [
+        "#FF0000",
+        "#00FF00",
+        "#0000FF",
+        "#FFFF00"
+    ],
+    "colorSpace": {
+        "Primaries": {
+            "Red": {},
+            "Green": {},
+            "Blue": {},
+            "WhitePoint": {}
+        }
+    },
+    "grid": {
+        "location": "Nothing"
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Test Card Schema",
+	"description": "The Schmea for the grid section of the test card generator",
+	"type": "object",
+    "properties": {
+        "location":{
+            "anyOf": [{
+                "$ref": "#/$defs/location/grid"
+            },
+            {
+                "$ref": "#/$defs/location/alias"
+            },
+            {
+                "$ref": "#/$defs/location/grids"
+            }],
+			"description":"The location of the module to be added to the test card"
+        },
+        "alias": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
+			"description":"The name to refer to the chosen grid location for the module, these are reset for each section in the array and are optional"
+            }
+    },
+    "required": ["location"],
+    "additionalProperties":false,
+    "$defs": {
+        "location": {
+            "grid": {
+                "type":"string",
+                "pattern": "^[a-pA-P]{1}[0-8]{1}$"
+            },
+            "grids": {
+                "type":"string",
+                "pattern": "^[a-pA-P]{1}[0-8]{1}:[a-pA-P]{1}[0-8]{1}$"
+            },
+            "alias": {
+                "type":"string",
+                "pattern": "^[\\w\\W]{1,30}$"
+            }
+        }
+    }
+}

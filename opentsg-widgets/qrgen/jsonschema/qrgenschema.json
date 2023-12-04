@@ -1,0 +1,123 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Test Card Schema",
+	"description": "The Schmea for the add qr code section of the test card generator",
+	"type": "object",
+    "properties": {
+        "grid": {
+            "$ref": "#/$defs/gridschema"
+        },
+        "code":{
+            "type":"string",
+            "minLength": 1,
+            "maxLength": 255,
+			"description":"A string that is translated to a qr code, where longer strings generate a larger qr code"
+        },
+        "colorSpace" : {
+			"type" : "object"
+		},
+        "type": {
+            "type": "string",
+            "enum": ["builtin.qrcode"],
+            "description": "This to be labelled as \"builtin.qrcode\", so that the json is correclty configured"
+        },
+        "gridPosition": {
+            "type": "object",
+            "properties": {
+                "x": {
+                    "$ref": "#/$defs/locations"
+                },
+                "y": {
+                    "$ref": "#/$defs/locations"
+                }
+            },
+            "additionalProperties":false ,
+			"description": "The x y location of qr code in pixels, where 0,0 is in the top left point of the image, if left empty then it is added to the top left of the testcard."
+        },
+        "size": {
+            "type": "object",
+            "properties": {
+                "width": {
+                    "$ref": "#/$defs/locations"
+                },
+                "height": {
+                    "$ref": "#/$defs/locations"
+                }
+            },
+            "required": ["width", "height"],
+            "additionalProperties":false ,
+			"description": "The width and height of the qr code to be scaled to"
+        },
+        "objectQuery": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "targetAlias": {
+                        "type": "string",
+                        "pattern": "^[\\w\\W]{1,255}$",
+                        "description": "the unquie identifier of a factory object"
+                    },
+                    "keys": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "string",
+                            "pattern": "^[\\w\\W]{1,255}$"
+                        }
+                    }
+                },
+                "required": [
+                    "targetAlias",
+                    "keys"
+                ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": ["code", "type"],
+    "additionalProperties":false,
+    "$defs": {
+        "locations": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+        },
+        "dimensions": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+        },
+		"gridschema": {
+            "properties": {
+                "location": {
+                    "anyOf":[
+						{
+								"type": "string",
+								"pattern": "^[a-pA-P]{1}[0-8]{1}$"
+							
+						},
+						{
+		
+								"type": "string",
+								"pattern": "^[\\w\\W]{1,30}$"
+							
+						}
+					],
+                    "description": "The location of the module to be added to the test card"
+                },
+                "alias": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "description": "The name to refer to the chosen grid location for the module, these are reset for each section in the array and are optional"
+                }
+            },
+            "required": [
+                "location"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

@@ -1,0 +1,23 @@
+canvas:
+    filedepth: 16
+    frameSize:
+        h: 2160
+        w: 4096
+    gridColumns: 1024
+    gridRows: 540
+    linewidth: 0.5
+    name:
+        - x{{framenumber}}-test.png
+    type: builtin.canvasoptions
+dummy:
+    backgroundcolor: '#000000'
+    bordercolor: '#333333'
+    bordersize: 0
+    font: body
+    grid:
+        alias: test
+        location: a0
+    text:
+        - test
+    textcolor: '#f2e2eb'
+    type: builtin.textbox

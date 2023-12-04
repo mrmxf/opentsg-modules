@@ -1,0 +1,30 @@
+{
+    "documentation":[
+        "## MSG Bit Depth Frame widget\\",
+        "{{frame.canvas.bitdepth}}\\",
+        " bits at {{canvas.Size.W}}",
+        "Render a single frame with some swatches over a background",
+        "",
+        "`swatchType` property is set by parent"
+    ],
+    "include": [
+        {"uri":"../pyramid.json", "name":"pyramid0"},
+        {"uri":"../pyramid.json", "name":"pyramid1"},
+        {"uri":"../pyramid.json", "name":"pyramid2"},
+        {"uri":"../pyramid.json", "name":"pyramid3"},
+        {"uri":"../pyramid.json", "name":"pyramid4"},
+        {"uri":"../pyramid.json", "name":"pyramid5"},
+        {"uri":"../pyramid.json", "name":"pyramid6"}
+    ],
+    "create":[
+        {
+            "pyramid0" :{},
+            "pyramid1" :{},
+            "pyramid2" :{},
+            "pyramid3" :{},
+            "pyramid4" :{},
+            "pyramid5" :{},
+            "pyramid6" :{}
+        }
+    ]
+}

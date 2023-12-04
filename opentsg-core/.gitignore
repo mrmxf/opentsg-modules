@@ -1,0 +1,43 @@
+
+
+## Ignore generated outputs
+**/*.png
+**/*.json
+**/*.dpx
+**/*.txt
+lint*.xml
+
+clogrc/core
+
+!clogrc/lint.sh
+
+
+
+## Return test files here
+!config/**/*.json
+!config/testdata/apitest.png
+!config/core/testdata/apitest.png
+
+!widgethandler/**/*.json
+!widgethandler/**/*.png
+
+!gridgen/**/*.png
+!gridgen/**/*.json
+
+!canvaswidget/**/*.json
+
+!action/testdata/*.json
+!action/testdata/create/*.json
+!action/testdata/generate/*.json
+!action/testdata/results/*.json
+
+!colour/testdata/draw/*.png
+
+#Return our schema
+!config/jsonschema/baseschema.json
+!config/jsonschema/basefacschema.json
+!config/jsonschema/includeschema.json
+
+!canvaswidget/jsonschema/baseschema.json
+!canvaswidget/jsonschema/basefacschema.json
+!canvaswidget/jsonschema/includeschema.json

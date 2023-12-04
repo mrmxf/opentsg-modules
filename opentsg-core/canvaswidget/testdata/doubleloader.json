@@ -1,0 +1,18 @@
+{
+    "include": [
+        {
+            "uri": "base.json",
+            "name": "base"
+        },
+        {
+            "uri": "base.json",
+            "name": "base2"
+        }
+    ],
+    "create": [
+        {
+            "base": {},
+            "base2":{}
+        }
+    ]
+}

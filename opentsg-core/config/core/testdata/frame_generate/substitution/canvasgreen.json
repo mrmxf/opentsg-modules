@@ -1,0 +1,10 @@
+{
+    "type": "builtin.canvasoptions",
+    "name": ["green-{{framenumber}}.png"],
+    "frameSize": { "w": 4096, "h": 2160 },
+    "linewidth": 199,
+    "filedepth": 16,
+    "gridColumns": 1024,
+    "gridRows": 540,
+    "backgroundColor": "#00FF00"
+  }

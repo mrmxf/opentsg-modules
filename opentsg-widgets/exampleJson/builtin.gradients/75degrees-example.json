@@ -1,0 +1,71 @@
+{
+    "groupsTemplates": {
+        "separator": {
+            "height": 0,
+            "color": "white"
+        },
+        "gradientSeparator": {
+            "colors": [
+                "white",
+                "black",
+                "red",
+                "blue"
+            ],
+            "height": 1
+        },
+        "gradients": [
+            {
+                "height": 5,
+                "bitDepth": 4,
+                "label": "4b"
+            },
+            {
+                "height": 5,
+                "bitDepth": 6,
+                "label": "6b"
+            },
+            {
+                "height": 5,
+                "bitDepth": 8,
+                "label": "8b"
+            },
+            {
+                "height": 5,
+                "bitDepth": 10,
+                "label": "10b"
+            }
+        ]
+    },
+    "groups": [
+        {
+            "color": "green",
+            "initialPixelValue": 960,
+            "reverse": false
+        },
+        {
+            "color": "gray",
+            "initialPixelValue": 960,
+            "reverse": false
+        }
+    ],
+    "widgetProperties": {
+        "maxBitDepth": 10,
+        "cwRotation": "π*5/12",
+        "objectFitFill": false,
+        "pixelValueRepeat": 0,
+        "textProperties": {
+            "textyPosition": "top",
+            "textxPosition": "left",
+            "textHeight": 30,
+            "textColor": "#345AB6"
+        }
+    },
+    "colorSpace": {
+        "Primaries": {
+            "Red": {},
+            "Green": {},
+            "Blue": {},
+            "WhitePoint": {}
+        }
+    }
+}

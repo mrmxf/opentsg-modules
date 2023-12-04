@@ -1,0 +1,11 @@
+{
+    "colours": {
+        "red": true,
+        "green": true,
+        "blue": true
+    },
+    "grid": {
+        "location": "a5:p8",
+        "alias": "bottom"
+    }
+}

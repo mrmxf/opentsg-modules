@@ -1,0 +1,20 @@
+{
+    "documentation":[
+        "## MSG Bit Depth Frame widget",
+        "",
+        "Render a single frame with some swatches over a background",
+        "",
+        "`swatchType` property is set by parent"
+    ],
+    "include": [
+        {"uri":"canvas.json", "name":"canvas",  "args":["swatchTyper","swatchType"]},
+        {"uri":"swatch.json", "name":"swatch",  "args":["swatchType"]}
+    ],
+    "create":[
+        {
+            
+            "canvas":{"swatchTyper": "green","linewidth": 0.5,"name":["000-{{swatchTyper}}-{{framenumber}}.json"]}},{
+            "swatch":{}
+        }
+    ]
+}

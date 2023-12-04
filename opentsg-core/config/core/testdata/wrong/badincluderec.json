@@ -1,0 +1,8 @@
+{
+    "factory include": [
+        {
+            "bad include": "./thingthatdoesntexist.json",
+            "alias": "inter"
+        }
+    ]
+}

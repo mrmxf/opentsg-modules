@@ -1,0 +1,12 @@
+{
+    "image": "./testdata/test16bit.png",
+    "colorSpace": {
+        "Primaries": {
+            "Red": {},
+            "Green": {},
+            "Blue": {},
+            "WhitePoint": {}
+        }
+    },
+    "imageFill": "fill"
+}

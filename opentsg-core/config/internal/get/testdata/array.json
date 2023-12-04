@@ -1,0 +1,5 @@
+{
+    "base":"base",
+    "arrayWithMap":[3,3,"no map here"],
+    "map":{"with":{"nested":"values"}}
+}

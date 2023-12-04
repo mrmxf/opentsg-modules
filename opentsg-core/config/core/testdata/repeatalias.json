@@ -1,0 +1,21 @@
+
+    {
+        "include": [
+            {
+                "uri":  "./factoryholder/base.json",
+                "name": "robocorner"
+            },
+            {
+                "uri":  "./factoryholder/base.json",
+                "name": "robocorner"
+            }
+        ],
+    "create":[
+    {},
+    {"canvas":{
+        "name":["newhello2.png"]},
+    "sweepzone":{    
+        "platetype": "circular"}
+    }
+    ]
+    }

@@ -1,0 +1,41 @@
+{
+    "include": [
+      {
+        "uri": "./collater.json",
+        "name": "load"
+      },
+      {
+        "uri": "./collater_hook.json",
+        "name": "load_hook"
+      },
+      {
+        "uri": "./collater_hook_reverse.json",
+        "name": "reverse"
+      }
+      ,
+      {
+        "uri": "./collater_hook_missed.json",
+        "name": "missed"
+      }
+    ],
+    "create": [
+      {
+        "load": {}
+      },
+      {
+        "load_hook": {}
+      },    {
+        "reverse": {}
+      },
+      {"load_hook":{},
+        "load_hook.black": {"location":"not real"}
+      }
+      ,
+      {"load_hook":{},
+        "load_hook.black": {"err":"the wheels have come off"}
+      }, 
+      {
+        "missed":{}
+      }
+    ]
+  }

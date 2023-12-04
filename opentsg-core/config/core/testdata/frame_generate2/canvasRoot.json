@@ -1,0 +1,9 @@
+{
+    "type": "builtin.canvasoptions",
+    "name": ["x{{framenumber}}-{{Title}}.png"],
+    "frameSize": { "w": 4096, "h": 2160 },
+    "linewidth": 0.5,
+    "filedepth": 16,
+    "gridColumns": 1024,
+    "gridRows": 540
+  }

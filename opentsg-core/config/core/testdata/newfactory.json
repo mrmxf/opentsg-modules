@@ -1,0 +1,17 @@
+
+    {
+        "include": [
+            {
+                "uri": "./factoryholder/base.json",
+                "name": "canvas"
+            }
+        ],
+    "create":[
+    {},
+    {"canvas":{
+        "name":["newhello2.png"]},
+    "sweepzone":{    
+        "platetype": "circular"}
+    }
+    ]
+}

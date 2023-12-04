@@ -1,0 +1,14 @@
+{
+    "include": [
+        {
+            "uri": "dummyRoot.json",
+            "name": "dummy"
+        }
+    ],
+    "create": [
+        {
+            "dummy": {
+            }
+        }
+    ]
+}

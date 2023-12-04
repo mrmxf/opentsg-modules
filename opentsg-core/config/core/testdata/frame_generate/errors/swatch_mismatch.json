@@ -1,0 +1,36 @@
+{
+    "documentation": [
+      "## MSG Swatch widget",
+      "",
+      "Render a matrix of pyramid squares over a background (possibly",
+      "",
+      "`swatchParams` property is set by parent"
+    ],
+    "include": [
+      { "uri": "pyramid.json", "name": "pyramid" },
+      { "uri": "pyramid-data-shallow.json", "name": "d" }
+    ],
+    "args": [
+      {
+        "name": "swatchParams",
+        "type": "string",
+        "doc": "string index of imported swatch"
+      },
+      {
+        "name": "frameNumber",
+        "type": "number",
+        "doc": "number of the current frame - remove framecounter as it is a magic string etc"
+      }
+    ],
+    "generate": [
+      {
+        "_COMMENT": "We should probably have a better syntax for mapping an N dimensional array of data to objects!",
+          "name": [{"R":"[:]"}, {"C":"[:]"}],
+          "action": {
+           "pyramid" : {
+           "d.{{swatchType}}": ["grid.location","backgroundcolor"]}
+          }
+      }
+    ]
+  }
+  

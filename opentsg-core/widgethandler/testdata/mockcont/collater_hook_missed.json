@@ -1,0 +1,46 @@
+{
+    "include": [
+      {
+        "uri": "./blue.json",
+        "name": "blue"
+      },
+      {
+        "uri": "./red.json",
+        "name": "red"
+      },
+      {
+        "uri": "./green.json",
+        "name": "green"
+      },
+      {
+        "uri": "./white.json",
+        "name": "white"
+      },
+      {
+        "uri": "./canvas.json",
+        "name": "canvas"
+      },
+      {
+        "uri": "./black.json",
+        "name": "black"
+      }
+      ,
+      {
+        "uri": "./missed.json",
+        "name": "misser"
+      }
+    ],
+    "create": [
+
+      {
+        "canvas":{},
+        "red":{},
+        "green":{},
+        "blue":{},
+        "white":{}
+      },
+      {"misser":{}},
+      {"black":{}}
+      
+    ]
+  }

@@ -1,0 +1,11 @@
+{
+
+    "include": [
+        {"uri":"frame_recurse.json", "name":"canvas", "args":["swatchType"]}
+    ],
+    "create":[
+        {
+            "canvas":{}
+        }
+    ]
+}

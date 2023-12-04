@@ -1,0 +1,105 @@
+{
+    "name": ["./genimages/multiramp-12b-pc-hd"],
+    "frameSize": {
+        "w": 4096,
+        "h": 2160
+    },
+    "textcolor": "#C2A649f",
+    "textxposition" : "center",
+    "textyposition" : "top",
+    "black": 0,
+    "white": 4095,
+    "rampstart": 2816,
+    "depth": 12,
+    "zoneplate" : {
+        "platetype": "sweep" ,
+        "angle" : 90,
+        "mask": "circle",
+        "startcolor" : "white",
+        "zonesize": {
+            "w": 2000,
+            "h": 2000
+        },
+        "position": {
+            "x": 1000,
+            "y": 100
+        }
+    },
+    "addimage":{
+        "image": "./test/testnormal.tiff",
+        "position": {
+            "x": 120,
+            "y": 420
+        },
+        "imagesize": {
+            "w": 1000,
+            "h": 1000
+        }
+    },
+    
+    "ramps":{
+        "stripeHeight": 30,
+        "interStripeDivider":{
+            "alternating":{
+                "color": ["black","white"],
+                "height":10
+            }
+        },
+        "interGroupDivider":{
+            "linear":{
+                "color": "white",
+                "height":40
+            }
+        },
+        "stripes": [{
+                "name": "12b",
+                "bitDepth": 12
+            },
+            {
+                "name": "10b",
+                "bitDepth": 10
+            },
+            {
+                "name": "8b",
+                "bitDepth": 8
+            },
+            {
+                "name": "4b",
+                "bitDepth": 4
+            }
+        ],
+        "groups": [{
+                "name": "grey",
+                "rampDelta": 1
+            },
+            {
+                "name": "red",
+                "rampDelta": 1
+            },
+            {
+                "name": "green",
+                "rampDelta": 1
+            },
+            {
+                "name": "blue",
+                "rampDelta": 1
+            },
+            {
+                "name": "grey",
+                "rampDelta": -1
+            },
+            {
+                "name": "red",
+                "rampDelta": -1
+            },
+            {
+                "name": "green",
+                "rampDelta": -1
+            },
+            {
+                "name": "blue",
+                "rampDelta": -1
+            }
+        ]
+    }
+}

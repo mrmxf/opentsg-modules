@@ -1,0 +1,11 @@
+{
+    "include":[
+        {"uri": "./frame_create_dotpath.json", "name":"frame", "args":["swatchType"]}
+    ],
+    "create":[
+        {"frame": {"swatchType":"blue"},
+        "frame.pd":{"text":["square"]},
+        "frame.pd.pyramid1":{"text":["I am a dotpath"]}},
+        {"frame": {"swatchType":"green"}},{}
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "text": [
+        "example space",
+        "rec2020"
+    ],
+    "grid": null,
+    "colorSpace": {
+        "ColorSpace": "rec2020",
+        "Primaries": {
+            "Red": {},
+            "Green": {},
+            "Blue": {},
+            "WhitePoint": {}
+        }
+    },
+    "borderColor": "rgb(134,24,180)",
+    "borderSize": 5,
+    "font": "pixel",
+    "backgroundColor": "rgb(255,255,0)",
+    "textColor": "rgb(134,24,180)",
+    "fillType": "",
+    "xAlignment": "middle",
+    "yAlignment": "middle"
+}

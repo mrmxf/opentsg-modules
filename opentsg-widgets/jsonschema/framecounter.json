@@ -1,0 +1,13 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Test Card Schema",
+	"description": "The Schmea for the test card generator",
+	"type": "object",
+	"properties": {
+		"framecounter": {
+			"type": "boolean",
+			"description": "If true a frame counter is generated in the bottom right corner of the image that sequentially increases with each json object"
+		}
+	},
+	"additionalProperties": false
+}

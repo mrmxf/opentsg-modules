@@ -1,0 +1,7 @@
+**/*.csv
+**/*.xml
+clogrc/core
+clogrc/tmp/*
+!clogrc/tmp/readme.md
+archive/
+.DS_Store

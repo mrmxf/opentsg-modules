@@ -1,0 +1,9 @@
+{
+    "include":[
+        {"uri": "./frame_create.json", "name":"frame", "args":["swatchType"]}
+    ],
+    "create":[
+        {"frame": {"swatchType":"blue"}},
+        {"frame": {"swatchType":"green"}}
+    ]
+}
