@@ -25,3 +25,17 @@ It has the following optional fields:
     }
 }
 ```
+
+Here are some further examples and their output:
+
+- [minimum.json](../../exampleJson/builtin.zoneplate/minimum-example.json) This does
+
+![image](../../exampleJson/builtin.zoneplate/minimum-example.png)
+
+- [maximum.json](../../exampleJson/builtin.zoneplate/maximum-example.json)
+
+![image](../../exampleJson/builtin.zoneplate/maximum-example.png)
+
+- [norotation.json](../../exampleJson/builtin.zoneplate/noangle-example.json)
+
+![image](../../exampleJson/builtin.zoneplate/noangle-example.png)

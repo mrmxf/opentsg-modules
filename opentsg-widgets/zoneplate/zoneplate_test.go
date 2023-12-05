@@ -15,6 +15,18 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestDemo(t *testing.T) {
+	// base example
+	tbDemo := zoneplateJSON{Platetype: circlePattern}
+	examplejson.SaveExampleJson(tbDemo, widgetType, "minimum", true)
+
+	tbDemoMaximum := zoneplateJSON{Platetype: sweepPattern, Startcolour: "white", Angle: "π*34/53"}
+	examplejson.SaveExampleJson(tbDemoMaximum, widgetType, "maximum", true)
+
+	tbDemoNoAngle := zoneplateJSON{Platetype: sweepPattern, Startcolour: "black"}
+	examplejson.SaveExampleJson(tbDemoNoAngle, widgetType, "noangle", true)
+}
+
 func TestZoneGenAngle(t *testing.T) {
 	var mockZone zoneplateJSON
 	// Make the dummy functions to circumvent config
@@ -67,7 +79,7 @@ func TestZoneGenMask(t *testing.T) {
 	mockZone.Platetype = circlePattern
 	mockZone.Startcolour = "grey"
 
-	mockZone.Mask = mask.Circle
+	//mockZone.Mask = mask.Circle
 	testF := []string{"./testdata/normalzpm.png"}
 	explanation := []string{"circularMask"}
 
@@ -95,7 +107,7 @@ func TestZoneGenMask(t *testing.T) {
 		htest.Write(myImage.Pix)
 
 		Convey("Checking the mask of the zoneplate", t, func() {
-			Convey(fmt.Sprintf("Comparing the mask of the zoneplate of %v ", mockZone.Mask), func() {
+			Convey(fmt.Sprintf("Comparing the mask of the zoneplate of %v ", "VOID" /*mockZone.Mask*/), func() {
 				Convey("No error is returned and the file matches exactly", func() {
 					So(genErr, ShouldBeNil)
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))

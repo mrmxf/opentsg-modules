@@ -3,7 +3,6 @@ package examplejson
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"image"
 	"image/png"
 	"os"
@@ -35,9 +34,8 @@ func SaveExampleJson(example widgethandler.Generator, folder, name string, saveI
 		baseImage := image.NewNRGBA64(image.Rect(0, 0, 500, 500))
 		mockCont := context.Background()
 		example.Generate(baseImage, &mockCont)
-		fImg, e := os.Create(base + string(os.PathSeparator) + folder + string(os.PathSeparator) + name + "-example.png")
-		fmt.Println(png.Encode(fImg, baseImage))
-		fmt.Println(e, "HERE", base+string(os.PathSeparator)+folder+string(os.PathSeparator)+name+"-example.png")
+		fImg, _ := os.Create(base + string(os.PathSeparator) + folder + string(os.PathSeparator) + name + "-example.png")
+		png.Encode(fImg, baseImage)
 
 		// Add the type and location fields
 		var updater map[string]any
