@@ -20,7 +20,7 @@ func TestDemo(t *testing.T) {
 	tbDemo := Ramp{}
 	examplejson.SaveExampleJson(tbDemo, widgetType, "minimum", false)
 
-	mockFull := Ramp{Groups: []RampProperties{{Colour: "green", InitialPixelValue: 960}, {Colour: "gray", InitialPixelValue: 960}, {Colour: "blue", InitialPixelValue: 0}, {Colour: "red", InitialPixelValue: 0}},
+	mockFull := Ramp{Groups: []RampProperties{{Colour: "green", InitialPixelValue: 960, Reverse: true}, {Colour: "gray", InitialPixelValue: 960, Reverse: true}, {Colour: "blue", InitialPixelValue: 0}, {Colour: "red", InitialPixelValue: 0}},
 		Gradients: groupContents{GroupSeparator: groupSeparator{Height: 2, Colour: "white"},
 			GradientSeparator: gradientSeparator{Colours: []string{"white", "black"}, Height: 1},
 			Gradients:         []Gradient{{Height: 5, BitDepth: 4, Label: "4b"}, {Height: 5, BitDepth: 6, Label: "6b"}, {Height: 5, BitDepth: 8, Label: "8b"}, {Height: 5, BitDepth: 10, Label: "10b"}}},

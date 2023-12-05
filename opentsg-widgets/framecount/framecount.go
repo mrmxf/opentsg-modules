@@ -153,7 +153,7 @@ func (f frameJSON) Generate(canvas draw.Image, extraOpts ...any) error {
 	} else if y > b.Y-fb.Y {
 		return fmt.Errorf("_0153 the y position %v is greater than the y boundary of %v with frame height of %v", y, canvas.Bounds().Max.Y, fb.Y)
 	}
-	fmt.Println("HERE", x, y, f.FontSize)
+
 	// Corner := image.Point{-1 * (canvas.Bounds().Max.X - height - 1), -1 * (canvas.Bounds().Max.Y - height - 1)}
 	colour.Draw(canvas, image.Rect(x, y, x+int(f.FontSize), y+int(f.FontSize)), frame, image.Point{}, draw.Over)
 

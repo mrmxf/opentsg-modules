@@ -1,6 +1,8 @@
 package textbox
 
 import (
+	_ "embed"
+
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
 )
@@ -22,13 +24,8 @@ type TextboxJSON struct {
 	YAlignment string `json:"yAlignment,omitempty" yaml:"yAlignment,omitempty"`
 }
 
-var textBoxSchema = []byte(`{
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://example.com/product.schema.json",
-	"title": "Allow anything through for tests",
-	"description": "An empty schema to allow custom structs to run through",
-	"type": "object"
-	}`)
+//go:embed jsonschema/textBoxSchema.json
+var textBoxSchema []byte
 
 func (tb TextboxJSON) Alias() string {
 	return tb.GridLoc.Alias

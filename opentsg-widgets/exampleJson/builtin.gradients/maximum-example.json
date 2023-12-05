@@ -14,11 +14,13 @@
     "groups": [
         {
             "color": "green",
-            "initialPixelValue": 960
+            "initialPixelValue": 960,
+            "reverse": true
         },
         {
             "color": "gray",
-            "initialPixelValue": 960
+            "initialPixelValue": 960,
+            "reverse": true
         },
         {
             "color": "blue"

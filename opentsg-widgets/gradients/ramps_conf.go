@@ -3,6 +3,8 @@ package gradients
 import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
+
+	_ "embed"
 )
 
 type Ramp struct {
@@ -78,13 +80,8 @@ type control struct {
 	truePixelShift float64
 }
 
-var textBoxSchema = []byte(`{
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://example.com/product.schema.json",
-	"title": "Allow anything through for tests",
-	"description": "An empty schema to allow custom structs to run through",
-	"type": "object"
-	}`)
+//go:embed jsonschema/gradientSchema.json
+var textBoxSchema []byte
 
 func (r Ramp) Alias() string {
 	return r.GridLoc.Alias

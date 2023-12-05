@@ -37,7 +37,7 @@
        }
     },
     "required": [
-        "noisetype",
+        "noiseType",
         "type"
     ],
     "additionalProperties": false,
