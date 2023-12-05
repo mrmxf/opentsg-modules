@@ -14,8 +14,23 @@ import (
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
+	"github.com/mrmxf/opentsg-modules/opentsg-widgets/text"
 	. "github.com/smartystreets/goconvey/convey"
 )
+
+func TestDemo(t *testing.T) {
+	// base example
+	frameDemo := frameJSON{FrameCounter: true}
+	examplejson.SaveExampleJson(frameDemo, widgetType, "minimum", true)
+
+	frameDemoMax := frameJSON{FrameCounter: true, TextColour: "#C2A649", BackColour: "#91B645", Font: text.FontTitle, FontSize: 25,
+		Imgpos: topLeft}
+	examplejson.SaveExampleJson(frameDemoMax, widgetType, "maximum", true)
+
+	frameDemoStyle := frameJSON{FrameCounter: true, TextColour: "rgb(154,58,115)", BackColour: "rgb12(816,816,816)", Font: text.FontBody}
+	examplejson.SaveExampleJson(frameDemoStyle, widgetType, "styleChange", true)
+
+}
 
 // Wait for august to undo the bug it decided to make
 func TestStringGen(t *testing.T) {

@@ -1,0 +1,22 @@
+{
+    "backgroundColor": "#91B645",
+    "colorSpace": {
+        "Primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "font": "title",
+    "fontSize": 25,
+    "frameCounter": true,
+    "frameNumber": 0,
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "gridPosition": "top left",
+    "textColor": "#C2A649",
+    "type": "builtin.frameCounter"
+}

@@ -65,7 +65,7 @@ func (f frameJSON) Generate(canvas draw.Image, extraOpts ...any) error {
 
 	// stop errors happening when font is not declared
 	if f.FontSize == 0 {
-		f.FontSize = 90
+		f.FontSize = 100
 	}
 
 	// Size of the text in pixels to font
@@ -186,16 +186,23 @@ func intTo4(num int) (string, error) {
 	return s, nil
 }
 
+const (
+	bottomLeft  = "bottom left"
+	bottomRight = "bottom right"
+	topRight    = "top right"
+	topLeft     = "top left"
+)
+
 func userPos(location map[string]interface{}, canSize, frameSize image.Point) (int, int) {
 	if location["alias"] != nil {
 		// Process as simple location
 		// The minus one is inluded to compensate for canvas startnig at 0
 		switch location["alias"].(string) {
-		case "bottom left":
+		case bottomLeft:
 			return 0, canSize.Y - frameSize.Y - 1
-		case "bottom right":
+		case bottomRight:
 			return canSize.X - frameSize.X - 1, canSize.Y - frameSize.Y - 1
-		case "top right":
+		case topRight:
 			return canSize.X - frameSize.X - 1, 0
 		default:
 			return 0, 0

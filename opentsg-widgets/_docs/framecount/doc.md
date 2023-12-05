@@ -35,3 +35,15 @@ of the grid the inhabit. There are also the builtin positions of
     }
 }
 ```
+
+- [minimum.json](../../exampleJson/builtin.frameCounter/minimum-example.json)
+
+![image](../../exampleJson/builtin.frameCounter/minimum-example.png)
+
+- [maximum.json](../../exampleJson/builtin.frameCounter/maximum-example.json)
+
+![image](../../exampleJson/builtin.frameCounter/maximum-example.png)
+
+- [styleChange.json](../../exampleJson/builtin.frameCounter/styleChange-example.json)
+
+![image](../../exampleJson/builtin.frameCounter/styleChange-example.png)
