@@ -15,6 +15,12 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestDemo(t *testing.T) {
+	// base example
+	barsDemo := barJSON{}
+	examplejson.SaveExampleJson(barsDemo, widgetType, "base", true)
+}
+
 func TestBars(t *testing.T) {
 
 	sizes := [][2]int{{3840, 1160}, {1920, 580}, {500, 1900}}
@@ -25,7 +31,7 @@ func TestBars(t *testing.T) {
 		mock := barJSON{GridLoc: config.Grid{Alias: "testlocation"}}
 		myImage := image.NewNRGBA64(image.Rect(0, 0, size[0], size[1]))
 
-		examplejson.SaveExampleJson(mock, widgetType, explanation[i],false)
+		examplejson.SaveExampleJson(mock, widgetType, explanation[i], false)
 		// Generate the ramp image
 		genErr := mock.Generate(myImage)
 		// Open the image to compare to

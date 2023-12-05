@@ -1,6 +1,7 @@
 package twosi
 
 import (
+	"context"
 	"crypto/sha256"
 	"fmt"
 	"image"
@@ -12,9 +13,22 @@ import (
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/gridgen"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	. "github.com/smartystreets/goconvey/convey"
 )
+
+func TestDemo(t *testing.T) {
+	getPostion = func(gridString, alias string, c *context.Context) (draw.Image, image.Point, draw.Image, error) {
+		return nil, image.Point{}, nil, nil
+	}
+	// base example
+	twosiDemo := twosiJSON{}
+	examplejson.SaveExampleJson(twosiDemo, widgetType, "base", true)
+
+	getPostion = gridgen.GridSquareLocatorAndGenerator
+
+}
 
 func TestChannels(t *testing.T) {
 

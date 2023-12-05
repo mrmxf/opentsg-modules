@@ -15,7 +15,13 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestBars(t *testing.T) {
+func TestDemo(t *testing.T) {
+	// base example
+	nbDemo := nearblackJSON{}
+	examplejson.SaveExampleJson(nbDemo, widgetType, "base", true)
+}
+
+func TestNearBlack(t *testing.T) {
 	sizes := [][2]int{{3840, 100}, {1920, 50}, {1000, 500}}
 	testBase := []string{"testdata/uhd.png", "testdata/hd.png", "testdata/obtuse.png"}
 	explanation := []string{"uhd", "hd", "obtuse"}

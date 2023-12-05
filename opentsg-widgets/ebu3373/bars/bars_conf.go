@@ -16,7 +16,7 @@ const hooks = ""*/
 
 type barJSON struct {
 	//	Type    string      `json:"type" yaml:"type"`
-	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
+	ColourSpace *colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
 	GridLoc     config.Grid       `json:"grid,omitempty" yaml:"grid,omitempty"`
 }
 

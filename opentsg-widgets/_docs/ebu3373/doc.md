@@ -25,6 +25,12 @@ It has no fields, only the location is required.
 }
 ```
 
+Here are some further examples and their output:
+
+- [base.json](../../exampleJson/builtin.ebu3373/bars/base-example.json)
+
+![image](../../exampleJson/builtin.ebu3373/bars/base-example.png)
+
 ## Luma
 
 A horizontal luma ramp from the 10 bit value 4 to 1019,
@@ -44,6 +50,12 @@ It has no fields, only the location is required.
 }
 ```
 
+Here are some further examples and their output:
+
+- [base.json](../../exampleJson/builtin.ebu3373/luma/base-example.json)
+
+![image](../../exampleJson/builtin.ebu3373/luma/base-example.png)
+
 ## Near black
 
 Alternating segments of 10 bit 0% black (RGB10(64,64,64)) and
@@ -62,6 +74,12 @@ It has no fields, only the location is required.
     }
 }
 ```
+
+Here are some further examples and their output:
+
+- [base.json](../../exampleJson/builtin.ebu3373/nearblack/base-example.json)
+
+![image](../../exampleJson/builtin.ebu3373/nearblack/base-example.png)
 
 ## Saturation
 
@@ -90,6 +108,20 @@ is not declared then the default order of, red,green and blue is used.
 }
 ```
 
+Here are some further examples and their output:
+
+- [minimum.json](../../exampleJson/builtin.ebu3373/saturation/minimum-example.json)
+
+![image](../../exampleJson/builtin.ebu3373/saturation/minimum-example.png)
+
+- [maximum.json](../../exampleJson/builtin.ebu3373/saturation/maximum-example.json)
+
+![image](../../exampleJson/builtin.ebu3373/saturation/maximum-example.png)
+
+- [different_order.json](../../exampleJson/builtin.ebu3373/saturation/diff-example.json)
+
+![image](../../exampleJson/builtin.ebu3373/saturation/diff-example.png)
+
 ## Two SI
 
 Two Si is the two sample interleave pattern, for when SMPTE ST 425-5:2019
@@ -109,3 +141,9 @@ It has no fields, only the location is required.
     }
 }
 ```
+
+Here are some further examples and their output:
+
+- [base.json](../../exampleJson/builtin.ebu3373/twosi/base-example.json)
+
+![image](../../exampleJson/builtin.ebu3373/twosi/base-example.png)

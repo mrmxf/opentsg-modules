@@ -25,3 +25,13 @@ And the following optional fields:
     }
 }
 ```
+
+Here are some further examples and their output:
+
+- [Minium.json](../../exampleJson/builtin.addimage/minimum-example.json)
+
+![image](../../exampleJson/builtin.addimage/minimum-example.png)
+
+- [Maximum.json](../../exampleJson/builtin.addimage/maximum-example.json)
+
+![image](../../exampleJson/builtin.addimage/maximum-example.png)

@@ -69,6 +69,10 @@ var (
 func (bar barJSON) Generate(canvas draw.Image, opt ...any) error {
 	b := canvas.Bounds().Max
 
+	if bar.ColourSpace == nil {
+		bar.ColourSpace = &colour.ColorSpace{}
+	}
+
 	colour.Draw(canvas, canvas.Bounds(), &image.Uniform{&grey}, image.Point{}, draw.Src)
 	wScale := (float64(b.X) / 3840.0)
 	barWidth := wScale * 412
@@ -98,7 +102,7 @@ func (bar barJSON) Generate(canvas draw.Image, opt ...any) error {
 			area := image.Rect(int(off), int(hOff), int(off+barWidth), int(boxHeight))
 
 			fill := c
-			fill.UpdateColorSpace(bar.ColourSpace)
+			fill.UpdateColorSpace(*bar.ColourSpace)
 			colour.Draw(canvas, area, &image.Uniform{&fill}, image.Point{}, draw.Over)
 			off += barWidth
 		}

@@ -15,7 +15,13 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestBars(t *testing.T) {
+func TestDemo(t *testing.T) {
+	// base example
+	lumaDemo := lumaJSON{}
+	examplejson.SaveExampleJson(lumaDemo, widgetType, "base", true)
+}
+
+func TestLuma(t *testing.T) {
 	sizes := [][2]int{{3840, 100}, {1920, 50}, {1000, 500}}
 	testBase := []string{"testdata/uhd.png", "testdata/hd.png", "testdata/obtuse.png"}
 	explanation := []string{"uhd", "hd", "obtuse"}
@@ -23,7 +29,7 @@ func TestBars(t *testing.T) {
 	for i, size := range sizes {
 		mock := lumaJSON{GridLoc: config.Grid{Alias: "testlocation"}}
 		myImage := image.NewNRGBA64(image.Rect(0, 0, size[0], size[1]))
-		examplejson.SaveExampleJson(mock, widgetType, explanation[i],false)
+		examplejson.SaveExampleJson(mock, widgetType, explanation[i], false)
 		// Generate the ramp image
 		genErr := mock.Generate(myImage)
 		// Open the image to compare to

@@ -20,8 +20,13 @@ import (
 )
 
 func TestDemo(t *testing.T) {
-	ai := addimageJSON{Image: "https://mrmxf.com/r/project/msg-tpg/ramp-2022-02-28/multiramp-12b-pc-4k-hswp.png"}
+	// minimum example
+	ai := addimageJSON{Image: "https://opentsg.io/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png"}
 	examplejson.SaveExampleJson(ai, widgetType, "minimum", true)
+
+	// maximum example
+	aiMax := addimageJSON{Image: "https://opentsg.io/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png", ImgFill: "y scale"}
+	examplejson.SaveExampleJson(aiMax, widgetType, "maximum", true)
 }
 
 func TestBadStrings(t *testing.T) {

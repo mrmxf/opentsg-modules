@@ -1,0 +1,20 @@
+{
+    "colorSpace": {
+        "Primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "colors": [
+        "red",
+        "green",
+        "blue"
+    ],
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "type": "builtin.ebu3373/saturation"
+}

@@ -38,6 +38,14 @@ func SaveExampleJson(example widgethandler.Generator, folder, name string, saveI
 		fImg, e := os.Create(base + string(os.PathSeparator) + folder + string(os.PathSeparator) + name + "-example.png")
 		fmt.Println(png.Encode(fImg, baseImage))
 		fmt.Println(e, "HERE", base+string(os.PathSeparator)+folder+string(os.PathSeparator)+name+"-example.png")
+
+		// Add the type and location fields
+		var updater map[string]any
+		json.Unmarshal(jsonExample, &updater)
+		updater["type"] = folder
+		updater["grid"] = map[string]string{"location": "a1", "alias": " A demo alias"}
+		jsonExample, _ = json.MarshalIndent(updater, "", "    ")
+
 	}
 
 	f, _ := os.Create(base + string(os.PathSeparator) + folder + string(os.PathSeparator) + name + "-example.json")
