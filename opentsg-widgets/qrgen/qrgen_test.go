@@ -17,6 +17,18 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestDemo(t *testing.T) {
+	// base example
+	qrDemo := qrcodeJSON{Code: "https://opentsg.io/"}
+	examplejson.SaveExampleJson(qrDemo, widgetType, "minimum", true)
+
+	qrDemoMax := qrcodeJSON{Code: "https://opentsg.io/", Imgpos: &config.Position{}, Size: &sizeJSON{Width: 100, Height: 100}}
+	examplejson.SaveExampleJson(qrDemoMax, widgetType, "maximum", true)
+
+	qrDemoMiddle := qrcodeJSON{Code: "https://opentsg.io/", Imgpos: &config.Position{X: 50, Y: 50}, Size: &sizeJSON{Width: 50, Height: 50}}
+	examplejson.SaveExampleJson(qrDemoMiddle, widgetType, "middlepic", true)
+}
+
 func TestQrGen(t *testing.T) {
 	// Run this so the qr code is not placed, placed in the middle and bottom right
 	var qrmock qrcodeJSON

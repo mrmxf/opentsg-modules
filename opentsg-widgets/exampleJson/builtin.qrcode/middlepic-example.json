@@ -1,0 +1,24 @@
+{
+    "code": "https://opentsg.io/",
+    "colorSpace": {
+        "Primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "gridPosition": {
+        "x": 50,
+        "y": 50
+    },
+    "size": {
+        "height": 50,
+        "width": 50
+    },
+    "type": "builtin.qrcode"
+}
