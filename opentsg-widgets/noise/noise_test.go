@@ -14,10 +14,19 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestDemo(t *testing.T) {
+	// base example
+	noiseDemo := noiseJSON{NoiseType: whiteNoise}
+	examplejson.SaveExampleJson(noiseDemo, widgetType, "minimum", true)
+
+	noiseDemoMax := noiseJSON{NoiseType: whiteNoise, Minimum: 2000, Maximum: 3000}
+	examplejson.SaveExampleJson(noiseDemoMax, widgetType, "maximum", true)
+}
+
 func TestZoneGenAngle(t *testing.T) {
 	var mockNoise noiseJSON
 
-	mockNoise.NoiseType = "white noise"
+	mockNoise.NoiseType = whiteNoise
 	randnum = func() int64 { return 27 }
 
 	testF := []string{"./testdata/whitenoise.png"}

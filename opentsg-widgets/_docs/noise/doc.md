@@ -24,3 +24,11 @@ It has the following optional fields
     }
 }
 ```
+
+- [minimum.json](../../exampleJson/builtin.noise/minimum-example.json)
+
+![image](../../exampleJson/builtin.noise/minimum-example.png)
+
+- [maximum.json](../../exampleJson/builtin.noise/maximum-example.json)
+
+![image](../../exampleJson/builtin.noise/maximum-example.png)
