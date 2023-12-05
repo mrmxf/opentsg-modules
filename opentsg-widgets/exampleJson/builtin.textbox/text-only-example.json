@@ -3,7 +3,6 @@
         "sample",
         "text"
     ],
-    "grid": null,
     "colorSpace": {
         "Primaries": {
             "Red": {},
@@ -12,12 +11,7 @@
             "WhitePoint": {}
         }
     },
-    "borderColor": "",
-    "borderSize": 0,
     "font": "header",
-    "backgroundColor": "",
     "textColor": "rgb12(3000,1401,1116)",
-    "fillType": "full",
-    "xAlignment": "",
-    "yAlignment": ""
+    "fillType": "full"
 }

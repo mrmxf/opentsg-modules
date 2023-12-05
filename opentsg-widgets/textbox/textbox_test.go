@@ -17,6 +17,26 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestDemo(t *testing.T) {
+	// base example
+	tbDemo := TextboxJSON{}
+	examplejson.SaveExampleJson(tbDemo, widgetType, "minimum", false)
+
+	tbDemoMax := TextboxJSON{Text: []string{"sample", "text"}, Border: "#91B645", BorderSize: 5,
+		Back: "#eeeeee", Textc: "#C2A649", Font: text.FontPixel, FillType: text.FillTypeRelaxed,
+		XAlignment: text.AlignmentLeft, YAlignment: text.AlignmentBottom}
+	examplejson.SaveExampleJson(tbDemoMax, widgetType, "maximum", true)
+
+	tbDemoNoborder := TextboxJSON{Text: []string{"sample", "text"},
+		Back: "#333333", Textc: "#C2A649"}
+	examplejson.SaveExampleJson(tbDemoNoborder, widgetType, "noborder", true)
+
+	tbDemoNoText := TextboxJSON{Border: "#EEE", BorderSize: 25,
+		Back: "rgb12(3566,2312,34)"}
+	examplejson.SaveExampleJson(tbDemoNoText, widgetType, "notext", true)
+
+}
+
 func TestLines(t *testing.T) {
 	mockContext := context.Background()
 

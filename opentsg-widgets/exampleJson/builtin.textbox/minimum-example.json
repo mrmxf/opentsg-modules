@@ -1,8 +1,4 @@
 {
-    "text": [
-        "sample",
-        "text"
-    ],
     "colorSpace": {
         "Primaries": {
             "Red": {},
@@ -10,7 +6,5 @@
             "Blue": {},
             "WhitePoint": {}
         }
-    },
-    "font": "header",
-    "backgroundColor": "rgb(255,255,0)"
+    }
 }

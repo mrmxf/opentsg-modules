@@ -7,19 +7,19 @@ import (
 
 type TextboxJSON struct {
 	// Type       string       `json:"type" yaml:"type"`
-	Text []string `json:"text" yaml:"text"`
+	Text []string `json:"text,omitempty" yaml:"text,omitempty"`
 
-	GridLoc     *config.Grid      `json:"grid" yaml:"grid"`
+	GridLoc     *config.Grid      `json:"grid,omitempty" yaml:"grid,omitempty"`
 	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	Border      string            `json:"borderColor" yaml:"borderColor"`
-	BorderSize  float64           `json:"borderSize" yaml:"borderSize"`
-	Font        string            `json:"font" yaml:"font"`
+	Border      string            `json:"borderColor,omitempty" yaml:"borderColor,omitempty"`
+	BorderSize  float64           `json:"borderSize,omitempty" yaml:"borderSize,omitempty"`
+	Font        string            `json:"font,omitempty" yaml:"font,omitempty"`
 
-	Back       string `json:"backgroundColor" yaml:"backgroundColor"`
-	Textc      string `json:"textColor" yaml:"textColor"`
-	FillType   string `json:"fillType" yaml:"fillType"`
-	XAlignment string `json:"xAlignment" yaml:"xAlignment"`
-	YAlignment string `json:"yAlignment" yaml:"yAlignment"`
+	Back       string `json:"backgroundColor,omitempty" yaml:"backgroundColor,omitempty"`
+	Textc      string `json:"textColor,omitempty" yaml:"textColor,omitempty"`
+	FillType   string `json:"fillType,omitempty" yaml:"fillType,omitempty"`
+	XAlignment string `json:"xAlignment,omitempty" yaml:"xAlignment,omitempty"`
+	YAlignment string `json:"yAlignment,omitempty" yaml:"yAlignment,omitempty"`
 }
 
 var textBoxSchema = []byte(`{

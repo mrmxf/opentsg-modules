@@ -2,7 +2,6 @@
     "text": [
         "sample text"
     ],
-    "grid": null,
     "colorSpace": {
         "Primaries": {
             "Red": {},
@@ -13,10 +12,7 @@
     },
     "borderColor": "#f0f0f0",
     "borderSize": 20,
-    "font": "",
     "backgroundColor": "#ffffff",
     "textColor": "#C2A649",
-    "fillType": "",
-    "xAlignment": "",
     "yAlignment": "middle"
 }

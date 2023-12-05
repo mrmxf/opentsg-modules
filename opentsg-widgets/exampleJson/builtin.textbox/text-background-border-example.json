@@ -3,7 +3,6 @@
         "sample",
         "text"
     ],
-    "grid": null,
     "colorSpace": {
         "Primaries": {
             "Red": {},
@@ -17,7 +16,6 @@
     "font": "title",
     "backgroundColor": "#99AD49",
     "textColor": "rgb12(3000,1401,1116)",
-    "fillType": "",
     "xAlignment": "right",
     "yAlignment": "bottom"
 }

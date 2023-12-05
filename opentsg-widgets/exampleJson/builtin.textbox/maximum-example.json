@@ -1,0 +1,27 @@
+{
+    "backgroundColor": "#eeeeee",
+    "borderColor": "#91B645",
+    "borderSize": 5,
+    "colorSpace": {
+        "Primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "fillType": "relaxed",
+    "font": "pixel",
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "text": [
+        "sample",
+        "text"
+    ],
+    "textColor": "#C2A649",
+    "type": "builtin.textbox",
+    "xAlignment": "left",
+    "yAlignment": "bottom"
+}

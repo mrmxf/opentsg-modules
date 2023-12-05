@@ -25,6 +25,8 @@ of the grid the inhabit.
 }
 ```
 
+Here are some further examples and their output:
+
 - [minimum.json](../../exampleJson/builtin.qrcode/minimum-example.json)
 
 ![image](../../exampleJson/builtin.qrcode/minimum-example.png)

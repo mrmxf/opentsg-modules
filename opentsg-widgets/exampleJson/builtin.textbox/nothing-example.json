@@ -3,7 +3,6 @@
         "sample",
         "text"
     ],
-    "grid": null,
     "colorSpace": {
         "Primaries": {
             "Red": {},
@@ -13,11 +12,5 @@
         }
     },
     "borderColor": "rgb(134,24,180)",
-    "borderSize": 0,
-    "font": "header",
-    "backgroundColor": "",
-    "textColor": "",
-    "fillType": "",
-    "xAlignment": "",
-    "yAlignment": ""
+    "font": "header"
 }
