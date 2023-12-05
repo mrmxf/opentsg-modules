@@ -1,0 +1,63 @@
+{
+    "colorSpace": {
+        "Primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "groups": [
+        {
+            "color": "green"
+        },
+        {
+            "color": "blue"
+        },
+        {
+            "color": "red"
+        }
+    ],
+    "groupsTemplates": {
+        "gradientSeparator": {
+            "colors": null,
+            "height": 0
+        },
+        "gradients": [
+            {
+                "bitDepth": 4,
+                "height": 5,
+                "label": "4b"
+            },
+            {
+                "bitDepth": 6,
+                "height": 5,
+                "label": "6b"
+            },
+            {
+                "bitDepth": 8,
+                "height": 5,
+                "label": "8b"
+            }
+        ],
+        "separator": {
+            "color": "grey",
+            "height": 4
+        }
+    },
+    "type": "builtin.gradients",
+    "widgetProperties": {
+        "cwRotation": "",
+        "maxBitDepth": 8,
+        "objectFitFill": false,
+        "pixelValueRepeat": 1,
+        "textProperties": {
+            "textColor": "#345AB6",
+            "textHeight": 30
+        }
+    }
+}

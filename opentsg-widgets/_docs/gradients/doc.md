@@ -11,13 +11,15 @@ area it is given.
 Gradients has the following fields:
 
 only the `color`/`colors` and `height` subfields are required
-for a ramp to be drawn. Everything else is optional
+for a ramp to be drawn. Everything else is optional. The available 
+ramp colors are `red`, `green`, `blue`, `grey`. The dividers have 
+these colours as well as `black` and `white`.
 
 - `Gradients` - contains the gradient information
   - `GroupSeparator` - the separator between the groups of gradients. This is the
 first row in the group.
     - `height` - the relative height of the group separator.
-    - `color` - the colour of the separator
+    - `color` - the colour of the separator.
   - `GradientSeparator` - the separator between the gradients.
     - `height` - the relative height of the gradient separator.
     - `colors` - An array of colours to separate each group. If more than one colour
@@ -122,3 +124,27 @@ the colour direction and start value.
     }
 }
 ```
+
+Here are some further examples and their output:
+
+- [minimum.json](../../exampleJson/builtin.gradients/minimum-example.json) This does
+not generate an image as no fields are used. 0 or more fields can be used with
+the textbox widget.
+
+![image](../../exampleJson/builtin.gradients/minimum-example.png)
+
+- [maximum.json](../../exampleJson/builtin.gradients/maximum-example.json)
+
+![image](../../exampleJson/builtin.gradients/maximum-example.png)
+
+- [noGroupSeparator.json](../../exampleJson/builtin.gradients/noGroupSeparator-example.json)
+
+![image](../../exampleJson/builtin.gradients/noGroupSeparator-example.png)
+
+- [noGradientSeparator.json](../../exampleJson/builtin.gradients/noGradientSeparator-example.json)
+
+![image](../../exampleJson/builtin.gradients/noGradientSeparator-example.png)
+
+- [noText.json](../../exampleJson/builtin.gradients/noText-example.json)
+
+![image](../../exampleJson/builtin.gradients/noText-example.png)

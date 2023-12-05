@@ -39,13 +39,11 @@
     "groups": [
         {
             "color": "green",
-            "initialPixelValue": 960,
-            "reverse": false
+            "initialPixelValue": 960
         },
         {
             "color": "gray",
-            "initialPixelValue": 960,
-            "reverse": false
+            "initialPixelValue": 960
         }
     ],
     "widgetProperties": {
