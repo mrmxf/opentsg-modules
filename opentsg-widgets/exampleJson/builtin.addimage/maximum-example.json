@@ -1,0 +1,9 @@
+{
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "image": "https://opentsg.io/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png",
+    "imageFill": "y scale",
+    "type": "builtin.addimage"
+}

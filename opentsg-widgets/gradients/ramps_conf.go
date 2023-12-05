@@ -3,38 +3,40 @@ package gradients
 import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
+
+	_ "embed"
 )
 
 type Ramp struct {
-	Gradients        groupContents     `json:"groupsTemplates" yaml:"groupsTemplates"`
-	Groups           []RampProperties  `json:"groups" yaml:"groups"`
+	Gradients        groupContents     `json:"groupsTemplates,omitempty" yaml:"groupsTemplates,omitempty"`
+	Groups           []RampProperties  `json:"groups,omitempty" yaml:"groups,omitempty"`
 	WidgetProperties control           `json:"widgetProperties,omitempty" yaml:"widgetProperties,omitempty"`
 	ColourSpace      colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
 	GridLoc          *config.Grid      `json:"grid,omitempty" yaml:"grid,omitempty"`
 }
 
 type groupContents struct {
-	GroupSeparator    groupSeparator    `json:"separator" yaml:"separator"`
-	GradientSeparator gradientSeparator `json:"gradientSeparator" yaml:"gradientSeparator"`
-	Gradients         []Gradient        `json:"gradients" yaml:"gradients"`
+	GroupSeparator    groupSeparator    `json:"separator,omitempty" yaml:"separator,omitempty"`
+	GradientSeparator gradientSeparator `json:"gradientSeparator,omitempty" yaml:"gradientSeparator,omitempty"`
+	Gradients         []Gradient        `json:"gradients,omitempty" yaml:"gradients,omitempty"`
 }
 
 type textObjectJSON struct {
-	TextYPosition string  `json:"textyPosition" yaml:"textyPosition"`
-	TextXPosition string  `json:"textxPosition" yaml:"textxPosition"`
-	TextHeight    float64 `json:"textHeight" yaml:"textHeight"`
-	TextColour    string  `json:"textColor" yaml:"textColor"`
+	TextYPosition string  `json:"textyPosition,omitempty" yaml:"textyPosition,omitempty"`
+	TextXPosition string  `json:"textxPosition,omitempty" yaml:"textxPosition,omitempty"`
+	TextHeight    float64 `json:"textHeight,omitempty" yaml:"textHeight,omitempty"`
+	TextColour    string  `json:"textColor,omitempty" yaml:"textColor,omitempty"`
 }
 
 type RampProperties struct {
-	Colour            string `json:"color" yaml:"color"`
-	InitialPixelValue int    `json:"initialPixelValue" yaml:"initialPixelValue"`
-	Reverse           bool   `json:"reverse" yaml:"reverse"`
+	Colour            string `json:"color,omitempty" yaml:"color,omitempty"`
+	InitialPixelValue int    `json:"initialPixelValue,omitempty" yaml:"initialPixelValue,omitempty"`
+	Reverse           bool   `json:"reverse,omitempty" yaml:"reverse,omitempty"`
 }
 type Gradient struct {
-	Height   int    `json:"height" yaml:"height"`
-	BitDepth int    `json:"bitDepth" yaml:"bitDepth"`
-	Label    string `json:"label" yaml:"label"`
+	Height   int    `json:"height,omitempty" yaml:"height,omitempty"`
+	BitDepth int    `json:"bitDepth,omitempty" yaml:"bitDepth,omitempty"`
+	Label    string `json:"label,omitempty" yaml:"label,omitempty"`
 
 	// things that are added on run throughs
 	startPoint int
@@ -78,13 +80,8 @@ type control struct {
 	truePixelShift float64
 }
 
-var textBoxSchema = []byte(`{
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://example.com/product.schema.json",
-	"title": "Allow anything through for tests",
-	"description": "An empty schema to allow custom structs to run through",
-	"type": "object"
-	}`)
+//go:embed jsonschema/gradientSchema.json
+var textBoxSchema []byte
 
 func (r Ramp) Alias() string {
 	return r.GridLoc.Alias

@@ -17,6 +17,18 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestDemo(t *testing.T) {
+	// base example
+	qrDemo := qrcodeJSON{Code: "https://opentsg.io/"}
+	examplejson.SaveExampleJson(qrDemo, widgetType, "minimum", true)
+
+	qrDemoMax := qrcodeJSON{Code: "https://opentsg.io/", Imgpos: &config.Position{}, Size: &sizeJSON{Width: 100, Height: 100}}
+	examplejson.SaveExampleJson(qrDemoMax, widgetType, "maximum", true)
+
+	qrDemoMiddle := qrcodeJSON{Code: "https://opentsg.io/", Imgpos: &config.Position{X: 50, Y: 50}, Size: &sizeJSON{Width: 50, Height: 50}}
+	examplejson.SaveExampleJson(qrDemoMiddle, widgetType, "middlepic", true)
+}
+
 func TestQrGen(t *testing.T) {
 	// Run this so the qr code is not placed, placed in the middle and bottom right
 	var qrmock qrcodeJSON
@@ -49,7 +61,7 @@ func TestQrGen(t *testing.T) {
 		// Assign the colour to the correct type of image NGRBA64 and replace the colour values
 		c := context.Background()
 		genErr := qrmock.Generate(readImage, &c)
-		examplejson.SaveExampleJson(qrmock, widgetType, explanation[i])
+		examplejson.SaveExampleJson(qrmock, widgetType, explanation[i], false)
 		// Make a hash of the pixels of each image
 		hnormal := sha256.New()
 		htest := sha256.New()
@@ -74,7 +86,7 @@ func TestQrGen(t *testing.T) {
 	base := image.NewNRGBA64(image.Rect(0, 0, 1000, 1000))
 	c := context.Background()
 	genErr := qrmock.Generate(base, &c)
-	examplejson.SaveExampleJson(qrmock, widgetType, "full")
+	examplejson.SaveExampleJson(qrmock, widgetType, "full", false)
 
 	file, _ := os.Open("./testdata/full.png")
 	baseVals, _ := png.Decode(file)

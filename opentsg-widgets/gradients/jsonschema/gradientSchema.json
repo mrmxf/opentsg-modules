@@ -1,0 +1,315 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Test Card Schema",
+    "description": "The Schmea for the ramp section of the test card generator",
+    "type": "object",
+    "properties": {
+        "grid": {
+            "$ref": "#/$defs/gridschema",
+            "description": "The coordinates of the location to be added, a->p is the x axis, 0->9 are the allowed y axis parameters. Alternativley an alias can be used if already declared"
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "builtin.gradients"
+            ],
+            "description": "This to be labelled as \"builtin.gradients\", so that the json is correctly configured for open tpg"
+        },
+        "colorSpace": {
+            "type": "object"
+        },
+        "widgetProperties": {
+            "$ref": "#/$defs/widgetProperties"
+        },
+        "groups": {
+            "$ref": "#/$defs/groups"
+        },
+        "groupsTemplates": {
+            "$ref": "#/$defs/groupsTemplates"
+        }
+    },
+    "required": [
+        "type",
+        "grid"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+        "colourReg": {
+            "6hex": {
+                "type": "string",
+                "pattern": "^#[A-Fa-f0-9]{6}$",
+                "description": "## Example\nThis is for the colour of the labels on the gradients. This follows the pattern #rrggbb in hexcode, the values can be 0-9 and a-f e.g. #c45ea3 is acceptable but #aga6ah is not."
+            },
+            "3hex": {
+                "type": "string",
+                "pattern": "^#[A-Fa-f0-9]{3}$",
+                "description": "## Example\nThis is for the colour of the labels on the gradients. This follows the pattern #rgb in single hexcode, the values can be 0-9 and a-f e.g. #c53 is acceptable but #g6h is not."
+            },
+            "8hex": {
+                "type": "string",
+                "pattern": "^#[A-Fa-f0-9]{8}$",
+                "description": "## Example\nThis is for the colour of the labels on the gradients. This follows the pattern #rrggbbaa in hexcode, the values can be 0-9 and a-f e.g. #c45ea3ff is acceptable but #aga6ahff is not."
+            },
+            "4hex": {
+                "type": "string",
+                "pattern": "^#[A-Fa-f0-9]{4}$",
+                "description": "## Example\nThis is for the colour of the labels on the gradients. This follows the pattern #rgba in single hexcode, the values can be 0-9 and a-f e.g. #c53f is acceptable but #g6h is not."
+            },
+            "cssrgba": {
+                "type": "string",
+                "pattern": "^(rgba\\()\\b([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]),\\b([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]),\\b([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]),\b([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\\)$",
+                "description": "## Example\nThis is for the colour of the labels on the gradients. This follows the pattern rgba(rval,gval,bval,aval), the values are between 0.255 e.g. rgb(240,220,4,255) is acceptable but rgb(240,-5,400,23) is not."
+            },
+            "cssrgb": {
+                "type": "string",
+                "pattern": "^(rgb\\()\\b([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]),\\b([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]),\\b([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\\)$",
+                "description": "## Example\nThis is for the colour of the labels on the gradients. This follows the pattern rgb(rval,gval,bval), the values are between 0.255 e.g. rgb(240,220,4) is acceptable but rgb(240,-5,400) is not."
+            },
+            "cssrgb12": {
+                "type": "string",
+                "pattern": "^rgb12\\(([0-3]?[0-9]{1,3}|40[0-9][0-5]),([0-3]?[0-9]{1,3}|40[0-9][0-5]),([0-3]?[0-9]{1,3}|40[0-9][0-5])\\)$"
+            },
+            "cssrgba12": {
+                "type": "string",
+                "pattern": "^rgba12\\(([0-3]?[0-9]{1,3}|40[0-9][0-5]),([0-3]?[0-9]{1,3}|40[0-9][0-5]),([0-3]?[0-9]{1,3}|40[0-9][0-5]),([0-3]?[0-9]{1,3}|40[0-9][0-5])\\)$"
+            }
+        },
+        "angles": {
+            "radian1": {
+                "type": "string",
+                "desciption": "pattern requires a pi then star with a number, which can be divided by a resulting number",
+                "pattern": "^π\\*(\\d){1,4}$",
+                "description": "## Example\nThis is a multiplication of π up to 4 digits\n### Acceptable input\n- π*2\n- π*3332\n### Unacceptable input\n- π*0.5\n- π*12345"
+            },
+            "radian2": {
+                "type": "string",
+                "desciption": "pattern requires a pi then star with a number, which can be divided by a resulting number",
+                "pattern": "^π\\*(\\d){1,4}/{1}(\\d){1,4}$",
+                "description": "## Example\nThis is a multiplication of π up to 4 digits/4 digits \n### Acceptable input\n- π*1/22\n- π*7/3332\n### Unacceptable input\n- π*12345/3\n- π*0.5/3"
+            },
+            "degree": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 360,
+                "description": "## Degrees can be any number between 0 and 360"
+            }
+        },
+        "colourinfo": {
+            "description": "The available colors for the gradients to be assigned",
+            "enum": [
+                "red",
+                "green",
+                "blue",
+                "black",
+                "white",
+                "gray",
+                "grey"
+            ]
+        },
+        "textProperties": {
+            "type": "object",
+            "properties": {
+                "textyPosition": {
+                    "enum": [
+                        "top",
+                        "middle",
+                        "bottom"
+                    ],
+                    "description": "These are the permitted y coordinates of the labels on the bars."
+                },
+                "textxPosition": {
+                    "enum": [
+                        "left",
+                        "right",
+                        "center"
+                    ],
+                    "description": "These are the permitted x coordinates of the labels on the bars."
+                },
+                "textHeight": {
+                    "description": "the height of the label text, as a percentage of the gradient",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "textColor": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/colourReg/6hex"
+                        },
+                        {
+                            "$ref": "#/$defs/colourReg/3hex"
+                        },
+                        {
+                            "$ref": "#/$defs/colourReg/4hex"
+                        },
+                        {
+                            "$ref": "#/$defs/colourReg/8hex"
+                        },
+                        {
+                            "$ref": "#/$defs/colourReg/cssrgb"
+                        },
+                        {
+                            "$ref": "#/$defs/colourReg/cssrgba"
+                        },
+                        {
+                            "$ref": "#/$defs/colourReg/cssrgb12"
+                        },
+                        {
+                            "$ref": "#/$defs/colourReg/cssrgba12"
+                        }
+                    ],
+                    "description": "The colour for the labels on the ramp."
+                }
+            },
+            "additionalProperties": false
+        },
+        "widgetProperties": {
+            "type": "object",
+            "properties": {
+                "cwRotation": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/angles/radian1"
+                        },
+                        {
+                            "$ref": "#/$defs/angles/radian2"
+                        },
+                        {
+                            "$ref": "#/$defs/angles/degree"
+                        }
+                    ]
+                },
+                "maxBitDepth": {
+                    "description": "the maximum bit depth of the gradients",
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 16
+                },
+                "objectFitFill": {
+                    "type": "boolean"
+                },
+                "pixelValueRepeat": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "textProperties": {
+                    "$ref": "#/$defs/textProperties"
+                }
+            },
+            "additionalProperties": false
+        },
+        "groups": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "$ref": "#/$defs/groupsLayout"
+            }
+        },
+        "groupsLayout": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "$ref": "#/$defs/colourinfo"
+                },
+                "initialPixelValue": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "reverse": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false
+        },
+        "groupsTemplates": {
+            "type": "object",
+            "properties": {
+                "gradientSeparator": {
+                    "type": "object",
+                    "properties": {
+                        "colors": {
+                            "type": "array",
+                            "minItems": 0,
+                            "items": {
+                                "$ref": "#/$defs/colourinfo"
+                            }
+                        },
+                        "height": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    }, 
+                    "additionalProperties": false
+                },
+                "gradients": {
+                    "type": "array",
+                    "minItems": 0,
+                    "items": {
+                        "$ref": "#/$defs/gradientLayout"
+                    }
+                },
+                "separator": {
+                    "type": "object",
+                    "properties": {
+                        "color": {
+                            "$ref": "#/$defs/colourinfo"
+                        },
+                        "height": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    }, 
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "gradientLayout": {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "description": "The location of the font ttf file to be used, or a choice of one of the pre included ones of: \"body\", \"header\" and \"title\""
+                },
+                "bitDepth": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 16
+                },
+                "height": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "additionalProperties": false
+        },
+        "gridschema": {
+            "properties": {
+                "location": {
+                    "anyOf": [
+                        {
+                            "type": "string",
+                            "pattern": "^[a-pA-P]{1}[0-8]{1}$"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^[\\w\\W]{1,30}$"
+                        }
+                    ],
+                    "description": "The location of the module to be added to the test card"
+                },
+                "alias": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "description": "The name to refer to the chosen grid location for the module, these are reset for each section in the array and are optional"
+                }
+            },
+            "required": [
+                "location"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

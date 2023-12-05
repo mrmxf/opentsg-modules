@@ -1,0 +1,18 @@
+{
+    "backgroundColor": "rgb12(3566,2312,34)",
+    "borderColor": "#EEE",
+    "borderSize": 25,
+    "colorSpace": {
+        "Primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "type": "builtin.textbox"
+}

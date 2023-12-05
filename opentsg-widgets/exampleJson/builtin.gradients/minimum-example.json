@@ -1,0 +1,27 @@
+{
+    "groupsTemplates": {
+        "separator": {
+            "height": 0,
+            "color": ""
+        },
+        "gradientSeparator": {
+            "colors": null,
+            "height": 0
+        }
+    },
+    "widgetProperties": {
+        "maxBitDepth": 0,
+        "cwRotation": "",
+        "objectFitFill": false,
+        "pixelValueRepeat": 0,
+        "textProperties": {}
+    },
+    "colorSpace": {
+        "Primaries": {
+            "Red": {},
+            "Green": {},
+            "Blue": {},
+            "WhitePoint": {}
+        }
+    }
+}

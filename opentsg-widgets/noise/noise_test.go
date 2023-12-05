@@ -14,10 +14,19 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestDemo(t *testing.T) {
+	// base example
+	noiseDemo := noiseJSON{NoiseType: whiteNoise}
+	examplejson.SaveExampleJson(noiseDemo, widgetType, "minimum", true)
+
+	noiseDemoMax := noiseJSON{NoiseType: whiteNoise, Minimum: 2000, Maximum: 3000}
+	examplejson.SaveExampleJson(noiseDemoMax, widgetType, "maximum", true)
+}
+
 func TestZoneGenAngle(t *testing.T) {
 	var mockNoise noiseJSON
 
-	mockNoise.NoiseType = "white noise"
+	mockNoise.NoiseType = whiteNoise
 	randnum = func() int64 { return 27 }
 
 	testF := []string{"./testdata/whitenoise.png"}
@@ -28,7 +37,7 @@ func TestZoneGenAngle(t *testing.T) {
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{1000, 1000}})
 		// Generate the noise image
 		genErr := mockNoise.Generate(myImage)
-		examplejson.SaveExampleJson(mockNoise, widgetType, explanation[i])
+		examplejson.SaveExampleJson(mockNoise, widgetType, explanation[i], false)
 		// Open the image to compare to
 		file, _ := os.Open(compare)
 		// Decode to get the colour values

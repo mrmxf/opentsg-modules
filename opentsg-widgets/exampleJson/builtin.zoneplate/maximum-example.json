@@ -1,0 +1,18 @@
+{
+    "angle": "π*34/53",
+    "colorSpace": {
+        "Primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "plateType": "sweep",
+    "startColor": "white",
+    "type": "builtin.zoneplate"
+}

@@ -18,6 +18,10 @@ const (
 	widgetType = "builtin.noise"
 )
 
+const (
+	whiteNoise = "white noise"
+)
+
 // NGenerator generates images of noise
 func NGenerator(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *errhandle.Logger) {
 	defer wg.Done()
@@ -49,7 +53,7 @@ func (n noiseJSON) Generate(canvas draw.Image, opt ...any) error {
 		return fmt.Errorf("0141 The minimum noise value %v is greater than the maximum noise value %v", min, max)
 	}
 
-	if n.NoiseType == "white noise" { // upgrade to switch statement when more types come in
+	if n.NoiseType == whiteNoise { // upgrade to switch statement when more types come in
 		whitenoise(random, n.ColourSpace, canvas, min, max)
 	}
 

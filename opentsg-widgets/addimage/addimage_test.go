@@ -19,6 +19,16 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestDemo(t *testing.T) {
+	// minimum example
+	ai := addimageJSON{Image: "https://opentsg.io/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png"}
+	examplejson.SaveExampleJson(ai, widgetType, "minimum", true)
+
+	// maximum example
+	aiMax := addimageJSON{Image: "https://opentsg.io/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png", ImgFill: "y scale"}
+	examplejson.SaveExampleJson(aiMax, widgetType, "maximum", true)
+}
+
 func TestBadStrings(t *testing.T) {
 
 	mockContext := context.Background()
@@ -141,7 +151,7 @@ func TestZoneGenMask(t *testing.T) {
 
 			// generate the ramp image
 			genErr := imgMock.Generate(myImage, &mockContext)
-			examplejson.SaveExampleJson(imgMock, widgetType, explanation[i])
+			examplejson.SaveExampleJson(imgMock, widgetType, explanation[i], false)
 			file, _ := os.Open(testF[i])
 			defer file.Close()
 			// Decode to get the colour values
@@ -196,7 +206,7 @@ func TestFillTypes(t *testing.T) {
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{1000, 900}})
 		genErr := imgMock.Generate(myImage, &mockContext)
 
-		examplejson.SaveExampleJson(imgMock, widgetType, explanation[i])
+		examplejson.SaveExampleJson(imgMock, widgetType, explanation[i], false)
 		// Open the image to compare to
 
 		file, _ := os.Open(fmt.Sprintf("./testdata/fill%v.png", i))

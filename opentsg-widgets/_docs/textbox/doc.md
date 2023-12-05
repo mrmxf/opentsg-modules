@@ -39,3 +39,21 @@ the path to a local or web file.
     }
 }
 ```
+
+Here are some further examples and their output:
+
+- [minimum.json](../../exampleJson/builtin.textbox/minimum-example.json) This does
+not generate an image as no fields are used. 0 or more fields can be used with
+the textbox widget.
+
+- [maximum.json](../../exampleJson/builtin.textbox/maximum-example.json)
+
+![image](../../exampleJson/builtin.textbox/maximum-example.png)
+
+- [noborder.json](../../exampleJson/builtin.textbox/noborder-example.json)
+
+![image](../../exampleJson/builtin.textbox/noborder-example.png)
+
+- [notext.json](../../exampleJson/builtin.textbox/notext-example.json)
+
+![image](../../exampleJson/builtin.textbox/notext-example.png)

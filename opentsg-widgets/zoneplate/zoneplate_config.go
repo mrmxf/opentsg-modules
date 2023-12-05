@@ -15,11 +15,11 @@ const wLibrary = "builtin"
 const hooks = ""*/
 
 type zoneplateJSON struct {
-	Platetype   string            `json:"plateType" yaml:"plateType"`
-	ColourSpace colour.ColorSpace `json:"colorSpace" yaml:"colorSpace"`
-	Startcolour string            `json:"startColor" yaml:"startColor"`
-	Angle       interface{}       `json:"angle" yaml:"angle"`
-	Mask        string            `json:"mask" yaml:"mask"`
+	Platetype   string            `json:"plateType,omitempty" yaml:"plateType,omitempty"`
+	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
+	Startcolour string            `json:"startColor,omitempty" yaml:"startColor,omitempty"`
+	Angle       interface{}       `json:"angle,omitempty" yaml:"angle,omitempty"`
+	// Mask        string            `json:"mask,omitempty" yaml:"mask,omitempty"`
 	GridLoc     *config.Grid      `json:"grid,omitempty" yaml:"grid,omitempty"`
 }
 

@@ -13,7 +13,6 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/widgethandler"
-	"github.com/mrmxf/opentsg-modules/opentsg-widgets/mask"
 )
 
 const (
@@ -66,12 +65,14 @@ func (z zoneplateJSON) Generate(canvas draw.Image, opts ...any) error {
 			canvas.Set(int(j+zv.xPos), int(i+zv.yPos), &fill)
 		}
 	}
-	// Check if needs to be masked and apply it
-	if maskShape := z.Mask; maskShape != "" {
-		// At the moment just make a mask around the zoneplate
-		canvas = mask.Mask(maskShape, w, h, 0, 0, canvas)
+	//@TODO fix this
+	/*
+		// Check if needs to be masked and apply it
+		if maskShape := z.Mask; maskShape != "" {
+			// At the moment just make a mask around the zoneplate
+			canvas = mask.Mask(maskShape, w, h, 0, 0, canvas)
 
-	}
+		}*/
 
 	return nil
 }

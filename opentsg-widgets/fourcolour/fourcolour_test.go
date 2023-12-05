@@ -39,7 +39,7 @@ func TestFillMethod(t *testing.T) {
 		c := context.Background()
 		genErr := mj.Generate(canvas, &c)
 
-		examplejson.SaveExampleJson(mj, widgetType, explanation[i])
+		examplejson.SaveExampleJson(mj, widgetType, explanation[i], false)
 
 		f, _ := os.Open("./testdata/generatecheck" + fmt.Sprint(len(mj.Colourpallette)) + ".png")
 		baseVals, _ := png.Decode(f)

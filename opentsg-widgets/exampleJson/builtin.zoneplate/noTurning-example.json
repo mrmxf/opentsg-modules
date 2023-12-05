@@ -8,7 +8,5 @@
             "WhitePoint": {}
         }
     },
-    "startColor": "white",
-    "angle": null,
-    "mask": ""
+    "startColor": "white"
 }

@@ -24,3 +24,17 @@ of the grid the inhabit.
     }
 }
 ```
+
+Here are some further examples and their output:
+
+- [minimum.json](../../exampleJson/builtin.qrcode/minimum-example.json)
+
+![image](../../exampleJson/builtin.qrcode/minimum-example.png)
+
+- [maximum.json](../../exampleJson/builtin.qrcode/maximum-example.json)
+
+![image](../../exampleJson/builtin.qrcode/maximum-example.png)
+
+- [middle.json](../../exampleJson/builtin.qrcode/middlepic-example.json)
+
+![image](../../exampleJson/builtin.qrcode/middlepic-example.png)

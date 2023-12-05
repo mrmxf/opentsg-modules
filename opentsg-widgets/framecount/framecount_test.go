@@ -14,8 +14,23 @@ import (
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
+	"github.com/mrmxf/opentsg-modules/opentsg-widgets/text"
 	. "github.com/smartystreets/goconvey/convey"
 )
+
+func TestDemo(t *testing.T) {
+	// base example
+	frameDemo := frameJSON{FrameCounter: true}
+	examplejson.SaveExampleJson(frameDemo, widgetType, "minimum", true)
+
+	frameDemoMax := frameJSON{FrameCounter: true, TextColour: "#C2A649", BackColour: "#91B645", Font: text.FontTitle, FontSize: 25,
+		Imgpos: topLeft}
+	examplejson.SaveExampleJson(frameDemoMax, widgetType, "maximum", true)
+
+	frameDemoStyle := frameJSON{FrameCounter: true, TextColour: "rgb(154,58,115)", BackColour: "rgb12(816,816,816)", Font: text.FontBody}
+	examplejson.SaveExampleJson(frameDemoStyle, widgetType, "styleChange", true)
+
+}
 
 // Wait for august to undo the bug it decided to make
 func TestStringGen(t *testing.T) {
@@ -38,7 +53,7 @@ func TestStringGen(t *testing.T) {
 			myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{33, 33}})
 			genErr := yesFrame.Generate(myImage, &c)
 
-			examplejson.SaveExampleJson(yesFrame, widgetType, explanation[i])
+			examplejson.SaveExampleJson(yesFrame, widgetType, explanation[i], false)
 
 			// Assign the colour to the correct type of image NGRBA64 and replace the colour values
 			file, _ := os.Open("./testdata/framecount" + expecResult[i] + ".png")
@@ -93,7 +108,7 @@ func TestFonts(t *testing.T) {
 			myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{100, 100}})
 			genErr := mockFrame.Generate(myImage, &c)
 
-			examplejson.SaveExampleJson(mockFrame, widgetType, explanation[i])
+			examplejson.SaveExampleJson(mockFrame, widgetType, explanation[i], false)
 			// Save these images when we can test for them
 			//	f, _ := os.Create("./testdata/framecount" + fmt.Sprintf("%v", i) + "2.png")
 			//	png.Encode(f, myImage)

@@ -15,6 +15,19 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestDemo(t *testing.T) {
+	// base example
+	satDemo := saturationJSON{}
+	examplejson.SaveExampleJson(satDemo, widgetType, "minimum", true)
+
+	satDemoMax := saturationJSON{Colours: []string{"red", "green", "blue"}}
+	examplejson.SaveExampleJson(satDemoMax, widgetType, "maximum", true)
+
+	satDemoDiff := saturationJSON{Colours: []string{"blue", "red", "green"}}
+	examplejson.SaveExampleJson(satDemoDiff, widgetType, "diff", true)
+
+}
+
 func TestBars(t *testing.T) {
 	myImage := image.NewNRGBA64(image.Rect(0, 0, 2330, 600))
 	s := saturationJSON{GridLoc: &config.Grid{Alias: "testlocation"}}
@@ -24,7 +37,7 @@ func TestBars(t *testing.T) {
 	for i, c := range colours {
 		s.Colours = c
 		genErr := s.Generate(myImage)
-		examplejson.SaveExampleJson(s, widgetType, explanation[i])
+		examplejson.SaveExampleJson(s, widgetType, explanation[i], false)
 
 		f, _ := os.Open(fmt.Sprintf("./testdata/ordertest%v.png", i))
 

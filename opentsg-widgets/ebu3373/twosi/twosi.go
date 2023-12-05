@@ -41,6 +41,8 @@ type channel struct {
 	mask       draw.Image
 }
 
+var getPostion = gridgen.GridSquareLocatorAndGenerator
+
 func (t twosiJSON) Generate(canvas draw.Image, opt ...any) error {
 	// Kick off with filling it all in as grey
 	backFill := grey
@@ -58,7 +60,7 @@ func (t twosiJSON) Generate(canvas draw.Image, opt ...any) error {
 		if !ok {
 			return fmt.Errorf("0172 Widget Configuration error when assigning context")
 		}
-		_, canvasLocation, _, err := gridgen.GridSquareLocatorAndGenerator(t.Location(), t.Alias(), c)
+		_, canvasLocation, _, err := getPostion(t.Location(), t.Alias(), c)
 		if err != nil {
 			return err
 		}

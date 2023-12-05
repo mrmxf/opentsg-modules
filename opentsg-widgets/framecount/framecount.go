@@ -65,7 +65,7 @@ func (f frameJSON) Generate(canvas draw.Image, extraOpts ...any) error {
 
 	// stop errors happening when font is not declared
 	if f.FontSize == 0 {
-		f.FontSize = 90
+		f.FontSize = 100
 	}
 
 	// Size of the text in pixels to font
@@ -153,7 +153,7 @@ func (f frameJSON) Generate(canvas draw.Image, extraOpts ...any) error {
 	} else if y > b.Y-fb.Y {
 		return fmt.Errorf("_0153 the y position %v is greater than the y boundary of %v with frame height of %v", y, canvas.Bounds().Max.Y, fb.Y)
 	}
-	fmt.Println("HERE", x, y, f.FontSize)
+
 	// Corner := image.Point{-1 * (canvas.Bounds().Max.X - height - 1), -1 * (canvas.Bounds().Max.Y - height - 1)}
 	colour.Draw(canvas, image.Rect(x, y, x+int(f.FontSize), y+int(f.FontSize)), frame, image.Point{}, draw.Over)
 
@@ -186,16 +186,23 @@ func intTo4(num int) (string, error) {
 	return s, nil
 }
 
+const (
+	bottomLeft  = "bottom left"
+	bottomRight = "bottom right"
+	topRight    = "top right"
+	topLeft     = "top left"
+)
+
 func userPos(location map[string]interface{}, canSize, frameSize image.Point) (int, int) {
 	if location["alias"] != nil {
 		// Process as simple location
 		// The minus one is inluded to compensate for canvas startnig at 0
 		switch location["alias"].(string) {
-		case "bottom left":
+		case bottomLeft:
 			return 0, canSize.Y - frameSize.Y - 1
-		case "bottom right":
+		case bottomRight:
 			return canSize.X - frameSize.X - 1, canSize.Y - frameSize.Y - 1
-		case "top right":
+		case topRight:
 			return canSize.X - frameSize.X - 1, 0
 		default:
 			return 0, 0
