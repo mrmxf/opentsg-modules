@@ -1,0 +1,11 @@
+frame.canvas:
+    filedepth: 16
+    frameSize:
+        h: 2160
+        w: 4096
+    gridColumns: 1024
+    gridRows: 540
+    linewidth: 0.5
+    name:
+        - sequence-TestTitle-{{framenumber}}.png
+    type: builtin.canvasoptions
