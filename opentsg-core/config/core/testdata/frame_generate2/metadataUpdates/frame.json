@@ -1,0 +1,10 @@
+{
+    "include": [
+        {"uri":"canvas.json", "name":"canvas",  "args":["title","update"]}
+    ],
+    "create":[
+        { 
+            "canvas":{"title":"{{update}}-{{title}}", "update":"frame"}
+        }
+    ]
+}

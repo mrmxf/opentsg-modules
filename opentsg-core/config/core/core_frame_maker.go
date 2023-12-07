@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"maps"
 	"regexp"
 	"strings"
 	"sync"
@@ -98,12 +99,17 @@ func FrameWidgetsGenerator(c context.Context, pos int, debug bool) (context.Cont
 		}
 	}
 
-
 	// Metadata update of the base widget
 	for k, wc := range bases.generatedFrameWidgets {
 		// if it is widget to be updated
 		if wc.Tag != "" {
-			metadata, _ := bases.metadataGetter(map[string]any{}, k)
+			metadata, _, err := bases.metadataGetter(map[string]any{}, k)
+			if err != nil {
+				allError = append(allError, err) //skip to next widget
+
+				continue
+			}
+
 			var widget map[string]any
 			yaml.Unmarshal(wc.Data, &widget)
 
@@ -277,8 +283,12 @@ func (b *base) createWidgets(createTargets map[string]map[string]any, parent str
 					}
 				}*/
 
-			metadata, additions := b.metadataGetter(createUpdate, fullname)
+			metadata, additions, err := b.metadataGetter(createUpdate, fullname)
+			if err != nil {
+				genErrs = append(genErrs, err)
 
+				continue
+			}
 			//	fmt.Println(args, newArgs, fullname)
 			//	fmt.Println(metadata, additions, metadata2)
 			// assign the metadata before additional metadata is used
@@ -326,9 +336,10 @@ func (b *base) createWidgets(createTargets map[string]map[string]any, parent str
 	return genErrs, arrayUpdates
 }
 
-func (b *base) metadataGetter(update map[string]any, fullname string) (metadata, updaters map[string]any) {
+func (b *base) metadataGetter(update map[string]any, fullname string) (metadata, updaters map[string]any, err error) {
 
 	metadata = make(map[string]any)
+	parentMetadata := make(map[string]any)
 	updaters = make(map[string]any)
 
 	parents := strings.Split(fullname, ".")
@@ -347,9 +358,20 @@ func (b *base) metadataGetter(update map[string]any, fullname string) (metadata,
 		// and with metadata that fits the arguments
 		for k, v := range b.metadataBucket[base] {
 			if stringMatcher(k, newArgs) {
+				// update with previu metadata, or only update with title
 				metadata[k] = v
+
 			}
 		}
+
+		// mustache the metadata with any metadata from the parents
+		metadata, err = objectMustacheUpdater(metadata, parentMetadata, fullname, "", "")
+		if err != nil {
+			return
+		}
+		// Each step update the metadata
+		//create a new copy of the parent to prevent overwriting
+		maps.Copy(parentMetadata, metadata)
 	}
 
 	// mapOverWriter(metadata2, b.metadataBucket[base])
@@ -461,7 +483,11 @@ func (b *base) widgetHandler(createUpdate map[string]any, dotPath, dotExt string
 
 	// @ ADDED
 
-	md, ud := b.metadataGetter(createUpdate, dotPath)
+	md, ud, err := b.metadataGetter(createUpdate, dotPath)
+	if err != nil {
+		return []jsonUpdate{}, err
+	}
+
 	res, err := objectMustacheUpdater(ud, md, dotPath, dotExt, "")
 
 	if err != nil {
@@ -613,7 +639,7 @@ func objectMustacheUpdater(updates, metadata map[string]any, path, ext, extext s
 	for k, vals := range updates {
 		var err error
 		metadata["framenumber"] = "{{framenumber}}" // self fufilling mustache substition
-		action[k], err = typeExtractor(vals, path+ext, metadata)
+		action[k], err = typeExtractAndUpdate(vals, path+ext, metadata)
 		if err != nil {
 
 			return nil, err
@@ -623,9 +649,9 @@ func objectMustacheUpdater(updates, metadata map[string]any, path, ext, extext s
 	return action, nil
 }
 
-// type extractor recusrively searches through type any to update all the values of an object
+// type extractor recursively searches through type any to update all the values of an object
 // with the mustached metadata
-func typeExtractor(value any, location string, metadata map[string]any) (any, error) {
+func typeExtractAndUpdate(value any, location string, metadata map[string]any) (any, error) {
 	switch val := value.(type) {
 	case string:
 		// update the target widget with the metadata here. The metadata is self contained per child
@@ -637,7 +663,7 @@ func typeExtractor(value any, location string, metadata map[string]any) (any, er
 		old := val
 		newArray := make([]any, len(old))
 		for i, s := range old {
-			extracted, err := typeExtractor(s, location, metadata)
+			extracted, err := typeExtractAndUpdate(s, location, metadata)
 			if err != nil {
 				return val, err
 			}
@@ -654,7 +680,7 @@ func typeExtractor(value any, location string, metadata map[string]any) (any, er
 			target := v[i]
 
 			// follow the extract chain
-			extracted, err := typeExtractor(target, location, metadata)
+			extracted, err := typeExtractAndUpdate(target, location, metadata)
 			if err != nil {
 				return updatedMap, err
 			}

@@ -46,4 +46,13 @@ Then if no file is found then an error is returned.
 For step 3 the factories are searched depth first, so only folder locations
 that are parents of the factory are included. No width based searches occur.
 
+### Metadata Arguments update order
+
+When passing metadata through the input files, the child metadata overwrites
+the parent metadata, if applicable. As part of this the metadata is mustached
+as you go along. So a parent will declare `"title": "TestTitle"` then the child
+will use `"title": "{{title}}-update"`, resulting in a final argument value of
+`"title": "TestTitle-update"` reaching the widget. This means arguments can
+be built up throughout the initialisation process.
+
 ## TPIG

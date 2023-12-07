@@ -1,0 +1,20 @@
+{
+    "include": [
+        {
+            "uri": "frame.json",
+            "name": "frame",
+            "args": [
+                "title",
+                "update"
+            ]
+        }
+    ],
+    "create": [
+        {
+            "frame": {
+                "update": "sequence",
+                "title": "TestTitle"
+            }
+        }
+    ]
+}

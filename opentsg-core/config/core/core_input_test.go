@@ -209,7 +209,7 @@ func TestYamlRead(t *testing.T) {
 		//	res.Write(b)
 
 		Convey("Checking arguments are parsed correctly into base widgets, so widgets with declared args are updated", t, func() {
-			Convey(fmt.Sprintf("Using frame %v ./testdata/RootMustache.json as the input ", i), func() {
+			Convey(fmt.Sprintf("Using frame %v ./testdata/frame_generate2/sequenceRootMustache.json as the input ", i), func() {
 				Convey("The generated widget map as a json body matches "+pv, func() {
 					So(expec.Sum(nil), ShouldResemble, got.Sum(nil))
 				})
@@ -220,21 +220,6 @@ func TestYamlRead(t *testing.T) {
 
 func TestSearchOrder(t *testing.T) {
 
-	/*
-
-		tests to run
-		- the current search order
-		- test the LastInFirst out
-		- check working directory
-
-		hash the bytes of the expected body file
-
-		test set up
-
-		make some files in a folder system. Give a bunch of paths
-		as path parents
-
-	*/
 	expectedResult := []string{"./testdata/searchpath/first/first.json", "./testdata/searchpath/second/second.json", "./testdata/searchpath/third/third.json"}
 
 	mockCredentials, _ := credentials.AuthInit("")
@@ -285,4 +270,60 @@ func TestSearchOrder(t *testing.T) {
 	})
 
 	os.Setenv("OPENTSG_HOME", holder)
+}
+
+func TestMetadataUpdate(t *testing.T) {
+
+	newDesignRoot := "./testdata/frame_generate2/metadataUpdates/sequence.json"
+	cYamlRoot, _, _ := FileImport(newDesignRoot, "", false)
+	predictedValuesRoot := []string{"./testdata/frame_generate2/metadataUpdates/resRoot.yaml"}
+
+	for i, pv := range predictedValuesRoot {
+		n, _ := FrameWidgetsGenerator(cYamlRoot, i, false)
+
+		expec, got := genHash(n, pv)
+		bar := n.Value(baseKey).(map[string]widgetContents)
+
+		frameJSON := make(map[string]map[string]any)
+
+		for k, v := range bar {
+			if v.Data != nil { // fill the ones with actual data
+				var m map[string]any
+				yaml.Unmarshal(v.Data, &m)
+				frameJSON[k] = m
+			}
+		}
+
+		fmt.Printf("\n\n\n")
+		fmt.Println(frameJSON, "end")
+
+		//b, _ := yaml.Marshal(frameJSON)
+		//res, _ := os.Create("./testdata/frame_generate2/metadataUpdates/resRoot2.yaml")
+		// res.Write(b)
+
+		Convey("Checking arguments are mustached with previous, so arguments can be built upon", t, func() {
+			Convey(fmt.Sprintf("Using frame %v ./testdata/frame_generate2/metadataUpdates/sequence.json as the input ", i), func() {
+				Convey("The generated widget map as a json body matches "+pv, func() {
+					So(expec.Sum(nil), ShouldResemble, got.Sum(nil))
+				})
+			})
+		})
+	}
+
+	newDesignError := "./testdata/frame_generate2/metadataUpdates/sequenceErr.json"
+	cYamlRootErr, _, _ := FileImport(newDesignError, "", false)
+	predictedErrors := []string{"0007 missing variable \"title\" in TestTitle-{{title}} at frame.canvas",
+		"0007 missing variable \"update\" in {{update}}-{{title}} at frame.canvas"}
+
+	for i, pv := range predictedValuesRoot {
+		_, es := FrameWidgetsGenerator(cYamlRootErr, i, false)
+
+		Convey("Checking arguments are mustached with previous, so arguments can be built upon", t, func() {
+			Convey(fmt.Sprintf("Using frame %v ./testdata/frame_generate2/metadataUpdates/sequence.json as the input ", i), func() {
+				Convey("The generated widget map as a json body matches "+pv, func() {
+					So(es, ShouldResemble, []error{fmt.Errorf(predictedErrors[i])})
+				})
+			})
+		})
+	}
 }
