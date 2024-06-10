@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"image/draw"
+	"io"
 	"math"
 	"os"
 	"path/filepath"
@@ -45,7 +46,7 @@ type opentsg struct {
 	internal      context.Context
 	framcount     int
 	customWidgets []func(chan draw.Image, bool, *context.Context, *sync.WaitGroup, *sync.WaitGroup, *errhandle.Logger)
-	customSaves   map[string]func(*os.File, draw.Image, int) error
+	customSaves   map[string]func(io.Writer, draw.Image, int) error
 }
 
 // FileImport reads a input json file and any profile set up information and generates the opentsg object.
@@ -60,7 +61,7 @@ func FileImport(inputFile string, profile string, debug bool, httpKeys ...string
 
 type NameSave struct {
 	Extension    string
-	SaveFunction func(*os.File, draw.Image, int) error
+	SaveFunction func(io.Writer, draw.Image, int) error
 }
 
 /*
