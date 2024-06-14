@@ -5,6 +5,7 @@ clogrc/tmp/*
 !clogrc/tmp/readme.md
 archive/
 .DS_Store
+tmp/*
 
 
 
@@ -45,6 +46,7 @@ clogrc/core
 !opentsg-core/action/testdata/create/*.json
 !opentsg-core/action/testdata/generate/*.json
 !opentsg-core/action/testdata/results/*.json
+!opentsg-core/_docs/_images/houseEbu.png
 
 !opentsg-core/colour/testdata/draw/*.png
 
@@ -56,3 +58,8 @@ clogrc/core
 !opentsg-core/canvaswidget/jsonschema/baseschema.json
 !opentsg-core/canvaswidget/jsonschema/basefacschema.json
 !opentsg-core/canvaswidget/jsonschema/includeschema.json
+
+
+
+main.go
+opentsg-modules

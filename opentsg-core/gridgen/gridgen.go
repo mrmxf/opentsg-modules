@@ -19,20 +19,18 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/core"
 )
 
-type gridContextKey struct {
-	key string
-}
+type gridContextKey string
 
-var (
-	xkey        = gridContextKey{"x key holder"}
-	ykey        = gridContextKey{"y key holder"}
-	sizekey     = gridContextKey{"size of the canvas"}
-	artkey      = gridContextKey{"art key holder"}
-	tpigkey     = gridContextKey{"tpig key holder, contains the segements of a tpig"}
-	tilekey     = gridContextKey{"tpig key holder for individual tiles, contains the segements of a tpig"}
-	gridkey     = gridContextKey{"tpig key holder for individual grids, shows what values they contain"}
-	tilemaskkey = gridContextKey{"tpig mask representing the shape of a tpig"}
-	carvekey    = gridContextKey{"contains the carving information for tpigs"}
+const (
+	xkey        gridContextKey = "x key holder"
+	ykey        gridContextKey = "y key holder"
+	sizekey     gridContextKey = "size of the canvas"
+	artkey      gridContextKey = "art key holder"
+	tpigkey     gridContextKey = "tpig key holder, contains the segements of a tpig"
+	tilekey     gridContextKey = "tpig key holder for individual tiles, contains the segements of a tpig"
+	gridkey     gridContextKey = "tpig key holder for individual grids, shows what values they contain"
+	tilemaskkey gridContextKey = "tpig mask representing the shape of a tpig"
+	carvekey    gridContextKey = "contains the carving information for tpigs"
 )
 
 var rows = canvaswidget.GetGridRows
@@ -90,6 +88,7 @@ func baseGen(c *context.Context, geomCanvas draw.Image) (draw.Image, error) {
 	return canvas, nil
 }
 
+// ImageGenerator generates an image based off the configuration type.
 func ImageGenerator(c context.Context, canvasSize image.Rectangle) draw.Image {
 	base := imageType(c)
 	if base == "ACES" {
@@ -120,7 +119,7 @@ func GridGen(c *context.Context) (draw.Image, error) {
 	var geomImg canvasAndMask
 
 	if geom != "" {
-		//update the context and produce a mask to draw over the main image
+		// update the context and produce a mask to draw over the main image
 		// get it to generate a base image that supersedes the one given in s? This is then used as a base for the other methods so they can combine
 		var err error
 		geomImg, err = flatmap(c, geom)

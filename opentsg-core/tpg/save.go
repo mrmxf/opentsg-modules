@@ -70,7 +70,6 @@ func (tpg *opentsg) savefile(filename, framenumber string, base draw.Image, bitd
 	// regSTH := regexp.MustCompile(`^[\w\W]{1,255}\.[7][tT][hH]$`)
 	// regEXR := regexp.MustCompile(`^[\w\W]{1,255}\.[eE][xX][rR]$`)
 
-
 	filename, _ = mustache.Render(filename, map[string]string{"framenumber": framenumber})
 
 	extensions := strings.Split(filename, ".")
@@ -83,12 +82,9 @@ func (tpg *opentsg) savefile(filename, framenumber string, base draw.Image, bitd
 		return fmt.Errorf("%s is not a valid file format, please choose one of the following: tiff, png, dpx,exr,7th or csv", filename)
 	}
 
-
 	//open the file if not sth or the other
-	var saveTarget *os.File
-	///	if openFence(filename, regTIFF, regDPX, regPNG, regEXR) {
-	var err error
-	saveTarget, err = os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0777)
+
+	saveTarget, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
 		return fmt.Errorf("0051 %v", err)
 	}

@@ -30,7 +30,6 @@ This transformations are included in the NRGBA64 Set method and when using the D
 Different transformation methods will be implemented. Currently only matrix transformations are used.
 to go from RGB to XYZ space and then to XYZ to RGB.
 
-
 To add colour space to opentsg add the following json to the base image json.
 Then add the same json code to any widget you would like to use a colourspace.
 
@@ -77,3 +76,34 @@ The input factory does not have declared metadata.
 The create array function in the first file. Each object in the array is a frame.
 Within sub factories the create, sets the order the widgets are run. E,g if you want a big
 picture to run first and then have smaller widgets placed on top it would be first.
+
+## Test Pattern Input Geometry (TPIG)
+
+A TPIG file is used to generate images for non flat screens. e.g. a sphere or a cube
+
+It works by mapping the geometry to a flat layout of the object, which forms the
+base test pattern image all the test pattern widgets are drawn to. Keeping the same
+coordinate system OpenTSG normally uses.
+
+For example this house.
+
+<img src="./_docs/_images/houseBlenderView.jpg" alt="Blender House" width="300"/>
+
+e.g. would be unwrapped as a [TPIG](./gridgen/testdata/tpig/house.json) into this flat shape.
+
+<img src="./_docs/_images/houseFlat.jpeg" alt="House TPIG" width="500"/>
+
+OpenTSG would then produce a test pattern (e.g. EBU 3373) that looks like:
+
+<img src="./_docs/_images/houseEbu.png" alt="House TPIG" width="500"/>
+
+Which then wraps round the house like so.
+
+<img src="./_docs/_images/houseBlenderViewWrapped.jpg" alt="House TPIG" width="500"/>
+
+Each TPIG generates specifies the size of an image, so a TPIG will not
+generate an image for 6 sizes of cubes, just the image for the one cube it represents.
+
+To see TPIGs being put into action in OpenTSG check out this [walkthrough](https://github.com/mrmxf/opentsg-node/blob/main/READMETPIG.md)
+and generate these images yourself.
+Or check the [Gridgen](_docs/gridgen/doc.md) docs to find more about how TPIGs work.
