@@ -7,12 +7,15 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	"image/jpeg"
 	"image/png"
 	"os"
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	. "github.com/smartystreets/goconvey/convey"
+
+	texter "github.com/mrmxf/opentsg-modules/opentsg-widgets/text"
 )
 
 func TestTpigGeometry(t *testing.T) {
@@ -100,7 +103,12 @@ func TestTpigGeometry(t *testing.T) {
 		htest := sha256.New()
 
 		hnormal.Write(readImage.Pix)
-		htest.Write(v.Image.(*colour.NRGBA64).Pix())
+		switch img := v.Image.(type) {
+		case *image.NRGBA64:
+			htest.Write(img.Pix)
+		case *colour.NRGBA64:
+			htest.Write(img.Pix())
+		}
 		Convey("Checking the carved images match their expected tpig carving", t, func() {
 			Convey(fmt.Sprintf("comparing the result to %v", v.Location[0]), func() {
 				Convey("The hashes of the two images match exactly", func() {
@@ -150,4 +158,40 @@ func TestGridGeometry(t *testing.T) {
 	s, e := GetGridGeometry(cpp, "A0:A2")
 	fmt.Println(s, e)
 
+}
+
+func TestTpigGeometryHouse(t *testing.T) {
+	c := context.Background()
+
+	in, err := flatmap(&c, "./testdata/tpig/house.json")
+	fmt.Println(err)
+
+	draw.DrawMask(in.canvas, in.canvas.Bounds(), &image.Uniform{color.NRGBA64{B: 0xf0f0, A: 0xffff}}, image.Point{}, in.mask, image.Point{}, draw.Over)
+
+	segments := c.Value(tilekey).([]Segmenter)
+	fmt.Println(segments)
+
+	textbox := texter.NewTextboxer(colour.ColorSpace{},
+
+		texter.WithTextColour(&colour.CNRGBA64{A: 0xffff}),
+	)
+
+	for _, s := range segments {
+		border := 5
+		area := image.Rectangle{Min: s.Shape.Min.Add(image.Point{border, border}), Max: s.Shape.Max.Add(image.Point{-border, -border})}
+
+		fmt.Println(area.Add(image.Point{-border - s.Shape.Min.X, -border - s.Shape.Min.Y}))
+		box := image.NewNRGBA64(area.Add(image.Point{-border - s.Shape.Min.X, -border - s.Shape.Min.Y}))
+
+		draw.Draw(box, box.Bounds(), &image.Uniform{color.NRGBA64{R: 0xf0f0, A: 0xffff}}, image.Point{}, draw.Src)
+		fmt.Println(s.Name)
+		err := textbox.DrawStrings(box, &c, []string{s.Name})
+		fmt.Println(err)
+
+		fmt.Println(area, area.Min)
+		draw.Draw(in.canvas, area, box, image.Point{}, draw.Src)
+	}
+
+	f, _ := os.Create("./testdata/tpig/house.jpeg")
+	jpeg.Encode(f, in.canvas, nil)
 }

@@ -13,7 +13,7 @@ of the grid the inhabit.
 ```json
 {
     "type" :  "builtin.qrcode",
-    "code": "https://opentsg.io/",
+    "code": "https://opentsg.studio/",
     "gridPosition": {
         "x":0,
         "y": 0

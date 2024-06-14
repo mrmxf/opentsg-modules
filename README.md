@@ -1,7 +1,7 @@
 # OpenTSG-Modules
 
 Welcome to opentsg-modules
-This contains all the components for [open tsg](https://opentsg.io/) to run.
+This contains all the components for [open tsg](https://opentsg.studio/) to run.
 
 Please see the individual documentation for each module:
 

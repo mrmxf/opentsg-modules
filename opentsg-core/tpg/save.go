@@ -17,11 +17,11 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 
+	ascmhl "github.com/mrmxf/opentsg-mhl"
 	"github.com/mrmxf/opentsg-modules/opentsg-io/csvsave"
 	"github.com/mrmxf/opentsg-modules/opentsg-io/dpx"
 	"github.com/mrmxf/opentsg-modules/opentsg-io/exr"
 	"github.com/mrmxf/opentsg-modules/opentsg-io/tiffup"
-	ascmhl "github.com/mrmxf/opentsg-mhl"
 )
 
 // CanvasSave saves the file according to the extensions provided
@@ -43,9 +43,9 @@ func (tpg *opentsg) canvasSave(canvas draw.Image, filename []string, bitdeph int
 
 // saveType Extensions, regex and error
 
-func baseSaves() map[string]func(*os.File, draw.Image, int) error {
+func baseSaves() map[string]func(io.Writer, draw.Image, int) error {
 
-	return map[string]func(*os.File, draw.Image, int) error{
+	return map[string]func(io.Writer, draw.Image, int) error{
 		"DPX": WriteDPXFile,
 		"TIF": WriteTiffFile, "TIFF": WriteTiffFile,
 		"PNG": WritePngFile,
@@ -70,21 +70,6 @@ func (tpg *opentsg) savefile(filename, framenumber string, base draw.Image, bitd
 	// regSTH := regexp.MustCompile(`^[\w\W]{1,255}\.[7][tT][hH]$`)
 	// regEXR := regexp.MustCompile(`^[\w\W]{1,255}\.[eE][xX][rR]$`)
 
-	/*
-		new layout, customary sanity check with a regexp
-
-		get the final bit for an extension match with strings.Split. then To upper and use the map
-
-		// do the opening here etc
-
-		saveType := make(map[string]func(*os.File, draw.Image))
-
-		if save, validSave := saveType[ext]; validSave {
-			save(all the relevantInformation)
-		}
-
-	*/
-
 	filename, _ = mustache.Render(filename, map[string]string{"framenumber": framenumber})
 
 	extensions := strings.Split(filename, ".")
@@ -97,18 +82,9 @@ func (tpg *opentsg) savefile(filename, framenumber string, base draw.Image, bitd
 		return fmt.Errorf("%s is not a valid file format, please choose one of the following: tiff, png, dpx,exr,7th or csv", filename)
 	}
 
-	// TODO update this to be more robust and not always done
-	//canvas, ok := base.(*image.NRGBA64)
-	//if !ok { //set to nrgba64 if not ok
-	//	canvas = image.NewNRGBA64(base.Bounds())
-	//	draw.Draw(canvas, canvas.Bounds(), base, image.Point{}, draw.Src)
-	//}
-
 	//open the file if not sth or the other
-	var saveTarget *os.File
-	///	if openFence(filename, regTIFF, regDPX, regPNG, regEXR) {
-	var err error
-	saveTarget, err = os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0777)
+
+	saveTarget, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
 		return fmt.Errorf("0051 %v", err)
 	}
@@ -194,7 +170,7 @@ func openFence(file string, checkers ...*regexp.Regexp) bool {
 ////////////////////////////
 
 // writeTiffFile saves the file as a tiff
-func WriteTiffFile(f *os.File, img draw.Image, empty int) error {
+func WriteTiffFile(w io.Writer, img draw.Image, empty int) error {
 
 	// check for opaque
 
@@ -203,7 +179,7 @@ func WriteTiffFile(f *os.File, img draw.Image, empty int) error {
 		for y := bound.Min.Y; y < bound.Max.Y; y++ {
 			if _, _, _, A := img.At(x, y).RGBA(); A != 65535 {
 				// if there is one bit of transparency save with this method
-				return colour.TiffEncode(f, img, nil)
+				return colour.TiffEncode(w, img, nil)
 			}
 		}
 	}
@@ -211,14 +187,14 @@ func WriteTiffFile(f *os.File, img draw.Image, empty int) error {
 	switch canvas := img.(type) {
 	case *image.NRGBA64:
 
-		return tiffup.Encode(f, canvas)
+		return tiffup.Encode(w, canvas)
 	case *colour.NRGBA64:
-		return colour.TiffEncode(f, canvas.BaseImage(), nil)
+		return colour.TiffEncode(w, canvas.BaseImage(), nil)
 
 	default:
 		// return the alpha channel version anyway
 		//as at it will save the file and not crash
-		return colour.TiffEncode(f, img, nil)
+		return colour.TiffEncode(w, img, nil)
 	}
 
 	// if it passes the transparency check save without
@@ -227,24 +203,24 @@ func WriteTiffFile(f *os.File, img draw.Image, empty int) error {
 }
 
 // writePngFile saves the file as a png
-func WritePngFile(f *os.File, image draw.Image, empty int) error {
-	return colour.PngEncode(f, image)
+func WritePngFile(w io.Writer, image draw.Image, empty int) error {
+	return colour.PngEncode(w, image)
 }
 
-func WriteExrFile(f *os.File, image draw.Image, empty int) error {
-	return exr.Encode(f, image)
+func WriteExrFile(w io.Writer, image draw.Image, empty int) error {
+	return exr.Encode(w, image)
 }
 
-func WriteDPXFile(f *os.File, toDraw draw.Image, bit int) error {
+func WriteDPXFile(w io.Writer, toDraw draw.Image, bit int) error {
 	// default all files to 16 bit
 	if bit == 0 {
 		bit = 16
 	}
 	switch canvas := toDraw.(type) {
 	case *image.NRGBA64:
-		return dpx.Encode(f, canvas, &dpx.Options{Bitdepth: bit})
+		return dpx.Encode(w, canvas, &dpx.Options{Bitdepth: bit})
 	case *colour.NRGBA64:
-		return dpx.Encode(f, canvas.BaseImage(), &dpx.Options{Bitdepth: bit})
+		return dpx.Encode(w, canvas.BaseImage(), &dpx.Options{Bitdepth: bit})
 	default:
 		return fmt.Errorf("configuration error image of type %v can not be saved as a dpx", reflect.TypeOf(toDraw))
 	}
@@ -252,14 +228,14 @@ func WriteDPXFile(f *os.File, toDraw draw.Image, bit int) error {
 	// 	return dpx.Encode(f, toDraw.(*image.NRGBA64), &dpx.Options{Bitdepth: bit})
 }
 
-func WriteCSVFile(file *os.File, toDraw draw.Image, empty int) error {
-	filename := file.Name()
+func WriteCSVFile(w io.Writer, toDraw draw.Image, empty int) error {
+	// filename := file.Name()
 
 	switch canvas := toDraw.(type) {
 	case *image.NRGBA64:
-		return csvsave.Encode(filename, canvas)
+		return csvsave.Encode(w, canvas)
 	case *colour.NRGBA64:
-		return csvsave.Encode(filename, canvas.BaseImage())
+		return csvsave.Encode(w, canvas.BaseImage())
 	default:
 		return fmt.Errorf("configuration error image of type %v can not be saved as a csv", reflect.TypeOf(toDraw))
 

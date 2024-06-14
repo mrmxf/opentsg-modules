@@ -74,27 +74,26 @@ func flatmap(c *context.Context, tpigpath string) (canvasAndMask, error) {
 		fullpath := filepath.Join(basePath, tpigpath)
 		file, err = os.ReadFile(fullpath)
 		if err != nil {
-			return canvasAndMask{}, fmt.Errorf("0DEV error accessing the tpig file %v", err)
+			return canvasAndMask{}, fmt.Errorf("0DEV error accessing the TPIG file %v", err)
 		}
 	}
 
 	var segmentLayout TPIG
 	err = json.Unmarshal(file, &segmentLayout)
 	if err != nil {
-		return canvasAndMask{}, fmt.Errorf("0DEV error extracting the tpig file %v", err)
+		return canvasAndMask{}, fmt.Errorf("0DEV error extracting the TPIG file %v", err)
 	}
 	// remove the need for the map of art grid as this is more of a layer
 	// keep carve as a map for naming convetions
 
 	if len(segmentLayout.Tilelayout) == 0 {
-		return canvasAndMask{}, fmt.Errorf("0DEV No geometry postions have been declared")
+		return canvasAndMask{}, fmt.Errorf("0DEV No geometry positions have been declared")
 	}
 
 	carveSegements := make(map[string]carvedImageLayout)
 	// map[string]locationsandneighbours for other things to call it
 
-	// TODO add streamlined error checking
-	// take each area to start at 0,0 and cmpile them?
+	// Make a flat image of the geometrhy with corresponding mask
 	flatbase := ImageGenerator(*c, image.Rect(segmentLayout.Dimensions.Flat.X0, segmentLayout.Dimensions.Flat.Y0, segmentLayout.Dimensions.Flat.X1, segmentLayout.Dimensions.Flat.Y1))
 	basemask := ImageGenerator(*c, image.Rect(segmentLayout.Dimensions.Flat.X0, segmentLayout.Dimensions.Flat.Y0, segmentLayout.Dimensions.Flat.X1, segmentLayout.Dimensions.Flat.Y1))
 	// create the empty mask here. Keep it as empty as we want only bits that match the
@@ -125,7 +124,9 @@ func flatmap(c *context.Context, tpigpath string) (canvasAndMask, error) {
 		// extract the carve for each area, appending it to the carve map
 		carved := carveSegements[t.Layout.Carve.Destination]
 		carved.Layout = append(carveSegements[t.Layout.Carve.Destination].Layout, carveshift{destination: carves, target: locs[i]})
-		carveSegements[t.Layout.Carve.Destination] = carved
+		if t.Layout.Carve.Destination != "" {
+			carveSegements[t.Layout.Carve.Destination] = carved
+		}
 		// fill in the global base mask
 		colour.Draw(basemask, utilitySegements[i].Shape, &image.Uniform{color.NRGBA64{A: 0xffff}}, image.Point{}, draw.Src)
 	}
@@ -172,6 +173,7 @@ func Carve(c *context.Context, canvas draw.Image, target []string) []ImageLocati
 			carved := ImageGenerator(*c, ct.carveSize)
 
 			for _, carve := range ct.Layout {
+				// move each polygon face to the carved destination
 				colour.Draw(carved, carve.destination, canvas, carve.target.Min.Add(ct.offset), draw.Src)
 			}
 
@@ -186,7 +188,7 @@ func Carve(c *context.Context, canvas draw.Image, target []string) []ImageLocati
 			carvedTargets[count] = ImageLocation{Image: carved, Location: names}
 			count++
 		}
-		//add the full image at the end
+		//add the full image at the end just for a flat debug
 		carvedTargets[count] = ImageLocation{Image: canvas, Location: target}
 		return carvedTargets
 	}

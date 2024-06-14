@@ -19,13 +19,13 @@ import (
 
 func TestDemo(t *testing.T) {
 	// base example
-	qrDemo := qrcodeJSON{Code: "https://opentsg.io/"}
+	qrDemo := qrcodeJSON{Code: "https://opentsg.studio/"}
 	examplejson.SaveExampleJson(qrDemo, widgetType, "minimum", true)
 
-	qrDemoMax := qrcodeJSON{Code: "https://opentsg.io/", Imgpos: &config.Position{}, Size: &sizeJSON{Width: 100, Height: 100}}
+	qrDemoMax := qrcodeJSON{Code: "https://opentsg.studio/", Imgpos: &config.Position{}, Size: &sizeJSON{Width: 100, Height: 100}}
 	examplejson.SaveExampleJson(qrDemoMax, widgetType, "maximum", true)
 
-	qrDemoMiddle := qrcodeJSON{Code: "https://opentsg.io/", Imgpos: &config.Position{X: 50, Y: 50}, Size: &sizeJSON{Width: 50, Height: 50}}
+	qrDemoMiddle := qrcodeJSON{Code: "https://opentsg.studio/", Imgpos: &config.Position{X: 50, Y: 50}, Size: &sizeJSON{Width: 50, Height: 50}}
 	examplejson.SaveExampleJson(qrDemoMiddle, widgetType, "middlepic", true)
 }
 

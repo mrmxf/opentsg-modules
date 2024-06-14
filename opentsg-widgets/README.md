@@ -1,7 +1,7 @@
 # tpg-widgets
 
 `opentsg-widgets` is the library of builtin widgets,
-for the [Open Test Signal Generator](https://opentsg.io/).
+for the [Open Test Signal Generator](https://opentsg.studio/).
 Feel free to use any as a demo to make your own widgets.
 
 ## Examples

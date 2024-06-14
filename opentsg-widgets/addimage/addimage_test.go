@@ -21,11 +21,11 @@ import (
 
 func TestDemo(t *testing.T) {
 	// minimum example
-	ai := addimageJSON{Image: "https://opentsg.io/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png"}
+	ai := addimageJSON{Image: "https://opentsg.studio/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png"}
 	examplejson.SaveExampleJson(ai, widgetType, "minimum", true)
 
 	// maximum example
-	aiMax := addimageJSON{Image: "https://opentsg.io/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png", ImgFill: "y scale"}
+	aiMax := addimageJSON{Image: "https://opentsg.studio/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png", ImgFill: "y scale"}
 	examplejson.SaveExampleJson(aiMax, widgetType, "maximum", true)
 }
 
