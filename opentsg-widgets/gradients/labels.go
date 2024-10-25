@@ -38,60 +38,6 @@ func (txt textObjectJSON) labels(target draw.Image, colourSpace colour.ColorSpac
 
 	txtBox.DrawString(canvas, &mc, label)
 
-	// gradientBounds := canvas.Bounds().Max
-
-	// var stripeH int
-	//stripeH = gradientBounds.Y
-	/*
-		switch angle {
-		case rotate180, noRotation:
-			stripeH = gradientBounds.Y
-		case rotate270, rotate90:
-			stripeH = gradientBounds.X
-		}*/
-
-	/*
-		lFont := fontGen(t.TextHeight, stripeH)
-
-		// @TODO update so it always draws the same thing then put over the image as a overlay
-		// so things are transposed we always draw the rows so they fit
-		// 180 is inverse x and y
-		// 90 is swap x and y
-		// 270 is inverse and swap x and y
-
-		col := colourgen.HexToColour(t.TextColour, colour.ColorSpace{})
-
-
-		xpos := xPos(b.X, lFont, label, t.TextXPosition)
-		ypos := yPos(lFont, t.TextYPosition, b.Y)
-
-		point := fixed.Point26_6{X: fixed.Int26_6(xpos * 64), Y: fixed.Int26_6(ypos * 64)}
-
-		/*
-			// Assign the point based on the rotation to ensure the label lines up with the bar
-			var point fixed.Point26_6
-			switch angle {
-			case rotate180, noRotation:
-				xpos := xPos(b.X, lFont, label, t.TextXPosition)
-				ypos := yPos(lFont, t.TextYPosition, stripeH)
-				// else do not change the y
-				point = fixed.Point26_6{X: fixed.Int26_6(xpos * 64), Y: fixed.Int26_6(ypos * 64)}
-			case rotate270, rotate90:
-				xpos := xPos(b.X, lFont, label, t.TextXPosition)
-				ypos := yPos(lFont, t.TextYPosition, b.Y)
-
-				point = fixed.Point26_6{X: fixed.Int26_6(xpos * 64), Y: fixed.Int26_6(ypos * 64)}
-			}*/
-	/*
-		d := &font.Drawer{
-			Dst:  canvas,
-			Src:  image.NewUniform(col),
-			Face: lFont,
-			Dot:  point,
-		}
-
-		d.DrawString(label)*/
-
 	// rotate the text and transpose it on
 	// @TODO figure out how to make this more efficent
 	b := canvas.Bounds().Max
@@ -127,7 +73,6 @@ func (txt textObjectJSON) labels(target draw.Image, colourSpace colour.ColorSpac
 
 	}
 
-	// fmt.Println(intermediate.At(0, 0), txtBox, colourSpace)
 	// add the label
 	colour.Draw(target, target.Bounds(), intermediate, image.Point{}, draw.Over)
 }

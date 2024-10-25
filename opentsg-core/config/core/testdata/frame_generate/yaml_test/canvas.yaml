@@ -1,5 +1,6 @@
+---
 type: "builtin.canvasoptions"
-name: 
+name:
   - "x{{framenumber}}.png"
 frameSize:
   w: 4096
@@ -8,4 +9,3 @@ linewidth: 0.5
 filedepth: 16
 gridColumns: 1024
 gridRows: 540
-  

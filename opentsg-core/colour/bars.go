@@ -34,18 +34,20 @@ var ( /*
 	red75    = &CNRGBA64{R: 721 << 6, G: 64 << 6, B: 64 << 6, A: 0xffff}
 	blue75   = &CNRGBA64{R: 64 << 6, G: 64 << 6, B: 721 << 6, A: 0xffff}
 
-	gray40YCbCr   = &CyCbCr{Y: 104, Cb: 128, Cr: 128}
-	white75YCbCr  = &CyCbCr{Y: 180, Cb: 128, Cr: 128}
-	yellow75YCbCr = &CyCbCr{Y: 168, Cb: 44, Cr: 136}
-	cyan75YCbCr   = &CyCbCr{Y: 145, Cb: 147, Cr: 44}
-	green75YCbCr  = &CyCbCr{Y: 133, Cb: 63, Cr: 52}
-	mag75YCbCr    = &CyCbCr{Y: 63, Cb: 193, Cr: 204}
-	red75YCbCr    = &CyCbCr{Y: 51, Cb: 109, Cr: 212}
-	blue75YCbCr   = &CyCbCr{Y: 28, Cb: 212, Cr: 120}
+/*
+gray40YCbCr   = &CyCbCr{Y: 104, Cb: 128, Cr: 128}
+white75YCbCr  = &CyCbCr{Y: 180, Cb: 128, Cr: 128}
+yellow75YCbCr = &CyCbCr{Y: 168, Cb: 44, Cr: 136}
+cyan75YCbCr   = &CyCbCr{Y: 145, Cb: 147, Cr: 44}
+green75YCbCr  = &CyCbCr{Y: 133, Cb: 63, Cr: 52}
+mag75YCbCr    = &CyCbCr{Y: 63, Cb: 193, Cr: 204}
+red75YCbCr    = &CyCbCr{Y: 51, Cb: 109, Cr: 212}
+blue75YCbCr   = &CyCbCr{Y: 28, Cb: 212, Cr: 120}
+*/
 )
 
 const (
-	//widths
+	// widths
 	d = 240 / 1920.0
 	f = 205 / 1920.0
 	c = 206 / 1920.0

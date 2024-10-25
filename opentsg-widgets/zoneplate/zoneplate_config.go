@@ -5,31 +5,32 @@ import (
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/parameters"
 )
 
-/*
-// zoneplate definitions
-const wName = "zone plate"
-const wType = "zoneplate"
-const wLibrary = "builtin"
-const hooks = ""*/
-
-type zoneplateJSON struct {
-	Platetype   string            `json:"plateType,omitempty" yaml:"plateType,omitempty"`
+type ZConfig struct {
+	PlateType   string            `json:"plateType,omitempty" yaml:"plateType,omitempty"`
+	WaveType    string            `json:"waveType,omitempty" yaml:"waveType,omitempty"`
 	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
 	Startcolour string            `json:"startColor,omitempty" yaml:"startColor,omitempty"`
-	Angle       interface{}       `json:"angle,omitempty" yaml:"angle,omitempty"`
+	Colors      []string          `json:"colors,omitempty" yaml:"colors,omitempty"`
+
+	Frequency parameters.AngleField `json:"frequency,omitempty" yaml:"frequency,omitempty"`
+	// embed the angle
+	parameters.RotationAngle `yaml:",inline"`
+	parameters.Offset        `yaml:",inline"`
 	// Mask        string            `json:"mask,omitempty" yaml:"mask,omitempty"`
-	GridLoc     *config.Grid      `json:"grid,omitempty" yaml:"grid,omitempty"`
+	config.WidgetGrid `yaml:",inline"`
 }
 
 //go:embed jsonschema/zoneplateschema.json
 var schemaInit []byte
 
+/*
 func (z zoneplateJSON) Alias() string {
 	return z.GridLoc.Alias
 }
 
 func (z zoneplateJSON) Location() string {
 	return z.GridLoc.Location
-}
+}*/

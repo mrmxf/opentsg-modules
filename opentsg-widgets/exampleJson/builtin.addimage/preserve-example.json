@@ -1,0 +1,5 @@
+{
+    "image": "./testdata/test16bit.png",
+    "imageFill": "preserve",
+    "offset": {}
+}

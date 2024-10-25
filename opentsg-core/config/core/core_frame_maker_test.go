@@ -402,7 +402,7 @@ func genHash(n context.Context, pv string) (hash.Hash, hash.Hash) {
 	gen, _ := yaml.Marshal(frameJSON)
 
 	hnormal.Write(read)
-	htest.Write(gen)
+	htest.Write(append([]byte("---\n"), gen...))
 
 	if pv == "./testdata/frame_generate/create/blue_create.yaml.0" {
 		p, _ := os.Create(pv + ".yaml")

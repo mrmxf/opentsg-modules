@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -27,7 +26,7 @@ func TestNearBlack(t *testing.T) {
 	explanation := []string{"uhd", "hd", "obtuse"}
 
 	for i, size := range sizes {
-		mock := nearblackJSON{GridLoc: config.Grid{Alias: "testlocation"}}
+		mock := nearblackJSON{}
 		myImage := image.NewNRGBA64(image.Rect(0, 0, size[0], size[1]))
 		examplejson.SaveExampleJson(mock, widgetType, explanation[i], false)
 		// Generate the ramp image

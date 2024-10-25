@@ -6,6 +6,8 @@ import (
 	"image"
 	"image/png"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/widgethandler"
 )
@@ -16,14 +18,21 @@ import (
 
  */
 
-// be able to change the base some how
-const (
-	base = "/workspace/opentsg-modules/opentsg-widgets/exampleJson/"
-)
-
 func SaveExampleJson(example widgethandler.Generator, folder, name string, saveImage bool) {
 
 	jsonExample, _ := json.MarshalIndent(example, "", "    ")
+
+	// get the demo folder so it can be found in new repos
+	pwd, _ := os.Getwd()
+
+	// how many folders up do we need to go to save in exampleJson
+	ups := strings.Count(folder, "/")
+	basePath := "../"
+	for i := 0; i < ups; i++ {
+		basePath += "../"
+	}
+
+	base := filepath.Join(pwd, basePath+"exampleJson/")
 
 	// check a folder exists
 	if _, err := os.Stat(base + string(os.PathSeparator) + folder); os.IsNotExist(err) {

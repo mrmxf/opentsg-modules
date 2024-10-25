@@ -59,7 +59,7 @@ func (f fourJSON) Generate(canvas draw.Image, opt ...any) error {
 	namelocations := make(map[string]int)
 	nodes := make([]nodal, len(flats))
 
-	//TODO Manual neighbour finding or ensure they must always suggest having a neighbour
+	// TODO Manual neighbour finding or ensure they must always suggest having a neighbour
 	//	fmt.Println(len(nodes))
 	for i, flat := range flats {
 		neighs := []int{}
@@ -93,7 +93,7 @@ func (f fourJSON) Generate(canvas draw.Image, opt ...any) error {
 
 	// extract the colour here
 	_, filled := bruteColourArea(nodes, len(pallette)+1)
-	//Break if there's an error etc
+	// Break if there's an error etc
 	for _, node := range filled {
 		setcolour := node.color
 		// fmt.Println(node.area, canvas.Bounds(), setcolour)
@@ -145,15 +145,18 @@ func bruteColourArea(colourNodes []nodal, colourLength int) (bool, []nodal) {
 
 			colournode.color = setcolour
 			colourNodes[nodePos] = colournode
-			if !match && (nodePos != max-1) { // if there are no neighbour matches go onto the next node
+
+			var nextNode bool
+			switch {
+			case !match && (nodePos != max-1): // if there are no neighbour matches go onto the next node
 				nodePos++ // moe to the next colour wheel after breaking
 
-				break
+				nextNode = true
 
-			} else if !match && (nodePos == max-1) {
+			case !match && (nodePos == max-1):
 				nodePos++
 
-				break
+				nextNode = true
 				//	return true, colourNodes
 				/*else if nodePos == max-1 {
 					colourNodes[nodePos].color = 0
@@ -161,12 +164,16 @@ func bruteColourArea(colourNodes []nodal, colourLength int) (bool, []nodal) {
 
 					break
 				}*/
-			} else if c == colourLength-1 && match {
+			case c == colourLength-1 && match:
 				colourNodes[nodePos].color = 0
 				nodePos++
-				//flag that a zero has emerged
+				// flag that a zero has emerged
 				zeroes = false
 
+			}
+
+			if nextNode {
+				break
 			}
 		}
 
@@ -194,7 +201,7 @@ func empty(colourNodes []nodal, colourLength int) (bool, []nodal) {
 
 		pos := colourNodes[i]
 		if pos.color == 0 {
-			//fmt.Println("TRIGGER")
+			// fmt.Println("TRIGGER")
 
 			neighbours := []int{i}
 			neighbours = append(neighbours, pos.neighbours...)
@@ -212,7 +219,7 @@ func empty(colourNodes []nodal, colourLength int) (bool, []nodal) {
 				neighbours = append(neighbours, colourNodes[n].neighbours...)
 			}
 
-			//reset all the neighbours to 0
+			// reset all the neighbours to 0
 			for _, n := range neighbours {
 				colourNodes[n].color = 0
 			}
@@ -268,7 +275,7 @@ func empty(colourNodes []nodal, colourLength int) (bool, []nodal) {
 								segPos--
 								if segPos == -1 { // if we move all the way back to the start then something is wrong
 
-									segPos = len(neighbours) //move segpos to the end so it quits the loop
+									segPos = len(neighbours) // move segpos to the end so it quits the loop
 									fail = false
 
 									break

@@ -12,7 +12,7 @@ import (
 
 	"github.com/boombuler/barcode/qr"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/parameters"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -22,10 +22,11 @@ func TestDemo(t *testing.T) {
 	qrDemo := qrcodeJSON{Code: "https://opentsg.studio/"}
 	examplejson.SaveExampleJson(qrDemo, widgetType, "minimum", true)
 
-	qrDemoMax := qrcodeJSON{Code: "https://opentsg.studio/", Imgpos: &config.Position{}, Size: &sizeJSON{Width: 100, Height: 100}}
+	qrDemoMax := qrcodeJSON{Code: "https://opentsg.studio/", Size: &sizeJSON{Width: 100, Height: 100}}
 	examplejson.SaveExampleJson(qrDemoMax, widgetType, "maximum", true)
 
-	qrDemoMiddle := qrcodeJSON{Code: "https://opentsg.studio/", Imgpos: &config.Position{X: 50, Y: 50}, Size: &sizeJSON{Width: 50, Height: 50}}
+	qrDemoMiddle := qrcodeJSON{Code: "https://opentsg.studio/", Size: &sizeJSON{Width: 50, Height: 50}}
+	qrDemoMiddle.Offset = parameters.Offset{Offset: parameters.XYOffset{X: 50, Y: 50}}
 	examplejson.SaveExampleJson(qrDemoMiddle, widgetType, "middlepic", true)
 }
 
@@ -52,11 +53,8 @@ func TestQrGen(t *testing.T) {
 		control := image.NewNRGBA64(baseCont.Bounds())
 		colour.Draw(control, control.Bounds(), baseCont, image.Point{}, draw.Over)
 		// Generate the image and the string
-		var position config.Position
-		position.X = num[0]
-		position.Y = num[1]
 
-		qrmock.Imgpos = &position
+		qrmock.Offset = parameters.Offset{Offset: parameters.XYOffset{X: num[0], Y: num[1]}}
 
 		// Assign the colour to the correct type of image NGRBA64 and replace the colour values
 		c := context.Background()
@@ -79,7 +77,7 @@ func TestQrGen(t *testing.T) {
 		})
 	}
 
-	qrmock.Imgpos = nil
+	qrmock.Offset = parameters.Offset{}
 	max := sizeJSON{Width: 100, Height: 100}
 	qrmock.Size = &max
 
@@ -129,10 +127,7 @@ func TestErr(t *testing.T) {
 		dummy := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{100, 100}})
 
 		// Generate the image and the string
-		var pos config.Position
-		pos.X = check[0]
-		pos.Y = check[1]
-		qrmock.Imgpos = &pos
+		qrmock.Offset = parameters.Offset{Offset: parameters.XYOffset{X: check[0], Y: check[1]}}
 
 		var s sizeJSON
 		s.Width = numberToResize[i][0]

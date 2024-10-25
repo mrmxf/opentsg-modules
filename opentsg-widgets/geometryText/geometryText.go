@@ -32,10 +32,10 @@ func (gt geomTextJSON) Generate(canvas draw.Image, opt ...any) error {
 		var ok bool
 		c, ok = opt[0].(*context.Context)
 		if !ok {
-			return fmt.Errorf("0DEV configuration error when assiging fourcolour context")
+			return fmt.Errorf("0DEV configuration error when assigning fourcolour context")
 		}
 	} else {
-		return fmt.Errorf("0DEV configuration error when assiging fourcolour context")
+		return fmt.Errorf("0DEV configuration error when assigning fourcolour context")
 	}
 
 	flats, err := getGeometry(c, gt.GridLoc.Location)

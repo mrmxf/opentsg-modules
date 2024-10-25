@@ -11,21 +11,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-/*
-
-
-
-
-make this test a check the whole thing runs as intended
-
-var mockSchema = []byte(`{
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://example.com/product.schema.json",
-	"title": "Allow anything through for tests",
-	"description": "An empty schema to allow custom structs to run through",
-	"type": "object"
-	}`)*/
-
 func init() {
 	location, _ = os.Getwd()
 	sep = string(os.PathSeparator)
@@ -134,14 +119,6 @@ func TestYamlRead(t *testing.T) {
 			})
 		}
 	}
-
-	/*
-
-		test the new method here
-
-		fix the several bits repeating overthem selves
-
-	*/
 
 	newDesign := "./testdata/frame_generate2/sequence.json"
 	cYaml, _, e := FileImport(newDesign, "", false)
@@ -253,7 +230,7 @@ func TestSearchOrder(t *testing.T) {
 		})
 	})
 
-	// ENVIROMENT TEST
+	// ENVIRONMENT TEST
 
 	holder := os.Getenv("OPENTSG_HOME")
 	os.Setenv("OPENTSG_HOME", "./testdata/searchpath/env")
@@ -297,8 +274,8 @@ func TestMetadataUpdate(t *testing.T) {
 		fmt.Printf("\n\n\n")
 		fmt.Println(frameJSON, "end")
 
-		//b, _ := yaml.Marshal(frameJSON)
-		//res, _ := os.Create("./testdata/frame_generate2/metadataUpdates/resRoot2.yaml")
+		// b, _ := yaml.Marshal(frameJSON)
+		// res, _ := os.Create("./testdata/frame_generate2/metadataUpdates/resRoot2.yaml")
 		// res.Write(b)
 
 		Convey("Checking arguments are mustached with previous, so arguments can be built upon", t, func() {

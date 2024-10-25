@@ -25,7 +25,7 @@ func TestTpigGeometry(t *testing.T) {
 	rows = func(c context.Context) int { return 3 }
 	cols = func(c context.Context) int { return 3 }
 
-	//repeat for the  input being a tpig and not being a tpig
+	// repeat for the  input being a tpig and not being a tpig
 	tpigs := "./testdata/tpig/mock.json"
 
 	c := context.Background()
@@ -117,7 +117,7 @@ func TestTpigGeometry(t *testing.T) {
 			})
 		})
 	}
-	//make the image
+	// make the image
 	// call the carve
 	// loop through and check the image matches the expected one already there
 	// ADD carving here
@@ -130,7 +130,7 @@ func TestGridGeometry(t *testing.T) {
 	rows = func(c context.Context) int { return 3 }
 	cols = func(c context.Context) int { return 3 }
 
-	//repeat for the  input being a tpig and not being a tpig
+	// repeat for the  input being a tpig and not being a tpig
 	tpigs := "./testdata/tpig/mock.json"
 
 	c := context.Background()

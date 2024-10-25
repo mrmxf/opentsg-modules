@@ -53,6 +53,10 @@ func TestLines(t *testing.T) {
 		mockTB.Text = str
 		genErr := mockTB.Generate(myImage, &mockContext)
 		examplejson.SaveExampleJson(mockTB, widgetType, explanation[i], false)
+
+		// f, _ := os.Create(original[i])
+		// png.Encode(f, myImage)
+
 		file, _ := os.Open(original[i])
 		// Decode to get the colour values
 		baseVals, _ := png.Decode(file)
@@ -67,8 +71,8 @@ func TestLines(t *testing.T) {
 		hnormal.Write(readImage.Pix)
 		htest.Write(myImage.Pix())
 
-		//f, _ := os.Create("./testdata/" + fmt.Sprintf("%v", i) + ".png")
-		//colour.PngEncode(f, myImage)
+		// f, _ := os.Create("./testdata/" + fmt.Sprintf("%v", i) + ".png")
+		// colour.PngEncode(f, myImage)
 		// Save the file
 		Convey("Checking that strings are generated", t, func() {
 			Convey(fmt.Sprintf("Generating an image with the following strings: %v ", str), func() {
@@ -118,11 +122,10 @@ func TestFontImport(t *testing.T) {
 	base := image.NewNRGBA64(image.Rect(0, 0, 1000, 1000))
 	//	text := texter.TextboxJSON{Textc: "#260498", Back: "#980609"}
 	genErr := TextboxJSON{Border: "#800080", BorderSize: 5, Textc: "#260498", Back: "#980609", Text: []string{"The quick",
-		"brown dog jumped", "over the lazy gray fox"}, Font: `https://get.fontspace.co/webfont/lgwK0/M2ZmY2VhZDMxMTNhNGE1Yzk2Y2JhZTEwNzgwOTNkN2YudHRm/halloween-clipart.ttf`}.Generate(base)
+		"brown dog jumped", "over the lazy gray fox"}, Font: `https://get.fontspace.co/webfont/XqrG/OGU3MmU3NmQzZGM2NGExZmFhNDY2YTk5MzhlNWMzMjYudHRm/helloween-2.ttf`}.Generate(base)
 
-	//	f, _ := os.Create("testdata/multiLongLines.png")
-	//	png.Encode(f, base)
-
+	// f, _ := os.Create("testdata/multiLongLines.png")
+	// png.Encode(f, base)
 	file, _ := os.Open("testdata/multiLongLines.png")
 	// Decode to get the colour values
 	baseVals, _ := png.Decode(file)
@@ -137,8 +140,8 @@ func TestFontImport(t *testing.T) {
 	hnormal.Write(readImage.Pix)
 	htest.Write(base.Pix)
 
-	//f, _ := os.Create("./testdata/" + fmt.Sprintf("%v", i) + ".png")
-	//colour.PngEncode(f, myImage)
+	// f, _ := os.Create("./testdata/" + fmt.Sprintf("%v", i) + ".png")
+	// colour.PngEncode(f, myImage)
 	// Save the file
 	Convey("Checking that multiple lines of small text are included", t, func() {
 		Convey("Generating an image with an imported string", func() {

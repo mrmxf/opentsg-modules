@@ -20,8 +20,8 @@ func TestSeveralErrrors(t *testing.T) {
 	err := Liner(fakeSon, "./testdata/jsonlines/badstripe.json", "test", d)
 
 	results := SchemaValidator(fakeSchema, fakeSon, "testsuite", d)
-	expec := []error{fmt.Errorf("0026 Additional property bad is not allowed at line 74 in ./testdata/jsonlines/badstripe.json"),
-		fmt.Errorf("0026 stripes.groupHeader.color.0 must be one of the following: \"red\", \"green\", \"blue\", \"black\", \"white\", \"gray\", \"grey\" at line 10 in ./testdata/jsonlines/badstripe.json"), fmt.Errorf("0026 Must be less than or equal to 4000 at line 12 in ./testdata/jsonlines/badstripe.json")}
+	expec := []error{fmt.Errorf("0026 Additional property bad is not allowed at line 74 in ./testdata/jsonlines/badstripe.json, for testsuite"),
+		fmt.Errorf("0026 stripes.groupHeader.color.0 must be one of the following: \"red\", \"green\", \"blue\", \"black\", \"white\", \"gray\", \"grey\" at line 10 in ./testdata/jsonlines/badstripe.json, for testsuite"), fmt.Errorf("0026 Must be less than or equal to 4000 at line 12 in ./testdata/jsonlines/badstripe.json, for testsuite")}
 	Convey("Checking that errors are caught and their line position is returned", t, func() {
 		Convey("using three different errors", func() {
 			Convey(fmt.Sprintf("Errors of %v are returned", expec), func() {
@@ -51,7 +51,7 @@ func TestTypes(t *testing.T) {
 		Convey("Checking that errors are caught and their line position is returned for different field types that don't match the expected", t, func() {
 			Convey("Using an update of"+e, func() {
 				Convey(fmt.Sprintf("An error of %v is returned", expected[i]), func() {
-					So(results, ShouldResemble, []error{fmt.Errorf("0026 Invalid type. Expected: object%s in error.json", expected[i])})
+					So(results, ShouldResemble, []error{fmt.Errorf("0026 Invalid type. Expected: object%s in error.json, for testsuite", expected[i])})
 				})
 			})
 		})
@@ -59,7 +59,7 @@ func TestTypes(t *testing.T) {
 
 	extraProps := []string{`,"text":{"surprise":5634}`, `,"text":{"surprise":{"lowermap":5634}}`,
 		`,"text":{"surprise":[3,"hello"]}`, `,"text":{"surprise":"big surprise"}`, `,"text": {"surprise": [3, {"surprise": {"map": 12}}]}`}
-	mapErr := []error{fmt.Errorf("0026 Additional property surprise is not allowed at line 68 in error.json")}
+	mapErr := []error{fmt.Errorf("0026 Additional property surprise is not allowed at line 68 in error.json, for testsuite")}
 
 	for _, e := range extraProps {
 
@@ -81,7 +81,7 @@ func TestTypes(t *testing.T) {
 
 	doubleWidget := []string{`,"text":"bad property"`}
 	doubleLoader := []string{`,"loader": {"text":"bad property"}`}
-	doubleResult := []error{fmt.Errorf("0026 Invalid type. Expected: object, given: string at line 68,11 in error.json,loader.json")}
+	doubleResult := []error{fmt.Errorf("0026 Invalid type. Expected: object, given: string at line 68,11 in error.json,loader.json, for testsuite")}
 	for i, e := range doubleWidget {
 		lines := make(JSONLines)
 		badBytes := addWidget(madeFile, e, lines)         // make a file with the error to be caught
@@ -110,7 +110,7 @@ func TestYaml(t *testing.T) {
 	err := Liner(fakeSon, "./testdata/jsonlines/badstripe.json", "test", d)
 
 	results := SchemaValidator(fakeSchema, fakeSon, "testsuite", d)
-	expec := []error{fmt.Errorf("0026 stripes.groupHeader.color.0 must be one of the following: \"red\", \"green\", \"blue\", \"black\", \"white\", \"gray\", \"grey\" at line 9 in ./testdata/jsonlines/badstripe.json")}
+	expec := []error{fmt.Errorf("0026 stripes.groupHeader.color.0 must be one of the following: \"red\", \"green\", \"blue\", \"black\", \"white\", \"gray\", \"grey\" at line 10 in ./testdata/jsonlines/badstripe.json, for testsuite")}
 
 	Convey("Checking that errors are caught and their line position is returned", t, func() {
 		Convey("using three different errors", func() {
@@ -133,9 +133,9 @@ func TestDoubleSource(t *testing.T) {
 		 "some":"value",
 		 "additional":"problem"}`
 
-	errorLocations := [][]error{{fmt.Errorf("0026  Additional property bad is not allowed at line 70 in error.json")},
-		{fmt.Errorf("0026  Additional property bad is not allowed at line 69 in error.json")},
-		{fmt.Errorf("0026  Additional property bad is not allowed at line 11 in loader.json")}}
+	errorLocations := [][]error{{fmt.Errorf("0026 Additional property bad is not allowed at line 70 in error.json, for testsuite")},
+		{fmt.Errorf("0026 Additional property bad is not allowed at line 69 in error.json, for testsuite")},
+		{fmt.Errorf("0026 Additional property bad is not allowed at line 11 in loader.json, for testsuite")}}
 
 	lines := make(JSONLines)
 	addWidget(madeFile, extraAdd, lines)         // make a file with the error to be caught
@@ -161,7 +161,7 @@ func TestDoubleSource(t *testing.T) {
 	badBytes := addWidget(madeFile, extraAdd, repeatLines) // make a file with the error to be caught
 
 	results = SchemaValidator(fakeSchema, badBytes, "testsuite", repeatLines)
-	errorMult := []error{fmt.Errorf("0026 Additional property bad is not allowed at line 68 in error.json")}
+	errorMult := []error{fmt.Errorf("0026 Additional property bad is not allowed at line 68 in error.json, for testsuite")}
 
 	Convey("Checking that multiple additions of the same file and line don't lead to repeated files", t, func() {
 		Convey(fmt.Sprintf("Using updates of %v in the json", extraAdd), func() {

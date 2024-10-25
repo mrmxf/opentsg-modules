@@ -17,17 +17,18 @@ tmp/*
 
 
 ## Ignore generated outputs
-**/*.png
-**/*.json
+# **/*.png
+#**/*.json
 **/*.dpx
 **/*.txt
+**/*.gif
 lint*.xml
 
 clogrc/core
 
 !clogrc/lint.sh
 
-
+!.github/*.json
 
 ## Return test files here
 !opentsg-core/config/**/*.json
@@ -36,6 +37,7 @@ clogrc/core
 
 !opentsg-core/widgethandler/**/*.json
 !opentsg-core/widgethandler/**/*.png
+
 
 !opentsg-core/gridgen/**/*.png
 !opentsg-core/gridgen/**/*.json
@@ -63,3 +65,5 @@ clogrc/core
 
 main.go
 opentsg-modules
+
+megalinter-reports/

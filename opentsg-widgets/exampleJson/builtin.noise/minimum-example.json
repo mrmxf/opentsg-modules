@@ -12,5 +12,6 @@
         "location": "a1"
     },
     "noiseType": "white noise",
-    "type": "builtin.noise"
+    "type": "builtin.noise",
+    "yOffset": {}
 }

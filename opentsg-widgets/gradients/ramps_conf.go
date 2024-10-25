@@ -3,16 +3,18 @@ package gradients
 import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/parameters"
 
 	_ "embed"
 )
 
+// Ramp is the gradient configuration object
 type Ramp struct {
-	Gradients        groupContents     `json:"groupsTemplates,omitempty" yaml:"groupsTemplates,omitempty"`
-	Groups           []RampProperties  `json:"groups,omitempty" yaml:"groups,omitempty"`
-	WidgetProperties control           `json:"widgetProperties,omitempty" yaml:"widgetProperties,omitempty"`
-	ColourSpace      colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	GridLoc          *config.Grid      `json:"grid,omitempty" yaml:"grid,omitempty"`
+	Gradients         groupContents     `json:"groupsTemplates,omitempty" yaml:"groupsTemplates,omitempty"`
+	Groups            []RampProperties  `json:"groups,omitempty" yaml:"groups,omitempty"`
+	WidgetProperties  control           `json:"widgetProperties,omitempty" yaml:"widgetProperties,omitempty"`
+	ColourSpace       colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
+	config.WidgetGrid `yaml:",inline"`
 }
 
 type groupContents struct {
@@ -61,12 +63,15 @@ type gradientSeparator struct {
 }
 
 type control struct {
-	MaxBitDepth      int            `json:"maxBitDepth" yaml:"maxBitDepth"`
-	CwRotation       string         `json:"cwRotation" yaml:"cwRotation"`
+	MaxBitDepth int `json:"maxBitDepth" yaml:"maxBitDepth"`
+
+	// CwRotation       anglegen.Angle `json:"cwRotation" yaml:"cwRotation"`
 	ObjectFitFill    bool           `json:"objectFitFill" yaml:"objectFitFill"`
 	PixelValueRepeat int            `json:"pixelValueRepeat" yaml:"pixelValueRepeat"`
 	TextProperties   textObjectJSON `json:"textProperties" yaml:"textProperties"`
 	// These are things the user does not set
+	// embed the angle
+	parameters.RotationAngle
 	/*
 		fill function - for rotation to automatically translate the fill location
 		fill - get stepsize and end goal
@@ -83,10 +88,11 @@ type control struct {
 //go:embed jsonschema/gradientSchema.json
 var textBoxSchema []byte
 
+/*
 func (r Ramp) Alias() string {
 	return r.GridLoc.Alias
 }
 
 func (r Ramp) Location() string {
 	return r.GridLoc.Location
-}
+}*/

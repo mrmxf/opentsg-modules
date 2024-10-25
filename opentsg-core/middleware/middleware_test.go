@@ -8,7 +8,7 @@ import (
 )
 
 /*todo wait for middleware to be readded in future updaes*/
-func TestMinMaxFrame(t *testing.T) { 
+func TestMinMaxFrame(t *testing.T) {
 	mockFunctions := make([]Functions, 1)
 	MinMax := [][2]int{{0, 9}, {3, 10}, {4, 9999}}
 

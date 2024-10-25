@@ -114,7 +114,7 @@ var geometry = canvaswidget.GetGeometry
 // the specified base image. In both instances the grid lines are calculated for locations.
 // If an image has been used for the base then colour locations are also calculated.
 func GridGen(c *context.Context) (draw.Image, error) {
-	//if tpig
+	// if tpig
 	geom := geometry(*c)
 	var geomImg canvasAndMask
 
@@ -244,8 +244,7 @@ type grid struct {
 func GridSquareLocatorAndGenerator(gridString, alias string, c *context.Context) (draw.Image, image.Point, draw.Image, error) {
 	regArt := regexp.MustCompile(`^key:[\w]{3,10}$`)
 
-	switch {
-	case regArt.MatchString(gridString):
+	if regArt.MatchString(gridString) {
 
 		return artToCanvas(gridString, c)
 
@@ -273,7 +272,7 @@ func gridSquareLocatorAndGenerator(gridString, alias string, c *context.Context)
 	regSing := regexp.MustCompile("^[a-zA-Z]{1,3}[0-9]{1,3}$")
 	regArea := regexp.MustCompile("^[a-zA-Z]{1,3}[0-9]{1,3}:[a-zA-Z]{1,3}[0-9]{1,3}$")
 	regAlias := regexp.MustCompile(`^[\w\W]{1,30}$`)
-	regXY := regexp.MustCompile(`^\([0-9]{1,5},[0-9]{1,5}\)-\([0-9]{1,5},[0-9]{1,5}\)$`)
+	regXY := regexp.MustCompile(`^\(-{0,1}[0-9]{1,5},-{0,1}[0-9]{1,5}\)-\(-{0,1}[0-9]{1,5},-{0,1}[0-9]{1,5}\)$`)
 	regRC := regexp.MustCompile(`^[Rr]([\d]{2,}|[1-9]{1})[Cc]([\d]{2,}|[1-9]{1})$`)
 	regRCArea := regexp.MustCompile(`^[Rr]([\d]{2,}|[1-9]{1})[Cc]([\d]{2,}|[1-9]{1}):[Rr]([\d]{2,}|[1-9]{1})[Cc]([\d]{2,}|[1-9]{1})$`)
 
@@ -331,9 +330,16 @@ func gridSquareLocatorAndGenerator(gridString, alias string, c *context.Context)
 		// g.GImage = image.NewNRGBA64(image.Rect(0, 0, squareX*(xend-x+1), squareY*(yend-y+1)))
 	case regXY.MatchString(gridString):
 		// remove surronding brackets and replace
-		gridString = strings.ReplaceAll(gridString, "(", "")
-		gridString = strings.ReplaceAll(gridString, ")", "")
-		grid := strings.Split(gridString, "-")
+		//gridString = strings.ReplaceAll(gridString, "(", "")
+		//gridString = strings.ReplaceAll(gridString, ")", "")
+		// split at the mid point
+		grid := strings.Split(gridString, ")-(")
+		for i := range grid {
+			//		fmt.Println(g)
+			grid[i] = strings.ReplaceAll(grid[i], "(", "")
+			grid[i] = strings.ReplaceAll(grid[i], ")", "")
+		}
+
 		x, y, xend, yend, err := pointToVal(grid)
 
 		if err != nil {
@@ -377,7 +383,7 @@ func gridSquareLocatorAndGenerator(gridString, alias string, c *context.Context)
 		generatedGridInfo.Y = int(float64(ys-1) * squareY)
 		// make a 1x1 square
 		generatedGridInfo.w, generatedGridInfo.h = int(float64(xe-1)*squareX)-generatedGridInfo.X, int(float64(ye-1)*squareY)-generatedGridInfo.Y
-		//squareX*(xe-xs), squareY*(ye-ys)
+		// squareX*(xe-xs), squareY*(ye-ys)
 	case regAlias.MatchString(gridString):
 		loc := aliasMap.Data[gridString]
 		if loc != "" {
@@ -416,18 +422,14 @@ func gridSquareLocatorAndGenerator(gridString, alias string, c *context.Context)
 	maxBounds := (*c).Value(sizekey).(image.Point)
 	gb := generatedGridInfo.GImage.Bounds().Max
 
-	if ((gb.X + generatedGridInfo.X) > maxBounds.X) || (gb.Y+generatedGridInfo.Y) > maxBounds.Y {
+	//ignore the XY coordinate power user
+	if (((gb.X + generatedGridInfo.X) > maxBounds.X) || (gb.Y+generatedGridInfo.Y) > maxBounds.Y) && !regXY.MatchString(gridString) {
 
 		return emptyGrid, fmt.Errorf(errBounds, maxBounds, gb.X+generatedGridInfo.X, gb.Y+generatedGridInfo.Y)
 	}
 
 	return generatedGridInfo, nil
 }
-
-/*
-func xpos(x rune) int {
-	return int(x) - 97 //lowercase a to 0
-}*/
 
 func divMod(numerator, denominator int) (int, int) {
 	quotient := numerator / denominator // integer division, decimals are truncated

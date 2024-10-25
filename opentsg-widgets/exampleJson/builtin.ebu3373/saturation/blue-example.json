@@ -9,8 +9,5 @@
             "Blue": {},
             "WhitePoint": {}
         }
-    },
-    "grid": {
-        "alias": "testlocation"
     }
 }

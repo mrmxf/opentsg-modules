@@ -19,9 +19,19 @@
             "enum": [
                 "circular",
                 "sweep",
-                "ellipse"
+                "ellipse",
+                "horizontalSweep",
+                "verticalSweep"
             ],
             "description": "The type of zoneplate to be generated."
+        },
+        "waveType": {
+            "enum": [
+               "sin",
+               "cos",
+               "zonePlate"
+            ],
+            "description": "the formula used to calculate the wave"
         },
         "startColor": {
             "enum": [
@@ -32,7 +42,7 @@
             ],
             "description": "The available colours for the middle of the zone plate."
         },
-        "angle": {
+        "cwRotation": {
             "anyOf": [
                 {
                     "$ref": "#/$defs/radian1"
@@ -84,9 +94,6 @@
         }
     },
     "required": [
-        "plateType",
-        "startColor",
-        "angle",
         "type",
 		"grid"
     ],
@@ -105,7 +112,7 @@
         "radian1": {
             "type": "string",
             "desciption": "pattern requires a pi then star with a number, which can be divided by a resulting number",
-            "pattern": "^π\\*(\\d){1,4}$",
+            "pattern": "^π\\*(\\d){1,4}$|^[0-9]{1,}$|^[0-9]{1,}\\.[0-9]{1,}$",
             "description": "## Example\nThis is a multiplication of π up to 4 digits\n### Acceptable input\n- π*2\n- π*3332\n### Unacceptable input\n- π*0.5\n- π*12345"
         },
         "radian2": {

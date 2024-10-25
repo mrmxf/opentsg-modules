@@ -1,38 +1,60 @@
 {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"title": "Test Card Schema",
-	"description": "The Schmea for the add qr code section of the test card generator",
-	"type": "object",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Test Card Schema",
+    "description": "The Schmea for the add qr code section of the test card generator",
+    "type": "object",
     "properties": {
         "grid": {
             "$ref": "#/$defs/gridschema"
         },
-        "code":{
-            "type":"string",
+        "code": {
+            "type": "string",
             "minLength": 1,
             "maxLength": 255,
-			"description":"A string that is translated to a qr code, where longer strings generate a larger qr code"
+            "description": "A string that is translated to a qr code, where longer strings generate a larger qr code"
         },
-        "colorSpace" : {
-			"type" : "object"
-		},
+        "colorSpace": {
+            "type": "object"
+        },
         "type": {
             "type": "string",
-            "enum": ["builtin.qrcode"],
+            "enum": [
+                "builtin.qrcode"
+            ],
             "description": "This to be labelled as \"builtin.qrcode\", so that the json is correclty configured"
         },
-        "gridPosition": {
+        "offset": {
             "type": "object",
             "properties": {
                 "x": {
-                    "$ref": "#/$defs/locations"
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/percent1"
+                        },
+                        {
+                            "$ref": "#/$defs/percent2"
+                        },
+                        {
+                            "$ref": "#/$defs/pixel"
+                        }
+                    ]
                 },
                 "y": {
-                    "$ref": "#/$defs/locations"
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/percent1"
+                        },
+                        {
+                            "$ref": "#/$defs/percent2"
+                        },
+                        {
+                            "$ref": "#/$defs/pixel"
+                        }
+                    ]
                 }
             },
-            "additionalProperties":false ,
-			"description": "The x y location of qr code in pixels, where 0,0 is in the top left point of the image, if left empty then it is added to the top left of the testcard."
+            "additionalProperties": false,
+            "description": "The offset of the image placement in the x and y direction"
         },
         "size": {
             "type": "object",
@@ -44,9 +66,12 @@
                     "$ref": "#/$defs/locations"
                 }
             },
-            "required": ["width", "height"],
-            "additionalProperties":false ,
-			"description": "The width and height of the qr code to be scaled to"
+            "required": [
+                "width",
+                "height"
+            ],
+            "additionalProperties": false,
+            "description": "The width and height of the qr code to be scaled to"
         },
         "objectQuery": {
             "type": "array",
@@ -76,35 +101,48 @@
             }
         }
     },
-    "required": ["code", "type"],
-    "additionalProperties":false,
+    "required": [
+        "code",
+        "type"
+    ],
+    "additionalProperties": false,
     "$defs": {
-        "locations": {
+        "pixel": {
+            "type": "string",
+            "desciption": "pattern requires a pi then star with a number, which can be divided by a resulting number",
+            "pattern": "^-{0,1}\\d{1,}px$",
+            "description": "pixel value to move the image"
+        },
+        "percent1": {
+            "type": "string",
+            "desciption": "pattern requires a pi then star with a number, which can be divided by a resulting number",
+            "pattern": "^-{0,1}\\d{0,2}\\.{1}\\d{0,}%$|^-{0,1}\\d{0,2}%$|^-{0,1}(100)%$",
+            "description": "percentage value to move the image, e.g. 25%"
+        },
+        "percent2": {
             "type": "number",
-            "minimum": 0,
-            "maximum": 100
+            "minimum": -100,
+            "maximum": 100,
+            "description": "The percentage of the image for it to be shifted"
         },
         "dimensions": {
             "type": "number",
             "minimum": 0,
             "maximum": 100
         },
-		"gridschema": {
+        "gridschema": {
             "properties": {
                 "location": {
-                    "anyOf":[
-						{
-								"type": "string",
-								"pattern": "^[a-pA-P]{1}[0-8]{1}$"
-							
-						},
-						{
-		
-								"type": "string",
-								"pattern": "^[\\w\\W]{1,30}$"
-							
-						}
-					],
+                    "anyOf": [
+                        {
+                            "type": "string",
+                            "pattern": "^[a-pA-P]{1}[0-8]{1}$"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^[\\w\\W]{1,30}$"
+                        }
+                    ],
                     "description": "The location of the module to be added to the test card"
                 },
                 "alias": {

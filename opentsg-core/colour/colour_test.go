@@ -95,8 +95,8 @@ func TestDraw(t *testing.T) {
 		hnormal.Write(goImplementation.Pix())
 		htest.Write(colourImplementation.Pix())
 
-		//td, _ := os.Create("r.png")
-		//png.Encode(td, canvas)
+		// td, _ := os.Create("r.png")
+		// png.Encode(td, canvas)
 
 		Convey("Checking that the go and colour implementations of draw produce the same result, when no colour space is involved", t, func() {
 			Convey(fmt.Sprintf("Run using a colour of %v", baseColour), func() {
@@ -151,19 +151,17 @@ func TestDraw(t *testing.T) {
 		Draw(colourImplementation, colourImplementation.Bounds(), &image.Uniform{&tcol}, image.Point{}, draw.Src)
 
 		baseFile, _ := os.Open("./testdata/draw/" + target[i])
-	
 
-		//PngEncode(basePng, colourImplementation.base)
-			baseImage, _ := png.Decode(baseFile)
+		// PngEncode(basePng, colourImplementation.base)
+		baseImage, _ := png.Decode(baseFile)
 
 		testFormat := image.NewNRGBA64(baseImage.Bounds())
-			Draw(testFormat, testFormat.Bounds(), baseImage, image.Point{}, draw.Src)
+		Draw(testFormat, testFormat.Bounds(), baseImage, image.Point{}, draw.Src)
 		//
 		hnormal := sha256.New()
 		htest := sha256.New()
-			hnormal.Write(testFormat.Pix)
+		hnormal.Write(testFormat.Pix)
 		htest.Write(colourImplementation.Pix())
-
 
 		Convey("Checking that the transformation produces the expected results", t, func() {
 			Convey(fmt.Sprintf("Run checking %v", target[i]), func() {

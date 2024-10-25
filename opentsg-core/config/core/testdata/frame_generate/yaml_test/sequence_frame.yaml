@@ -1,10 +1,11 @@
+---
 include:
-- uri: ../frame.json
-  name: frame
-  args: 
-    - swatchType
+  - uri: ../frame.json
+    name: frame
+    args:
+      - swatchType
 create:
-- frame:
-    swatchType: blue
-- frame:
-    swatchType: green
+  - frame:
+      swatchType: blue
+  - frame:
+      swatchType: green

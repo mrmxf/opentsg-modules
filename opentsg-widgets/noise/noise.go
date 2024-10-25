@@ -4,7 +4,9 @@ package noise
 import (
 	"context"
 	"fmt"
+	"image"
 	"image/draw"
+	"math"
 	"math/rand"
 	"sync"
 	"time"
@@ -36,7 +38,6 @@ func randSeed() int64 {
 }
 
 func (n noiseJSON) Generate(canvas draw.Image, opt ...any) error {
-
 	// Have a seed variable tht is taken out for testing purposes
 	random := rand.New(rand.NewSource(randnum()))
 
@@ -54,20 +55,104 @@ func (n noiseJSON) Generate(canvas draw.Image, opt ...any) error {
 	}
 
 	if n.NoiseType == whiteNoise { // upgrade to switch statement when more types come in
-		whitenoise(random, n.ColourSpace, canvas, min, max)
+		return n.whitenoise(random, canvas, min, max)
 	}
 
 	return nil
 }
 
-func whitenoise(random *rand.Rand, cspace colour.ColorSpace, canvas draw.Image, min, max int) {
+func (n noiseJSON) whitenoise(random *rand.Rand, canvas draw.Image, min, max int) error {
 	b := canvas.Bounds().Max
-	for y := 0; y < b.Y; y++ {
+
+	yStart := 0
+	TopOffset := 0
+
+	if n.YOffsets.TopLeft != 0 || n.YOffsets.TopRight != 0 {
+		if n.YOffsets.TopLeft > n.YOffsets.TopRight {
+			yStart = n.YOffsets.TopLeft
+			TopOffset = n.YOffsets.TopLeft - n.YOffsets.TopRight
+		} else {
+			yStart = n.YOffsets.TopRight
+			TopOffset = -(n.YOffsets.TopRight - n.YOffsets.TopLeft)
+		}
+	}
+
+	yMax := b.Y
+	BottomOffset := 0
+
+	if n.YOffsets.BottomLeft != 0 || n.YOffsets.BottomRight != 0 {
+		if n.YOffsets.BottomLeft > n.YOffsets.BottomRight {
+			yMax = b.Y - n.YOffsets.BottomLeft
+			BottomOffset = n.YOffsets.BottomLeft - n.YOffsets.BottomRight
+		} else {
+			yMax = b.Y - n.YOffsets.BottomRight
+			BottomOffset = -(n.YOffsets.BottomRight - n.YOffsets.BottomLeft)
+		}
+	}
+
+	if yMax < yStart {
+		return fmt.Errorf("0DEV vertical offset overlap, the offsets go past the middle in both directions. Box height : %v, top offset %v, bottom offset %v", b.Y, TopOffset, BottomOffset)
+	}
+
+	triangle(random, canvas, b, n.ColourSpace, true, yStart-int(math.Abs(float64(TopOffset))), TopOffset, max, min)
+
+	for y := yStart; y < yMax; y++ {
 		for x := 0; x < b.X; x++ {
 			colourPos := uint16(random.Intn(max-min)+min) << 4
-			// Fill := color.NRGBA64{colourPos << 4, colourPos << 4, colourPos << 4, uint16(0xffff)}
 
-			canvas.Set(x, y, &colour.CNRGBA64{R: colourPos, G: colourPos, B: colourPos, A: 0xffff, ColorSpace: cspace})
+			canvas.Set(x, y, &colour.CNRGBA64{R: colourPos, G: colourPos, B: colourPos, A: 0xffff, ColorSpace: n.ColourSpace})
+		}
+	}
+
+	// dp bottom half
+	triangle(random, canvas, b, n.ColourSpace, false, yMax, BottomOffset, max, min)
+	/*
+		Get the block height
+
+		get the x shift per y increase
+
+		go along each x shift doing that increase based on x or y chnage
+
+
+	*/
+	return nil
+}
+
+func triangle(random *rand.Rand, canvas draw.Image, b image.Point, colourSpace colour.ColorSpace, top bool, yMax, offset, max, min int) {
+	if offset != 0 {
+		yOffset := int(math.Abs(float64(offset)))
+
+		xShift := b.X / yOffset
+
+		xCount := 0
+		xPos := 0
+
+		// set it up to walk backwards
+		if offset < 0 {
+			xPos = b.X - xShift
+		}
+
+		off := 0
+
+		for xCount <= yOffset {
+			if top {
+				off = yOffset - xCount
+			}
+
+			for y := yMax + off; y < yMax+xCount+1+off; y++ {
+				for x := xPos; x < xPos+xShift; x++ {
+					colourPos := uint16(random.Intn(max-min)+min) << 4
+
+					canvas.Set(x, y, &colour.CNRGBA64{R: colourPos, G: colourPos, B: colourPos, A: 0xffff, ColorSpace: colourSpace})
+				}
+			}
+
+			xCount++
+			if offset < 0 {
+				xPos -= xShift
+			} else {
+				xPos += xShift
+			}
 		}
 	}
 }

@@ -55,6 +55,9 @@ func TestStringGen(t *testing.T) {
 
 			examplejson.SaveExampleJson(yesFrame, widgetType, explanation[i], false)
 
+			// f, _ := os.Create("./testdata/framecount" + expecResult[i] + ".png")
+			// png.Encode(f, myImage)
+
 			// Assign the colour to the correct type of image NGRBA64 and replace the colour values
 			file, _ := os.Open("./testdata/framecount" + expecResult[i] + ".png")
 			// Decode to get the colour values
@@ -153,13 +156,6 @@ func TestErrors(t *testing.T) {
 	}
 
 }
-
-/*
-var testbody = `{
-	"position":{
-        "x":3868
-    },
-}`*/
 
 func TestInterpret(t *testing.T) {
 	xonly := `{

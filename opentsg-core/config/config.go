@@ -19,8 +19,41 @@ type Position struct {
 	Y float64 `json:"y,omitempty" yaml:"y,omitempty"`
 }
 
+// WidgetGrid is the gridgen layout to be used by all widgets.
+// simply import it by embedding it in your struct
+/*
+e.g.
+
+type mydemo struct {
+
+gridgen.Grid
+}
+*/
+type WidgetGrid struct {
+	GridLoc *Grid `json:"grid,omitempty" yaml:"grid,omitempty"`
+}
+
 // Grid gives the grid system with the coordinates and an alias
 type Grid struct {
 	Location string `json:"location,omitempty" yaml:"location,omitempty"`
 	Alias    string `json:"alias,omitempty" yaml:"alias,omitempty"`
 }
+
+// default return values
+func (w WidgetGrid) Alias() string {
+	return w.GridLoc.Alias
+}
+
+func (w WidgetGrid) Location() string {
+	return w.GridLoc.Location
+}
+
+/*
+
+check x,y?
+do not mix and match for the moment
+
+each one has a field that can be handled
+
+
+*/

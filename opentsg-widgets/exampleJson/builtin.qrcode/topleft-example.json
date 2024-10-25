@@ -1,6 +1,9 @@
 {
     "code": "https://mrmxf.io/",
-    "gridPosition": {},
+    "offset": {
+        "x": 0,
+        "y": 0
+    },
     "colorSpace": {
         "Primaries": {
             "Red": {},

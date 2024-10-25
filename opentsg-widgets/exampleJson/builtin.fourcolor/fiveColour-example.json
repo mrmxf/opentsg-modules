@@ -15,6 +15,6 @@
         }
     },
     "grid": {
-        "location": "Nothing"
+        "alias": "testlocation"
     }
 }

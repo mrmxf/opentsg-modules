@@ -12,9 +12,8 @@ var (
 	}
 
 	// this is a working idea of how to handle luts
-	lutLibrary = map[ColorSpace]map[ColorSpace]any{ // where any is a lut
-
-	}
+	//	lutLibrary = map[ColorSpace]map[ColorSpace]any{ // where any is a lut
+	//}
 
 	// chromatic adaptation needs to be included as well
 
@@ -124,9 +123,9 @@ func matrixTransform(xyz, rgb [3][3]float64) func(color.Color) color.Color {
 		Y := r*xyz[1][0] + g*xyz[1][1] + b*xyz[1][2]
 		Z := r*xyz[2][0] + g*xyz[2][1] + b*xyz[2][2]
 
-		aR := math.Round(X*rgb[0][0] + Y*rgb[0][1] + Z*rgb[0][2]) //* 65535
-		aG := math.Round(X*rgb[1][0] + Y*rgb[1][1] + Z*rgb[1][2]) //* 65535
-		aB := math.Round(X*rgb[2][0] + Y*rgb[2][1] + Z*rgb[2][2]) //* 65535
+		aR := math.Round(X*rgb[0][0] + Y*rgb[0][1] + Z*rgb[0][2]) // * 65535
+		aG := math.Round(X*rgb[1][0] + Y*rgb[1][1] + Z*rgb[1][2]) // * 65535
+		aB := math.Round(X*rgb[2][0] + Y*rgb[2][1] + Z*rgb[2][2]) // * 65535
 
 		cols := []*float64{&aR, &aG, &aB}
 

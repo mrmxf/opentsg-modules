@@ -16,7 +16,7 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/widgets"
 	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/gridgen"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 // Generator contains the method for running widgets to generate segments of the test chart.
@@ -40,7 +40,7 @@ type GenConf[T Generator] struct {
 // each widget can call it and run.
 // widgets should follow the pattern of
 //
-//	func WidgetRunner(canvasChan chan *image.NRGBA64, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *log.Logger) {
+//	func WidgetRunner(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *log.Logger) {
 //		defer wg.Done()
 //		conf := generator.GenConf[widgetstruct]{Debug: debug, Schema: schemaFac, WidgetType: "widgetname"}
 //		generator.WidgetRunner(canvasChan, conf, c, logs, wgc)
@@ -50,9 +50,9 @@ type GenConf[T Generator] struct {
 
 type Generator interface {
 	Generate(draw.Image, ...any) error
-	//Loc returns the location of the grid for  gridgen.ParamToCanvas
+	//Loc returns the location of the grid for gridgen.ParamToCanvas
 	Location() string
-	//Alias returns the alias of the grid for  gridgen.ParamToCanvas
+	//Alias returns the alias of the grid for gridgen.ParamToCanvas
 	Alias() string
 }
 */
@@ -147,7 +147,7 @@ func WidgetRunner[T Generator](canvasChan chan draw.Image, g GenConf[T], c *cont
 					// extract base from channel before readding and preventing race conditions
 					canvas := <-canvasChan
 					colour.DrawMask(canvas, gridcanvas.Bounds().Add(imgLocation), gridcanvas, image.Point{}, mask, image.Point{}, draw.Over)
-					//draw.DrawMask(canvas, canvas.Bounds(), add.img, add.location, add.mask, add.location, draw.Over)
+					// draw.DrawMask(canvas, canvas.Bounds(), add.img, add.location, add.mask, add.location, draw.Over)
 					canvasChan <- canvas
 				}
 				// counter and z have two different scopes
@@ -243,29 +243,21 @@ func getOrder[A any](runMap map[core.AliasIdentity]A) []core.AliasIdentity {
 	return runOrder
 }
 
-type adder struct {
-	img, mask draw.Image
-	location  image.Point
-	zPos      int
-	add, run  bool
-}
-
 ////////////////////////
 // metadata handling //
 //////////////////////
 
 // unique name for this package so information can't be extracted else where
-var metakey = contextKey{"metadata", time.Now()}
-var zKey = contextKey{"pointer to the z position of all the widgets", time.Now()}
+const (
+	metakey contextKey = "metadata"
+	zKey    contextKey = "pointer to the z position of all the widgets"
+)
 
-type contextKey struct {
-	metadata string
-	when     time.Time
-}
+type contextKey string
 
 // metadata is a map with a mutex to prevent concurrent read write to maps
 type metadata struct {
-	data map[string]map[any]interface{}
+	data map[string]map[string]interface{}
 	mu   *sync.Mutex
 }
 
@@ -281,7 +273,7 @@ func put[T any](toSave map[core.AliasIdentity]T, c *context.Context) error {
 
 	// breakdown the map and add it to the image generation
 	for k, v := range toSave { // if empty than it's skipped
-		readForm := make(map[any]interface{})
+		readForm := make(map[string]interface{})
 		b, err := yaml.Marshal(v) // reset it from struct type to map[string]interface{}
 		if err != nil {
 
@@ -296,7 +288,7 @@ func put[T any](toSave map[core.AliasIdentity]T, c *context.Context) error {
 		}
 		imageGeneration.data[k.Alias] = readForm
 	}
-	//imageGeneration.data[widget] = alias
+	// imageGeneration.data[widget] = alias
 
 	return nil
 }
@@ -305,7 +297,7 @@ func put[T any](toSave map[core.AliasIdentity]T, c *context.Context) error {
 // before the widgets are run so that metadata can be stored.
 func MetaDataInit(c context.Context) *context.Context {
 	// MD is the metadata context of widget - alias - json(map[string] interface{})
-	md := metadata{make(map[string]map[any]interface{}), &sync.Mutex{}}
+	md := metadata{make(map[string]map[string]interface{}), &sync.Mutex{}}
 	valC := context.WithValue(c, metakey, md)
 	z := 0
 
@@ -334,7 +326,9 @@ func Extract(c *context.Context, alias string, keys ...string) interface{} {
 	return start
 }
 
-func mapToFace(find map[any]any, keys ...string) interface{} {
+func mapToFace(find map[string]any, keys ...string) interface{} {
+
+	fmt.Println(keys)
 	if find == nil {
 
 		return find
@@ -350,7 +344,7 @@ func mapToFace(find map[any]any, keys ...string) interface{} {
 		return find[keys[0]]
 	}
 	switch found := find[keys[0]].(type) {
-	case map[any]interface{}:
+	case map[string]interface{}:
 		if len(keys) == 1 {
 
 			return found

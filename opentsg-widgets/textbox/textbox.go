@@ -18,7 +18,7 @@ const (
 	widgetType = "builtin.textbox"
 )
 
-// TextBoxGen generates text boxes on a given image based on config values
+// TBGenerate generates text boxes on a given image based on config values
 func TBGenerate(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *errhandle.Logger) {
 	defer wg.Done()
 	opts := []any{c}
@@ -31,7 +31,7 @@ func (tb TextboxJSON) Generate(canvas draw.Image, opts ...any) error {
 
 	bounds := canvas.Bounds().Max
 	var width, height float64
-	if tb.BorderSize > 0 { //prevent div 0 errors
+	if tb.BorderSize > 0 { // prevent div 0 errors
 		width, height = (float64(bounds.X)*tb.BorderSize)/100, (float64(bounds.Y)*tb.BorderSize)/100
 	} // else leave as 0
 

@@ -14,5 +14,6 @@
     "maximum": 3000,
     "minimum": 2000,
     "noiseType": "white noise",
-    "type": "builtin.noise"
+    "type": "builtin.noise",
+    "yOffset": {}
 }

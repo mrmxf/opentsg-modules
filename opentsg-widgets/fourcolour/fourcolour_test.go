@@ -26,14 +26,15 @@ func TestFillMethod(t *testing.T) {
 	getGeometry = func(c *context.Context, coordinate string) ([]gridgen.Segmenter, error) {
 		return mg, nil
 	}
-	mockG := config.Grid{Location: "Nothing"}
-	mockJson4 := fourJSON{GridLoc: &mockG, Colourpallette: []string{"#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"}}
-	mockJson5 := fourJSON{GridLoc: &mockG, Colourpallette: []string{"#FF0000", "#00FF00", "#0000FF", "#FFFF00"}}
+	// mockG := config.Grid{Location: "Nothing"}
+	mockJson4 := fourJSON{Colourpallette: []string{"#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"}}
+	mockJson5 := fourJSON{Colourpallette: []string{"#FF0000", "#00FF00", "#0000FF", "#FFFF00"}}
 	mockJsons := []fourJSON{mockJson4, mockJson5}
 
 	explanation := []string{"fiveColour", "fourColour"}
 
 	for i, mj := range mockJsons {
+		mj.GridLoc = &config.Grid{Alias: "testlocation"}
 
 		canvas := image.NewNRGBA64(image.Rect(0, 0, 1000, 1000))
 		c := context.Background()
@@ -74,9 +75,9 @@ func BenchmarkNRGBA64ACESColour(b *testing.B) {
 	getGeometry = func(c *context.Context, coordinate string) ([]gridgen.Segmenter, error) {
 		return mg, nil
 	}
-	mockG := config.Grid{Location: "Nothing"}
+	//	mockG := config.Grid{Location: "Nothing"}
 	// mockJson := fourJSON{GridLoc: &mockG, Colourpallette: []string{"#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"}}
-	mockJson := fourJSON{GridLoc: &mockG, Colourpallette: []string{"#FF0000", "#00FF00", "#0000FF", "#FFFF00"}}
+	mockJson := fourJSON{Colourpallette: []string{"#FF0000", "#00FF00", "#0000FF", "#FFFF00"}}
 	canvas := image.NewNRGBA64(image.Rect(0, 0, 1, 1))
 	c := context.Background()
 	// run the Fib function b.N times
@@ -92,8 +93,8 @@ func BenchmarkNRGBA64ACESOTher(b *testing.B) {
 	getGeometry = func(c *context.Context, coordinate string) ([]gridgen.Segmenter, error) {
 		return mg, nil
 	}
-	mockG := config.Grid{Location: "Nothing"}
-	mockJson := fourJSON{GridLoc: &mockG, Colourpallette: []string{"#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"}}
+	//	mockG := config.Grid{Location: "Nothing"}
+	mockJson := fourJSON{Colourpallette: []string{"#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"}}
 
 	canvas := image.NewNRGBA64(image.Rect(0, 0, 1, 1))
 	c := context.Background()

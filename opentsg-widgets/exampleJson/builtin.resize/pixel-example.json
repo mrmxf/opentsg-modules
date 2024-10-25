@@ -1,0 +1,24 @@
+{
+    "colorSpace": {
+        "Primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "graticule": {},
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "type": "builtin.resize",
+    "xDetections": [
+        "3840px",
+        "1920px"
+    ],
+    "yDetections": [
+        "1080px",
+        "540px"
+    ]
+}
