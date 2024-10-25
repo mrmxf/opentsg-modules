@@ -48,7 +48,6 @@
     ],
     "widgetProperties": {
         "maxBitDepth": 10,
-        "cwRotation": "",
         "objectFitFill": false,
         "pixelValueRepeat": 0,
         "textProperties": {

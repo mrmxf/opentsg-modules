@@ -11,14 +11,3 @@
         }
     ]
 }
-,
-{
-    "include":[
-        {"uri": "./frame.json", "name":"frame"}
-    ],
-    "create":[
-        {"frame": {"swatchType":"blue"}
-    frame.swatch.pyramid1},
-        {"frame": {"swatchType":"green"}}
-    ]
-}

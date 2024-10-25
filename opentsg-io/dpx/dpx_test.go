@@ -14,12 +14,12 @@ import (
 )
 
 func TestEncode(t *testing.T) {
-	//"testing encoding of 8,10,12 and 16 bit files against known versions, this covers encoding with correct input values
-	//this is the standard 16 bit image as a tiff
+	// "testing encoding of 8,10,12 and 16 bit files against known versions, this covers encoding with correct input values
+	// this is the standard 16 bit image as a tiff
 	file, _ := os.Open("./testimages/standard.tiff")
-	//decode to get the colour values
+	// decode to get the colour values
 	baseVals, _ := tiff.Decode(file)
-	//assign the colour to the correct type of image NGRBA64 and replace the colour values
+	// assign the colour to the correct type of image NGRBA64 and replace the colour values
 	readImage := image.NewNRGBA64(baseVals.Bounds())
 
 	draw.Draw(readImage, readImage.Bounds(), baseVals, image.Point{0, 0}, draw.Over)
@@ -30,11 +30,11 @@ func TestEncode(t *testing.T) {
 		hnormal := sha256.New()
 		htest := sha256.New()
 
-		//open the files to be tested
+		// open the files to be tested
 		fnormal, _ := os.ReadFile(mf)
 		ftest := headerGen(readImage, matchFileDepth[i])
 
-		//write the hash with the information
+		// write the hash with the information
 		hnormal.Write(fnormal)
 		htest.Write(ftest)
 		Convey("Checking the image is saved and matches the example file exactly", t, func() {
@@ -51,9 +51,9 @@ func TestEncode(t *testing.T) {
 // 260         161384890 ns/op
 func BenchmarkEncode12(b *testing.B) {
 	file, _ := os.Open("./testimages/standard.tiff")
-	//decode to get the colour values
+	// decode to get the colour values
 	baseVals, _ := tiff.Decode(file)
-	//assign the colour to the correct type of image NGRBA64 and replace the colour values
+	// assign the colour to the correct type of image NGRBA64 and replace the colour values
 	readImage := image.NewNRGBA64(baseVals.Bounds())
 
 	draw.Draw(readImage, readImage.Bounds(), baseVals, image.Point{0, 0}, draw.Over)
@@ -66,9 +66,9 @@ func BenchmarkEncode12(b *testing.B) {
 // 222         194536411 ns/op
 func BenchmarkEncode16(b *testing.B) {
 	file, _ := os.Open("./testimages/standard.tiff")
-	//decode to get the colour values
+	// decode to get the colour values
 	baseVals, _ := tiff.Decode(file)
-	//assign the colour to the correct type of image NGRBA64 and replace the colour values
+	// assign the colour to the correct type of image NGRBA64 and replace the colour values
 	readImage := image.NewNRGBA64(baseVals.Bounds())
 
 	draw.Draw(readImage, readImage.Bounds(), baseVals, image.Point{0, 0}, draw.Over)
@@ -81,9 +81,9 @@ func BenchmarkEncode16(b *testing.B) {
 // 374         108842332 ns/op
 func BenchmarkEncode8(b *testing.B) {
 	file, _ := os.Open("./testimages/standard.tiff")
-	//decode to get the colour values
+	// decode to get the colour values
 	baseVals, _ := tiff.Decode(file)
-	//assign the colour to the correct type of image NGRBA64 and replace the colour values
+	// assign the colour to the correct type of image NGRBA64 and replace the colour values
 	readImage := image.NewNRGBA64(baseVals.Bounds())
 
 	draw.Draw(readImage, readImage.Bounds(), baseVals, image.Point{0, 0}, draw.Over)
@@ -93,7 +93,7 @@ func BenchmarkEncode8(b *testing.B) {
 	}
 }
 
-//add tests here to check the byte form saving
+// add tests here to check the byte form saving
 /*
 goos: linux
 goarch: amd64

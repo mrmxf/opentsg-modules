@@ -1,0 +1,18 @@
+{
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "offset": {
+        "x": "50px",
+        "y": "-70"
+    },
+    "segmentColors": [
+        "#C2A649",
+        "#9A3A73",
+        "#91B645",
+        "#433F87"
+    ],
+    "segmentCount": 32,
+    "type": "builtin.bowtie"
+}

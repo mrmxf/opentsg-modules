@@ -46,7 +46,7 @@ type bars struct {
 }
 
 const (
-	//widths
+	// widths
 	d = 240 / 1920.0
 	f = 205 / 1920.0
 	c = 206 / 1920.0
@@ -69,7 +69,7 @@ var (
 	red75    = color.NRGBA64{R: 721 << 6, G: 64 << 6, B: 64 << 6, A: 0xffff}
 	blue75   = color.NRGBA64{R: 64 << 6, G: 64 << 6, B: 721 << 6, A: 0xffff}
 
-	gray40SD   = color.NRGBA{R: 104, G: 104, B: 104, A: 0xff}
+	//	gray40SD   = color.NRGBA{R: 104, G: 104, B: 104, A: 0xff}
 	white75SD  = color.NRGBA{R: 180, G: 180, B: 180, A: 0xff}
 	yellow75SD = color.NRGBA{R: 180, G: 180, B: 16, A: 0xff}
 	cyan75SD   = color.NRGBA{R: 16, G: 180, B: 180, A: 0xff}
@@ -87,12 +87,13 @@ var (
 	black0    = color.NRGBA64{R: 64 << 6, G: 64 << 6, B: 64 << 6, A: 0xffff}
 	red100    = color.NRGBA64{R: 940 << 6, G: 64 << 6, B: 64 << 6, A: 0xffff}
 
-	cyan100SD   = color.NRGBA{R: 16, G: 235, B: 235, A: 0xff}
-	white100SD  = color.NRGBA{R: 235, G: 235, B: 235, A: 0xff}
-	blue100SD   = color.NRGBA{R: 16, G: 16, B: 235, A: 0xff}
-	yellow100SD = color.NRGBA{R: 235, G: 235, B: 16, A: 0xff}
-	black0SD    = color.NRGBA{R: 16, G: 16, B: 16, A: 0xff}
-	red100SD    = color.NRGBA{R: 235, G: 16, B: 16, A: 0xff}
+	//	cyan100SD   = color.NRGBA{R: 16, G: 235, B: 235, A: 0xff}
+	white100SD = color.NRGBA{R: 235, G: 235, B: 235, A: 0xff}
+	//	blue100SD   = color.NRGBA{R: 16, G: 16, B: 235, A: 0xff}
+	//	yellow100SD = color.NRGBA{R: 235, G: 235, B: 16, A: 0xff}
+	black0SD = color.NRGBA{R: 16, G: 16, B: 16, A: 0xff}
+
+// red100SD    = color.NRGBA{R: 235, G: 16, B: 16, A: 0xff}
 )
 
 var (
@@ -101,11 +102,12 @@ var (
 	black2Pos = color.NRGBA64{R: 82 << 6, G: 82 << 6, B: 82 << 6, A: 0xffff}
 	black4Pos = color.NRGBA64{R: 99 << 6, G: 99 << 6, B: 99 << 6, A: 0xffff}
 
-	gray15SD    = color.NRGBA{R: 49, G: 49, B: 49, A: 0xff}
-	black2NegSD = color.NRGBA{R: 12, G: 12, B: 12, A: 0xff}
+	//	gray15SD    = color.NRGBA{R: 49, G: 49, B: 49, A: 0xff}
+	//	black2NegSD = color.NRGBA{R: 12, G: 12, B: 12, A: 0xff}
 	black4NegSD = color.NRGBA{R: 7, G: 7, B: 7, A: 0xff}
 	black2PosSD = color.NRGBA{R: 20, G: 20, B: 20, A: 0xff}
-	black4PosSD = color.NRGBA{R: 25, G: 25, B: 25, A: 0xff}
+
+// black4PosSD = color.NRGBA{R: 25, G: 25, B: 25, A: 0xff}
 )
 
 var (
@@ -130,6 +132,7 @@ func yRamp(bounds image.Rectangle) draw.Image {
 	return base
 }
 
+/*
 func yRampSD(bounds image.Rectangle) draw.Image {
 	base := image.NewNRGBA(bounds)
 
@@ -145,7 +148,7 @@ func yRampSD(bounds image.Rectangle) draw.Image {
 	}
 
 	return base
-}
+}*/
 
 func superBlack(bounds image.Rectangle) draw.Image {
 	base := image.NewNRGBA64(bounds)
@@ -172,6 +175,7 @@ func superBlack(bounds image.Rectangle) draw.Image {
 	return base
 }
 
+/*
 func superBlackSD(bounds image.Rectangle) draw.Image {
 	base := image.NewNRGBA(bounds)
 
@@ -195,7 +199,7 @@ func superBlackSD(bounds image.Rectangle) draw.Image {
 	}
 
 	return base
-}
+}*/
 
 func superWhite(bounds image.Rectangle) draw.Image {
 	base := image.NewNRGBA64(bounds)
@@ -222,6 +226,7 @@ func superWhite(bounds image.Rectangle) draw.Image {
 	return base
 }
 
+/*
 func superWhiteSD(bounds image.Rectangle) draw.Image {
 	base := image.NewNRGBA(bounds)
 
@@ -246,3 +251,4 @@ func superWhiteSD(bounds image.Rectangle) draw.Image {
 
 	return base
 }
+*/

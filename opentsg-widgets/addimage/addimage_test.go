@@ -15,6 +15,7 @@ import (
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/parameters"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -33,7 +34,7 @@ func TestBadStrings(t *testing.T) {
 
 	mockContext := context.Background()
 
-	//make the test suite translatable to different os and hosts that are not gitpod
+	// make the test suite translatable to different os and hosts that are not gitpod
 	location := os.Getenv("PWD")
 	sep := string(os.PathSeparator)
 	// Slap some text files here
@@ -81,7 +82,7 @@ func Test16files(t *testing.T) {
 // 8 bit files are now allowed through
 func Test8files(t *testing.T) {
 	mockContext := context.Background()
-	good8String := []string{"./testdata/test8bit.png", "./testdata/test8bit.tiff", "./testdata/Untitled.png"}
+	good8String := []string{"./testdata/test8bit.png", "./testdata/test8bit.tiff", "./testdata/squares.png"}
 
 	for _, name := range good8String {
 		tfile, _ := os.Open(name)
@@ -107,8 +108,8 @@ func Test8files(t *testing.T) {
 
 func TestWebsites(t *testing.T) {
 	mockContext := context.Background()
-	validSite := []string{"https://mrmxf.com/r/project/msg-tpg/ramp-2022-02-28/multiramp-12b-pc-4k-hswp.png"}
-	expec := []string{"458d806395df44df3b4185c99d05cba6fe8c8b82b03f2a8a64f6b40ab1b9409f"}
+	validSite := []string{"https://opentsg.studio/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png"}
+	expec := []string{"1c9e781fb1ac14c8b292f8fcf68d95a00dd0ee96f1443627e322b4fe7ad9e809"}
 	for i, imgToAdd := range validSite {
 		ai := addimageJSON{Image: imgToAdd}
 		// Ai.Image = imgToAdd
@@ -116,6 +117,9 @@ func TestWebsites(t *testing.T) {
 		genErr := ai.Generate(genImg, &mockContext)
 		htest := sha256.New()
 		htest.Write(genImg.Pix)
+
+		//	f, _ := os.Create(fmt.Sprintf("file%v.png", i))
+		//	png.Encode(f, genImg)
 
 		Convey("Checking that images sourced from http can generate images", t, func() {
 			Convey(fmt.Sprintf("using a %s as the file to open", imgToAdd), func() {
@@ -137,7 +141,7 @@ func TestZoneGenMask(t *testing.T) {
 		var pos config.Position
 		pos.X = 0
 		pos.Y = 0
-		//imgMock.Imgpos = &pos
+		// imgMock.Imgpos = &pos
 
 		sizeDummies := []image.Point{{1000, 1000}, {1000, 500}}
 
@@ -152,6 +156,7 @@ func TestZoneGenMask(t *testing.T) {
 			// generate the ramp image
 			genErr := imgMock.Generate(myImage, &mockContext)
 			examplejson.SaveExampleJson(imgMock, widgetType, explanation[i], false)
+
 			file, _ := os.Open(testF[i])
 			defer file.Close()
 			// Decode to get the colour values
@@ -188,16 +193,14 @@ func TestFillTypes(t *testing.T) {
 	mockContext := context.Background()
 
 	var imgMock addimageJSON
-	var c config.Position
-	c.X = 0
-	c.Y = 0
-	//imgMock.Imgpos = &c
+
+	// imgMock.Imgpos = &c
 
 	//	sizeDummies := [][]int{{0, 0}, {1000, 500}}
 
 	testFile := "./testdata/test16bit.png"
-	fillTypes := []string{"x scale", "y scale", "xy scale", "fill"}
-	explanation := []string{"xScale", "yScale", "xyScale", "fill"}
+	fillTypes := []string{"x scale", "y scale", "xy scale", "fill", "preserve"}
+	explanation := []string{"xScale", "yScale", "xyScale", "fill", "preserve"}
 
 	for i, fill := range fillTypes {
 		imgMock.Image = testFile
@@ -225,8 +228,8 @@ func TestFillTypes(t *testing.T) {
 		htest.Write(myImage.Pix)
 		compare(myImage, readImage)
 
-		// f, _ := os.Create(fmt.Sprintf("./testdata/fill%v.png", i) + ".png")
-		//colour.PngEncode(f, myImage)
+		//	f, _ := os.Create(fmt.Sprintf("./testdata/fill%v.png", i) + ".png")
+		//	colour.PngEncode(f, myImage)
 
 		Convey("Checking the different fill methods of addimage", t, func() {
 			Convey(fmt.Sprintf("Adding the image to a blank canvas and using the fill type of %s", fill), func() {
@@ -247,6 +250,57 @@ func TestFillTypes(t *testing.T) {
 
 		f, _ := os.Create("test709.png")
 		png.Encode(f, base) */
+}
+
+func TestOffsets(t *testing.T) {
+	mockContext := context.Background()
+
+	var imgMock = addimageJSON{Image: "./testdata/squares.png", ImgFill: "fill"}
+	// imgMock.Imgpos = &c
+
+	//	sizeDummies := [][]int{{0, 0}, {1000, 500}}
+
+	offsets := []parameters.Offset{{Offset: parameters.XYOffset{X: "25px", Y: "100px"}}, {Offset: parameters.XYOffset{X: -20, Y: -20}}}
+	explanation := []string{"forward_offset", "backwards_offset"}
+
+	for i, off := range offsets {
+		imgMock.Offset = off
+
+		myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{1000, 1000}})
+		genErr := imgMock.Generate(myImage, &mockContext)
+
+		examplejson.SaveExampleJson(imgMock, widgetType, explanation[i], true)
+		// Open the image to compare to
+
+		file, _ := os.Open(fmt.Sprintf("./testdata/offset%v.png", i))
+		defer file.Close()
+		// Decode to get the colour values
+		baseVals, _ := png.Decode(file)
+		readImage := image.NewNRGBA64(baseVals.Bounds())
+
+		colour.Draw(readImage, readImage.Bounds(), baseVals, image.Point{0, 0}, draw.Src)
+		// Decode to get the colour values
+		_ = png.Encode(file, myImage)
+		// Save the file
+		hnormal := sha256.New()
+		htest := sha256.New()
+		hnormal.Write(readImage.Pix)
+		htest.Write(myImage.Pix)
+		compare(myImage, readImage)
+
+		// f, _ := os.Create(fmt.Sprintf("./testdata/offseti%v.png", i))
+		// colour.PngEncode(f, myImage)
+
+		Convey("Checking the offset methods of addimage", t, func() {
+			Convey(fmt.Sprintf("Adding the image to a blank canvas and using an offset of %v", off), func() {
+				Convey("No error is returned and the file matches exactly", func() {
+					So(genErr, ShouldBeNil)
+					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
+				})
+			})
+		})
+
+	}
 }
 
 func compare(base, new draw.Image) {

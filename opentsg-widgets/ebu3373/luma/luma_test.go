@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -27,7 +26,7 @@ func TestLuma(t *testing.T) {
 	explanation := []string{"uhd", "hd", "obtuse"}
 
 	for i, size := range sizes {
-		mock := lumaJSON{GridLoc: config.Grid{Alias: "testlocation"}}
+		mock := lumaJSON{}
 		myImage := image.NewNRGBA64(image.Rect(0, 0, size[0], size[1]))
 		examplejson.SaveExampleJson(mock, widgetType, explanation[i], false)
 		// Generate the ramp image
@@ -45,8 +44,8 @@ func TestLuma(t *testing.T) {
 		htest := sha256.New()
 		hnormal.Write(readImage.Pix)
 		htest.Write(myImage.Pix)
-		// F, _ := os.Create(testF[i] + fmt.Sprintf("%v.png", i))
-		// Png.Encode(f, myImage)
+		// f, _ := os.Create(testF[i] + fmt.Sprintf("%v.png", i))
+		// png.Encode(f, myImage)
 
 		Convey("Checking the luma functions are generated correctly", t, func() {
 			Convey(fmt.Sprintf("Comparing the generated ramp to %v", testBase[i]), func() {

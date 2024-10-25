@@ -50,7 +50,7 @@ func (d Decoder) Decode(url string) ([]byte, error) {
 		return gitDecode(url, tokenGen["git_auth"])
 	case regGitH.MatchString(url), regGitHbAPI.MatchString(url):
 		return gitHubDecode(url, tokenGen["github_auth"])
-		//develop functions for each regex string
+		// develop functions for each regex string
 	case regS3.MatchString(url), regS3AWS.MatchString(url):
 		return s3Decode(url, tokenGen["s3_profile"])
 		// Develop functions for each regex string
@@ -167,9 +167,9 @@ func gitHubDecode(url string, a token) ([]byte, error) {
 	// https://api.github.com/repos/mmTristan/ascmhl/contents/schema%2Fascmhl.xsd
 	// Convert gitlab links to gitlab api calls
 	if regGitH.MatchString(url) && !regGitHbAPI.MatchString(url) {
-		//get the owner and the repo
+		// get the owner and the repo
 		owner, wantrepo := bucketToString(url, 19)
-		//split the repo into repo and file
+		// split the repo into repo and file
 		repo, file := bucketToString(wantrepo, 0)
 
 		newfile := strings.ReplaceAll(file, "/", "%2F")

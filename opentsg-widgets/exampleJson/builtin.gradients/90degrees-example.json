@@ -48,7 +48,6 @@
     ],
     "widgetProperties": {
         "maxBitDepth": 10,
-        "cwRotation": "π*1/2",
         "objectFitFill": false,
         "pixelValueRepeat": 0,
         "textProperties": {
@@ -56,7 +55,8 @@
             "textxPosition": "left",
             "textHeight": 30,
             "textColor": "#345AB6"
-        }
+        },
+        "cwRotation": "π*1/2"
     },
     "colorSpace": {
         "Primaries": {

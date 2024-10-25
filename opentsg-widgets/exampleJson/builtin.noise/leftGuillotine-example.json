@@ -1,0 +1,20 @@
+{
+    "colorSpace": {
+        "Primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "maximum": 4095,
+    "noiseType": "white noise",
+    "type": "builtin.noise",
+    "yOffset": {
+        "bottomRight": 100
+    }
+}

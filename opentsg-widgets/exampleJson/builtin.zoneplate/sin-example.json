@@ -1,0 +1,13 @@
+{
+    "waveType": "sin",
+    "colorSpace": {
+        "Primaries": {
+            "Red": {},
+            "Green": {},
+            "Blue": {},
+            "WhitePoint": {}
+        }
+    },
+    "frequency": "π*13/100",
+    "offset": {}
+}

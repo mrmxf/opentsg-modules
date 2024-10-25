@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -30,7 +29,7 @@ func TestDemo(t *testing.T) {
 
 func TestBars(t *testing.T) {
 	myImage := image.NewNRGBA64(image.Rect(0, 0, 2330, 600))
-	s := saturationJSON{GridLoc: &config.Grid{Alias: "testlocation"}}
+	s := saturationJSON{}
 	colours := [][]string{{"red", "green", "blue"}, {"red", "blue"}, {"blue"}, {}}
 	explanation := []string{"redGreenBlue", "redBlue", "blue", "defualt"}
 

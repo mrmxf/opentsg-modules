@@ -41,6 +41,8 @@ type XY struct {
 type Image interface {
 	Space() ColorSpace
 	draw.Image // Draw include Set
+
+	// Margins()  // LeftRightTopBottom
 }
 
 // NRGBA64 is a wrapped *image.NRGBA64 with a colorspace

@@ -1,0 +1,13 @@
+{
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "image": "./testdata/squares.png",
+    "imageFill": "fill",
+    "offset": {
+        "x": "25px",
+        "y": "100px"
+    },
+    "type": "builtin.addimage"
+}

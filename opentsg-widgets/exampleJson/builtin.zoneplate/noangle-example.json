@@ -7,11 +7,13 @@
             "WhitePoint": {}
         }
     },
+    "frequency": null,
     "grid": {
         "alias": " A demo alias",
         "location": "a1"
     },
-    "plateType": "sweep",
+    "offset": {},
+    "plateType": "horizontalSweep",
     "startColor": "black",
     "type": "builtin.zoneplate"
 }

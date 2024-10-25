@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/mrmxf/opentsg-modules/opentsg-core/anglegen"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/colourgen"
 	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/widgethandler"
 )
@@ -22,100 +22,164 @@ const (
 // zoneGen takes a canvas and then returns an image of the zone plate layered ontop of the image
 func ZoneGen(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *errhandle.Logger) {
 	defer wg.Done()
-	conf := widgethandler.GenConf[zoneplateJSON]{Debug: debug, Schema: schemaInit, WidgetType: widgetType}
+	conf := widgethandler.GenConf[ZConfig]{Debug: debug, Schema: schemaInit, WidgetType: widgetType}
 	widgethandler.WidgetRunner(canvasChan, conf, c, logs, wgc) // Update this to pass an error which is then formatted afterwards
 }
 
-func (z zoneplateJSON) Generate(canvas draw.Image, opts ...any) error {
-	// Get the config for the zoneplate
-	platetype := z.Platetype
-	// Check zoneplates have been called
-	if platetype == "" {
-		return fmt.Errorf("0111 No zone plate module selected")
+func (z ZConfig) Generate(canvas draw.Image, opts ...any) error {
+
+	frequency, _ := z.Frequency.GetAngle()
+	fmt.Println(frequency)
+	if frequency > math.Pi {
+		frequency = math.Pi
+	} else if frequency == 0 {
+		frequency = 0.8 * math.Pi
 	}
-	w, h := canvas.Bounds().Max.X, canvas.Bounds().Max.Y // PlateDime()
 
-	x := float64(w) // Float64(canvas.Bounds().Max.X)
-	y := float64(h) // float64(canvas.Bounds().Max.Y)
-	zv := zoneConst(x, y)
+	// set up constants for the zone plate
+	b := canvas.Bounds().Max
+	rm := float64(b.X)
+	w := rm / 5
 
-	// Offset is 0 to pi to move from black to white
-	offset := startOffset(z.Startcolour)
-	//	platetilt := z.Angle
-	var angle float64
-	if z.Angle != nil {
-		var err error
-		angle, err = anglegen.AngleCalc(fmt.Sprintf("%v", z.Angle))
-		if err != nil {
-			return err
+	// set up the offset, this is centred in the middle of the box
+	off, err := z.CalcOffset(canvas.Bounds().Max)
+	if err != nil {
+		return err
+	}
+	xOffset := b.X/2 + off.X
+	yOffset := b.Y/2 + off.Y
+
+	yMagnitude := 1.0
+	// set xy to radius function
+	extractFunc := xyToRadius
+	switch z.PlateType {
+	case verticalSweep, sweepPattern:
+		extractFunc = xyToVerticalRadius
+	case horizontalSweep:
+		extractFunc = xyToHorizontalRadius
+		//	pattern, _, _ = createWeights16(b.X, 6, z.baseX/z.destX, lan)
+	case circlePattern, "":
+	case ellipse:
+		yMagnitude = 0.5
+	default:
+
+		return fmt.Errorf("unknown plateType \"%v\"", z.PlateType)
+	}
+
+	// set zone plate function
+	zplate := zPlate
+	switch z.WaveType {
+	case Sin:
+		zplate = sPlate
+	case Cos:
+		zplate = cPlate
+	case "cos*sin^2":
+		zplate = tPlate
+	}
+
+	ztc := zoneToColour
+	if len(z.Colors) > 0 {
+		colours := make([]colour.CNRGBA64, len(z.Colors))
+		for i, c := range z.Colors {
+			colours[i] = *colourgen.HexToColour(c, colour.ColorSpace{})
+		}
+
+		ztc = func(zone float64) colour.CNRGBA64 {
+			//	fmt.Println(((zone+1)/2)*(float64(len(colours))), zone)
+			pos := int(((zone+1)/2)*(float64(len(colours)))) % len(colours)
+			return colours[pos]
 		}
 	}
 
-	for i := zv.yNeg; i < zv.yPos; i++ {
+	rotation, err := z.ClockwiseRotationAngle()
+	if err != nil {
+		return err
+	}
 
-		for j := zv.xNeg; j < zv.xPos; j++ {
-			r := radialCalc(platetype, float64(j), float64(i), angle, float64(w), float64(h))
+	rotationOffset := startOffset(z.Startcolour)
 
-			zone := math.Sin((zv.km*r*r)/(2*zv.rm)+offset) * (0.5*math.Tanh((zv.rm-r)/zv.w) + 0.5)
+	for x := 0; x < b.X; x++ {
+		for y := 0; y < b.Y; y++ {
 
-			// Assign colour as an integer between 0 and 4095 as g scaled out of
-			colourPos := uint16(4095*((zone+1)/2)) << 4 // Uint16 acts as a floor function
+			xp, yp := rotate(float64(x-xOffset), float64(y-yOffset)*yMagnitude, rotation)
+			r := extractFunc(xp, yp)
 
-			fill := colour.CNRGBA64{R: colourPos, G: colourPos, B: colourPos, A: 0xffff, ColorSpace: z.ColourSpace}
-			canvas.Set(int(j+zv.xPos), int(i+zv.yPos), &fill)
+			//	zone := math.Sin((z.km*r*r)/(2*rm)+offset) * (0.5*math.Tanh((rm-r)/w) + 0.5)
+			zone := zplate(r, frequency, rm, w, rotationOffset)
+
+			// assign the colour and draw the canvas
+			fill := ztc(zone)
+			canvas.Set(x, y, &fill)
+
 		}
 	}
-	//@TODO fix this
-	/*
-		// Check if needs to be masked and apply it
-		if maskShape := z.Mask; maskShape != "" {
-			// At the moment just make a mask around the zoneplate
-			canvas = mask.Mask(maskShape, w, h, 0, 0, canvas)
-
-		}*/
 
 	return nil
 }
 
-type zoneVars struct {
-	xNeg float64
-	xPos float64
-	yNeg float64
-	yPos float64
-	km   float64
-	rm   float64
-	w    float64
-}
-
 const (
-	sweepPattern  = "sweep"
-	circlePattern = "circular"
+	sweepPattern    = "sweep"
+	verticalSweep   = "verticalSweep"
+	horizontalSweep = "horizontalSweep"
+	circlePattern   = "circular"
+	ellipse         = "ellipse"
+
+	// Plate Types
+	Sin = "sin"
+	Cos = "cos"
+	zp  = "zonePlate"
 )
 
-func radialCalc(plateType string, x, y float64, radian float64, w, h float64) float64 {
+func zoneToColour(zone float64) colour.CNRGBA64 {
+	//colourPos := 8192 + uint16(49151*(zone+1)/2)
+	colourPos := uint16(0xffff * (zone + 1) / 2)
+	return colour.CNRGBA64{R: colourPos, G: colourPos, B: colourPos, A: 0xffff}
+}
 
-	// To radians
-	// Generate the angle as a string and then extract the value in radians
+func zPlate(r, km, rm, w, rotationOffset float64) float64 {
+	return math.Sin((km*r*r)/(2*rm)+rotationOffset) * (0.5*math.Tanh((rm-r)/w) + 0.5)
+}
 
-	// Calculate new x and y values based off of the chosen angle
-	xp := x*math.Cos(radian) - y*math.Sin(radian)
-	yp := x*math.Sin(radian) + y*math.Cos(radian)
-	if plateType == sweepPattern {
-		return math.Abs(yp)
-		// } else if plateType == "ellipse" {
-		//	return math.Sqrt((2 * xp * xp) + (yp * yp))
+func sPlate(r, km, rm, w, rotationOffset float64) float64 {
+
+	return math.Sin(r*km + rotationOffset)
+}
+
+func cPlate(r, km, rm, w, rotationOffset float64) float64 {
+
+	return math.Cos(r*km + rotationOffset)
+}
+
+func tPlate(r, km, rm, w, rotationOffset float64) float64 {
+
+	return math.Cos(r*km) * math.Sin(r*km) * math.Sin(r*km) // * 2.598
+}
+
+// @TODO add a non decay version as well
+
+func rotate(x, y, angle float64) (float64, float64) {
+
+	if angle == 0 {
+		return x, y
 	}
 
-	switch {
-	case w > h:
-		// Fmt.Println(float64(w / h))
-		return math.Sqrt((xp * xp) + ((w / h) * (w / h) * yp * yp))
-	case h > w:
-		// Fmt.Println(float64(h / w))
-		return math.Sqrt(((h / w) * (h / w) * xp * xp) + (yp * yp))
-	default:
-		return math.Sqrt((xp * xp) + (yp * yp))
+	xp := x*math.Cos(angle) - y*math.Sin(angle)
+	yp := x*math.Sin(angle) + y*math.Cos(angle)
+
+	return xp, yp
+}
+
+func xyToAngle(x, y float64) float64 {
+
+	ang := math.Atan2(y, x)
+
+	// add 2 pi by the inverse to keep the angle
+	// incrementinh
+	if ang < 0 {
+		return ang + math.Pi*2
 	}
+
+	return ang
 }
 
 func startOffset(start string) float64 {
@@ -130,25 +194,15 @@ func startOffset(start string) float64 {
 	}
 }
 
-func zoneConst(x, y float64) (zv zoneVars) {
-
-	zv.km = 0.8 * math.Pi
-
-	if int(x)%2 == 1 {
-		zv.cartesian(x-1, y-1)
-	} else {
-		zv.cartesian(x, y)
-	}
-	zv.w = zv.rm / 5
-
-	return zv
+func xyToRadius(x, y float64) float64 {
+	return math.Sqrt(x*x + y*y)
 }
 
-// set x and y to be 0,0 in the middle
-func (zv *zoneVars) cartesian(x, y float64) {
-	zv.xNeg = -1 * x / 2
-	zv.yNeg = -1 * y / 2
-	zv.xPos = -1 * zv.xNeg
-	zv.yPos = -1 * zv.yNeg
-	zv.rm = float64(x)
+func xyToHorizontalRadius(_, y float64) float64 {
+	return y
+}
+
+func xyToVerticalRadius(x, _ float64) float64 {
+
+	return x // math.Sqrt(x*x + x*x)
 }

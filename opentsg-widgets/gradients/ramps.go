@@ -10,7 +10,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/mrmxf/opentsg-modules/opentsg-core/anglegen"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/widgethandler"
@@ -33,7 +32,7 @@ func RampGenerate(canvasChan chan draw.Image, debug bool, c *context.Context, wg
 	widgethandler.WidgetRunner(canvasChan, conf, c, logs, wgc) // Update this to pass an error which is then formatted afterwards
 }
 
-// TODO  make it into the open tsg formula
+// Generate runs the ramps widget.
 func (r Ramp) Generate(target draw.Image, opts ...any) error {
 	// calculate the whole height of each one
 	// holderc := context.Background()
@@ -70,7 +69,7 @@ func (r Ramp) Generate(target draw.Image, opts ...any) error {
 			row := colour.NewNRGBA64(r.ColourSpace, rowCut)
 			//	row := image.NewNRGBA64(rowCut)
 			posPoint := r.WidgetProperties.positionPoint(target.Bounds().Max, end-int(position), int(position))
-			hidden(target, row, r.ColourSpace, posPoint, r.Gradients.GroupSeparator)
+			drawSegment(target, row, r.ColourSpace, posPoint, r.Gradients.GroupSeparator)
 
 			position += groupStep * float64(rowHeight)
 
@@ -81,7 +80,7 @@ func (r Ramp) Generate(target draw.Image, opts ...any) error {
 			end := int(position + groupStep*float64(ramp.Height))
 			rowCut := r.WidgetProperties.rowOrColumn(target.Bounds(), end, position)
 			rrow := colour.NewNRGBA64(r.ColourSpace, rowCut)
-			//rrow := image.NewNRGBA64(rowCut)
+			// rrow := image.NewNRGBA64(rowCut)
 
 			ramp.colour = str.Colour
 			ramp.startPoint = str.InitialPixelValue
@@ -89,7 +88,7 @@ func (r Ramp) Generate(target draw.Image, opts ...any) error {
 
 			ramp.base = r.WidgetProperties
 			posPoint := r.WidgetProperties.positionPoint(target.Bounds().Max, end-int(position), int(position))
-			hidden(target, rrow, r.ColourSpace, posPoint, ramp)
+			drawSegment(target, rrow, r.ColourSpace, posPoint, ramp)
 
 			position += groupStep * float64(ramp.Height)
 			//	posPoint = r.base.positionPoint(target.Bounds().Max, int(position))
@@ -100,16 +99,16 @@ func (r Ramp) Generate(target draw.Image, opts ...any) error {
 
 				rowCut := r.WidgetProperties.rowOrColumn(target.Bounds(), end, position)
 				irow := colour.NewNRGBA64(r.ColourSpace, rowCut)
-				//irow := image.NewNRGBA64(rowCut)
+				// irow := image.NewNRGBA64(rowCut)
 				altCopy := r.Gradients.GradientSeparator
 				altCopy.base = r.WidgetProperties
 				altCopy.step = r.Gradients.Gradients[i+1].BitDepth
 				posPoint := r.WidgetProperties.positionPoint(target.Bounds().Max, end-int(position), int(position))
-				hidden(target, irow, r.ColourSpace, posPoint, altCopy)
+				drawSegment(target, irow, r.ColourSpace, posPoint, altCopy)
 
 				position += groupStep * float64(interHeight)
 				//	posPoint = input.base.positionPoint(target.Bounds().Max, int(position))
-				//calculate segments here
+				// calculate segments here
 			}
 
 		}
@@ -125,14 +124,15 @@ func (r Ramp) Generate(target draw.Image, opts ...any) error {
 	return nil
 }
 
+// setBase sets the starting positions and angles of the base image.
 func setBase(target *control, dims image.Point) (float64, error) {
 	radian := 0.0
 	target.angleType = noRotation
 
 	if target.CwRotation != "" {
-		angString := fmt.Sprintf("%v", target.CwRotation)
+		// angString := fmt.Sprintf("%v", target.CwRotation)
 		var err error
-		radian, err = anglegen.AngleCalc(angString)
+		radian, err = target.ClockwiseRotationAngle()
 		if err != nil {
 			return 0, err
 		}
@@ -164,7 +164,7 @@ func setBase(target *control, dims image.Point) (float64, error) {
 	}
 	//	stepLength := math.Pow(2, float64(target.MaxBitDepth))
 	// step := float64(rowLength) / stepLength
-	//fmt.Println(step)
+
 	if target.ObjectFitFill {
 
 		stepLength := math.Pow(2, float64(target.MaxBitDepth))
@@ -235,9 +235,9 @@ func (a gradientSeparator) Generate(img draw.Image, cspace colour.ColorSpace) {
 func (s Gradient) Generate(img draw.Image, cspace colour.ColorSpace) {
 	shift16 := 1 << (16 - s.BitDepth)
 
-	//set the steps relative to the max bitdepth
+	// set the steps relative to the max bitdepth
 	bitStep := int(math.Pow(2, float64((s.base.MaxBitDepth - s.BitDepth))))
-	//multiply the step by the shift factor
+	// multiply the step by the shift factor
 	shiftStep := s.base.truePixelShift * float64(bitStep)
 
 	// generate a start point in 16 bit
@@ -274,7 +274,7 @@ func (s Gradient) Generate(img draw.Image, cspace colour.ColorSpace) {
 		colour.Draw(img, target, &image.Uniform{&c}, image.Point{}, draw.Over)
 		altCount++
 
-		//make the colour steps 16 bit
+		// make the colour steps 16 bit
 		if !s.reverse {
 			startPoint += shift16 // 1 << shift16
 		} else {
@@ -289,7 +289,7 @@ func (s Gradient) Generate(img draw.Image, cspace colour.ColorSpace) {
 		s.base.TextProperties.labels(img, cspace, s.Label, s.base.angleType)
 	}
 
-	//run the labels here - use the other label code
+	// run the labels here - use the other label code
 }
 
 func (c control) getLoop(bounds image.Rectangle) (end int) {
@@ -359,14 +359,10 @@ type maker interface {
 	Generate(img draw.Image, cspace colour.ColorSpace)
 }
 
-// Defaults give the optional extras?
-func hidden(base, img draw.Image, cspace colour.ColorSpace, start image.Point, G maker) {
+// drawSegment runs the segment drawer
+func drawSegment(base, img draw.Image, cspace colour.ColorSpace, start image.Point, g maker) {
 
-	/*
-		hidden needs to be something that can be generic and useful
-
-	*/
-	G.Generate(img, cspace) //add optional parameterss?
+	g.Generate(img, cspace) // add optional parameterss?
 
 	colour.Draw(base, img.Bounds().Add(start), img, image.Point{}, draw.Over)
 }

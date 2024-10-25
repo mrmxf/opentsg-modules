@@ -28,9 +28,9 @@ var ghToken, glToken, s3Access, s3Secret, s3Region string
 func TestDecodeHTTP(t *testing.T) {
 
 	// Test getting http images with known urls
-	addresses := []string{"https://mrmxf.com/r/project/msg-tpg/ramp-2022-02-28/multiramp-12b-pc-4k-hswp.png",
+	addresses := []string{"https://opentsg.studio/blog/2023/09/13/2023-09-13-coming-soon/featured-logo-otsg.png",
 		"https://mrmxf.io/smpte-ra-demo/register/lmt/schema"}
-	expec := []string{"9ecf3411b3ad6b252a3bcf45a45291def84dbcbaa489be5a61845d27b3f4c484",
+	expec := []string{"a673f3a297c99e270f8dabb1478e86516187ece596a3b0afe378db7bb79dbdb5",
 		"f0537bd22e23f61dac9c1abcd8cdfa8dcf1d7b907bedb62fe55ae8b653ec525c"}
 
 	// Open the url and check it is good
@@ -231,7 +231,7 @@ func TestErrors(t *testing.T) {
 		"https://mrmxf.com/supersecret", "https://mrmxf.com/user"}
 
 	want := []error{fmt.Errorf("Get \"not%%20even%%20a%%20website\": unsupported protocol scheme \"\""),
-		fmt.Errorf(`Get "https://a.really.fake.website/not/real": dial tcp: lookup a.really.fake.website on 1.1.1.1:53: no such host`),
+		fmt.Errorf(`Get "https://a.really.fake.website/not/real": dial tcp: lookup a.really.fake.website on 10.255.255.254:53: no such host`),
 		fmt.Errorf("404 Not Found"), fmt.Errorf("404 Not Found"), fmt.Errorf("401 Unauthorized")}
 
 	// Open the url and check it is good

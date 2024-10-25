@@ -21,7 +21,6 @@ func SatGen(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc 
 	defer wg.Done()
 	conf := widgethandler.GenConf[saturationJSON]{Debug: debug, Schema: schemaInit, WidgetType: widgetType}
 	widgethandler.WidgetRunner(canvasChan, conf, c, logs, wgc) // Update this to pass an error which is then formatted afterwards
-
 }
 
 var (
@@ -69,10 +68,6 @@ var (
 	satBlue9  = colour.CNRGBA64{R: 197 << 6, G: 347 << 6, B: 912 << 6, A: 0xffff}
 	satBlue10 = colour.CNRGBA64{R: 64 << 6, G: 64 << 6, B: 940 << 6, A: 0xffff}
 )
-
-/*
-set up config etc and generate the sturct
-*/
 
 func (s saturationJSON) Generate(canvas draw.Image, opt ...any) error {
 	b := canvas.Bounds().Max

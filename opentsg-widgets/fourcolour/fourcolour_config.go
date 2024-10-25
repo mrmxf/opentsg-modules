@@ -6,9 +6,9 @@ import (
 )
 
 type fourJSON struct {
-	Colourpallette []string          `json:"colors" yaml:"colors"`
-	ColourSpace    colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	GridLoc        *config.Grid      `json:"grid,omitempty" yaml:"grid,omitempty"`
+	Colourpallette    []string          `json:"colors" yaml:"colors"`
+	ColourSpace       colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
+	config.WidgetGrid `yaml:",inline"`
 }
 
 var schemaInit = []byte(`{
@@ -19,10 +19,11 @@ var schemaInit = []byte(`{
 	"type": "object"
 	}`)
 
+/*
 func (f fourJSON) Alias() string {
 	return f.GridLoc.Alias
 }
 
 func (f fourJSON) Location() string {
 	return f.GridLoc.Location
-}
+}*/

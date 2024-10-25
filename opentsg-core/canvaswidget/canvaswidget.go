@@ -82,13 +82,17 @@ func LoopInit(frameContext *context.Context) []error {
 	}
 	globParams := ConfigVals{}
 
-	if len(conf) == 1 {
+	switch len(conf) {
+	case 1:
 		for _, v := range conf {
 			globParams = v
 		}
-	} else {
+	case 0:
+		return []error{fmt.Errorf("0061 no \"%s\" widget has been loaded, can not configure openTSG", "builtin.canvasoptions")}
 
-		return []error{fmt.Errorf("0061 %v configs have been assigned, only assign one config", len(conf))}
+	default:
+
+		return []error{fmt.Errorf("0061 too many \"%s\" widgets have been loaded (Got %v wanted 1), can not configure openTSG", "builtin.canvasoptions", len(conf))}
 	}
 
 	midC := context.WithValue(*frameContext, generatedConfig, globParams)

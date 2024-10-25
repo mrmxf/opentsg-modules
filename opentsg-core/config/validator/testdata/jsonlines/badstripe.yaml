@@ -1,3 +1,4 @@
+---
 type: builtin.ramps
 minimum: 0
 maximum: 4095
@@ -6,20 +7,20 @@ fillType: fill
 stripes:
   groupHeader:
     color:
-    - 27
+      - 27
     height: 80
   interstripes:
     color:
-    - black
+      - black
     height: 1
   ramps:
     fill: gradient
     bitdepth:
-    - 10
-    - 8
+      - 10
+      - 8
     labels:
-    - 10b
-    - 8b
+      - 10b
+      - 8b
     height: 10
     rampGroups:
       ared:

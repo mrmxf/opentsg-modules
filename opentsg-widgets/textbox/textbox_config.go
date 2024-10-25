@@ -11,11 +11,11 @@ type TextboxJSON struct {
 	// Type       string       `json:"type" yaml:"type"`
 	Text []string `json:"text,omitempty" yaml:"text,omitempty"`
 
-	GridLoc     *config.Grid      `json:"grid,omitempty" yaml:"grid,omitempty"`
-	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	Border      string            `json:"borderColor,omitempty" yaml:"borderColor,omitempty"`
-	BorderSize  float64           `json:"borderSize,omitempty" yaml:"borderSize,omitempty"`
-	Font        string            `json:"font,omitempty" yaml:"font,omitempty"`
+	config.WidgetGrid `yaml:",inline"`
+	ColourSpace       colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
+	Border            string            `json:"borderColor,omitempty" yaml:"borderColor,omitempty"`
+	BorderSize        float64           `json:"borderSize,omitempty" yaml:"borderSize,omitempty"`
+	Font              string            `json:"font,omitempty" yaml:"font,omitempty"`
 
 	Back       string `json:"backgroundColor,omitempty" yaml:"backgroundColor,omitempty"`
 	Textc      string `json:"textColor,omitempty" yaml:"textColor,omitempty"`
@@ -27,6 +27,7 @@ type TextboxJSON struct {
 //go:embed jsonschema/textBoxSchema.json
 var textBoxSchema []byte
 
+/*
 func (tb TextboxJSON) Alias() string {
 	return tb.GridLoc.Alias
 }
@@ -34,3 +35,4 @@ func (tb TextboxJSON) Alias() string {
 func (tb TextboxJSON) Location() string {
 	return tb.GridLoc.Location
 }
+*/

@@ -1,5 +1,5 @@
 {
-    "code": "https://opentsg.io/",
+    "code": "https://opentsg.studio/",
     "colorSpace": {
         "Primaries": {
             "Blue": {},
@@ -12,7 +12,7 @@
         "alias": " A demo alias",
         "location": "a1"
     },
-    "gridPosition": {},
+    "offset": {},
     "size": {
         "height": 100,
         "width": 100

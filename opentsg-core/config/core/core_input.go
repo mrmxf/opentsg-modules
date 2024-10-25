@@ -128,7 +128,7 @@ func (b *base) factoryInit(jsonFactory factory, mainPath, parent string, factory
 			if !slices.Contains(parents, path) {
 				// only append if its not an older path. As this will not effect the search order
 				// search the depth of your tree. not the neighbours
-				parents = append(factoryPaths, path)
+				parents = append(parents, path)
 			}
 
 			err = b.factoryInit(newF, path, parent+f.Name+".", parents, append(positions, i))
@@ -148,17 +148,17 @@ func (b *base) factoryInit(jsonFactory factory, mainPath, parent string, factory
 }
 
 // The resource search algorthim
-func FileSearch(authBody credentials.Decoder, URI, mainPath string, parentPaths []string) (fileBytes []byte, folderFilePath string, fileErr error) {
-	fileBytes, fileErr = authBody.Decode(URI)
+func FileSearch(authBody credentials.Decoder, uri, mainPath string, parentPaths []string) (fileBytes []byte, folderFilePath string, fileErr error) {
+	fileBytes, fileErr = authBody.Decode(uri)
 
 	// generate the input path per run to stop overwriting errors
 
 	if fileErr == nil {
 
-		return fileBytes, URI, nil
+		return fileBytes, uri, nil
 	}
 
-	inputPath, _ := url.JoinPath(mainPath, URI)
+	inputPath, _ := url.JoinPath(mainPath, uri)
 	// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
 	fileBytes, fileErr = authBody.Decode(inputPath)
 
@@ -169,7 +169,7 @@ func FileSearch(authBody credentials.Decoder, URI, mainPath string, parentPaths 
 	for _, path := range parentPaths {
 
 		// Check relative to the mainjson
-		inputPath, _ = filepath.Abs(filepath.Join(path, URI))
+		inputPath, _ = filepath.Abs(filepath.Join(path, uri))
 		// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
 		fileBytes, fileErr = os.ReadFile(inputPath)
 
@@ -181,7 +181,7 @@ func FileSearch(authBody credentials.Decoder, URI, mainPath string, parentPaths 
 	}
 
 	// check relative to the location of the executable
-	inputPath, _ = filepath.Abs(URI)
+	inputPath, _ = filepath.Abs(uri)
 	// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
 	fileBytes, fileErr = os.ReadFile(inputPath)
 	destFolder := filepath.Dir(inputPath)
@@ -194,7 +194,7 @@ func FileSearch(authBody credentials.Decoder, URI, mainPath string, parentPaths 
 	TSGHome := os.Getenv("OPENTSG_HOME")
 	if TSGHome != "" {
 		// check for it
-		inputPath, _ = filepath.Abs(filepath.Join(TSGHome, URI))
+		inputPath, _ = filepath.Abs(filepath.Join(TSGHome, uri))
 		// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
 		fileBytes, fileErr = os.ReadFile(inputPath)
 
