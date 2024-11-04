@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cespare/xxhash"
+	"github.com/cespare/xxhash/v2"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/internal/get"
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/yaml.v3"
@@ -326,14 +326,14 @@ func errorExtractor(schemaErrs []gojsonschema.ResultError, input []byte, loc str
 					errorTarget = fileLines[problemKey] // if it matches update the error and move on
 					if (errorTarget != fileAndLocation{}) {
 						// update the error message giving some idea of the problem then quit
-						errs[i] = fmt.Errorf("0026  %v at line %v in %s", schemaErr.Description(), errorTarget.position, errorTarget.file)
+						errs[i] = fmt.Errorf("0026 %v at line %v in %s, for %s", schemaErr.Description(), errorTarget.position, errorTarget.file, loc)
 
 						break
 					}
 				}
 			}
 		} else {
-			errs[i] = fmt.Errorf("0026 %v at line %v in %s", schemaErr.Description(), errorTarget.position, errorTarget.file)
+			errs[i] = fmt.Errorf("0026 %v at line %v in %s, for %s", schemaErr.Description(), errorTarget.position, errorTarget.file, loc)
 		}
 	}
 

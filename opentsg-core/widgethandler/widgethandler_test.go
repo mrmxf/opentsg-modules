@@ -30,21 +30,6 @@ var mockSchema = []byte(`{
 	"type": "object"
 	}`)
 
-/*
-var tightSchema = []byte(`{
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://example.com/product.schema.json",
-	"title": "Allow anything through for tests",
-	"description": "An empty schema to allow custom structs to run through",
-	"type": "object",
-	"properties": {
-		"type": {
-			"type": "string",
-			"enum": ["test"]}
-	},
-	"required": ["type"]
-}`)*/
-
 var base = `{
     "include": [
       {
@@ -116,7 +101,7 @@ func TestWidgetRun(t *testing.T) {
 	hnormal := sha256.New()
 	htest := sha256.New()
 	hnormal.Write(readImage.Pix)
-	htest.Write(canvas.(*colour.NRGBA64).Pix())
+	htest.Write(canvas.(*image.NRGBA64).Pix)
 
 	// td, _ := os.Create("r.png")
 	// png.Encode(td, canvas)
@@ -175,7 +160,7 @@ func TestZposRun(t *testing.T) {
 		hnormal := sha256.New()
 		htest := sha256.New()
 		hnormal.Write(readImage.Pix)
-		htest.Write(canvas.(*colour.NRGBA64).Pix())
+		htest.Write(canvas.(*image.NRGBA64).Pix)
 
 		// td, _ := os.Create(ftarget + "r.png")
 		// png.Encode(td, canvas)
@@ -239,7 +224,7 @@ func TestErrorZpos(t *testing.T) {
 		hnormal := sha256.New()
 		htest := sha256.New()
 		hnormal.Write(readImage.Pix)
-		htest.Write(canvas.(*colour.NRGBA64).Pix())
+		htest.Write(canvas.(*image.NRGBA64).Pix)
 
 		// td, _ := os.Create(fmt.Sprintf("%vr.png", ftarget))
 		// png.Encode(td, canvas)
@@ -265,7 +250,7 @@ type test struct {
 func (tt test) Generate(i draw.Image, t ...any) error {
 	c := colourgen.HexToColour(tt.Colour, colour.ColorSpace{})
 	// fmt.Println(tt.Fill)
-	colour.Draw(i.(*colour.NRGBA64), i.Bounds(), &image.Uniform{c}, image.Point{}, draw.Src)
+	colour.Draw(i.(*image.NRGBA64), i.Bounds(), &image.Uniform{c}, image.Point{}, draw.Src)
 
 	return nil
 }
@@ -322,7 +307,7 @@ func TestPut(t *testing.T) {
 	names := []string{"testStringAlias", "testIntAlias"}
 	added := []any{"test1", 6} // gets shifted to float64 from json back to reality
 	// gen and expected should grow at the same rate
-	expected := make(map[string]map[any]interface{})
+	expected := make(map[string]map[string]interface{})
 	dummy := context.TODO()
 	newC := MetaDataInit(dummy)
 
@@ -333,12 +318,12 @@ func TestPut(t *testing.T) {
 		err := put(gen, newC)
 
 		// add to the expected total
-		expected[names[i]] = make(map[any]interface{})
+		expected[names[i]] = make(map[string]interface{})
 		expected[names[i]]["content"] = added[i]
 
 		imageGeneration := (*newC).Value(metakey).(metadata)
 
-		//imageGeneration := Extract(newC, "testkey", "")
+		// imageGeneration := Extract(newC, "testkey", "")
 		Convey("Checking that put assigns values to image generation", t, func() {
 			Convey(fmt.Sprintf("using %v as the input map", gen), func() {
 				Convey(fmt.Sprintf("the expected map of %v is returned as the saved data", expected), func() {
@@ -383,9 +368,9 @@ func TestExtract(t *testing.T) {
 		{"twolayer", "checkInt"},
 		{},
 	}
-	expec := make(map[any]interface{})
-	mid := make(map[any]interface{})
-	bot := make(map[any]interface{})
+	expec := make(map[string]interface{})
+	mid := make(map[string]interface{})
+	bot := make(map[string]interface{})
 	bot["checkString"] = "bottom"
 	mid["threelayer"] = bot
 	mid["checkInt"] = 0

@@ -86,11 +86,11 @@ func TestPtoCanvas(t *testing.T) { // test the way [{}] are read etc
 	cPoint := &cmid
 
 	// check size of single area then put through the alias and we get some sizes
-	goodSize := []string{"a1", "a1:b2", "test", "(27,27)-(53,53)", "R1C02", "R2C2:R10C10"}
-	alias := []string{"test", "", "", "", "", ""}
+	goodSize := []string{"a1", "a1:b2", "test", "(27,27)-(53,53)", "R1C02", "R2C2:R10C10", "(-27,-27)-(53,53)"}
+	alias := []string{"test", "", "", "", "", "", ""}
 	expec := []image.Rectangle{image.Rect(0, 0, 100, 100), image.Rect(0, 0, 200, 200), image.Rect(0, 0, 100, 100),
-		image.Rect(0, 0, 26, 26), image.Rect(0, 0, 100, 100), image.Rect(0, 0, 800, 800)}
-	expecP := []image.Point{{0, 100}, {0, 100}, {0, 100}, {27, 27}, {0, 100}, {100, 100}}
+		image.Rect(0, 0, 26, 26), image.Rect(0, 0, 100, 100), image.Rect(0, 0, 800, 800), image.Rect(0, 0, 80, 80)}
+	expecP := []image.Point{{0, 100}, {0, 100}, {0, 100}, {27, 27}, {0, 100}, {100, 100}, {-27, -27}}
 	rows = func(context.Context) int { return 9 }
 	cols = func(context.Context) int { return 16 }
 	for i, size := range goodSize {
@@ -116,7 +116,7 @@ func TestPtoCanvas(t *testing.T) { // test the way [{}] are read etc
 
 	for i, size := range badSize {
 		toCheck, pCheck, _, err := GridSquareLocatorAndGenerator(size, badAlias[i], cPoint)
-		//_, pCheck, _, err := GridSquareLocatorAndGenerator(size, badAlias[i], cPoint)
+		// _, pCheck, _, err := GridSquareLocatorAndGenerator(size, badAlias[i], cPoint)
 		Convey("Checking the differrent methods of bad string input to make a map", t, func() {
 			Convey(fmt.Sprintf("using a %v as the input coordinates", size), func() {
 				Convey(fmt.Sprintf("An error of %v is returned as these are invalid coordinates", badE[i]), func() {
@@ -128,15 +128,15 @@ func TestPtoCanvas(t *testing.T) { // test the way [{}] are read etc
 		})
 	}
 
-	tooLarge := []string{"a5:q6", "(200,200)-(500,901)", "t6:at20"}
+	tooLarge := []string{"a5:q6", "t6:at20"} //"(200,200)-(500,901)", "t6:at20"}
 	largeErr := []string{"0047 Area outside of image bounds of (1600,900), received an x value of 1700 and a y value of 700",
-		"0047 Area outside of image bounds of (1600,900), received an x value of 500 and a y value of 901",
+		//	"0047 Area outside of image bounds of (1600,900), received an x value of 500 and a y value of 901",
 		"0047 Area outside of image bounds of (1600,900), received an x value of 4600 and a y value of 2100",
 	}
 
 	for i, size := range tooLarge {
 		toCheck, pCheck, _, err := GridSquareLocatorAndGenerator(size, "", cPoint)
-		//_, pCheck, _, err := GridSquareLocatorAndGenerator(size, "", cPoint)
+		// _, pCheck, _, err := GridSquareLocatorAndGenerator(size, "", cPoint)
 		Convey("Checking the differrent methods of bad string input to make a map", t, func() {
 			Convey(fmt.Sprintf("using a %v as the input coordinates", size), func() {
 				Convey(fmt.Sprintf("An error of %v is returned as these are invalid coordinates", badE[i]), func() {

@@ -1,26 +1,25 @@
-
+---
 documentation:
   - "## MSG Bit Depth Frame widget"
   - ""
   - "Render a single frame with some swatches over a background"
   - ""
   - "`swatchType` property is set by parent"
-    
+
 include:
   - uri: canvas.yaml
     name: canvas
   - uri: swatch.yaml
     name: swatch
 
-args:        
-- name: swatchType
-  type: string
-  doc: "just a string for substitution in lower levels"
+args:
+  - name: swatchType
+    type: string
+    doc: "just a string for substitution in lower levels"
 create:
-- canvas:
-    linewidth: 0.5
-    name:
-    - 000-{{swatchType}}-{{framenumber}}.json
-- swatch:
-    swatchParams: "{{swatchType}}"
-
+  - canvas:
+      linewidth: 0.5
+      name:
+        - 000-{{swatchType}}-{{framenumber}}.json
+  - swatch:
+      swatchParams: "{{swatchType}}"

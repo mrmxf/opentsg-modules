@@ -21,7 +21,7 @@ func TestNRGBA64Write(t *testing.T) {
 
 	for i, v := range vals {
 
-		//generate a box of certain colours
+		// generate a box of certain colours
 		box := image.NewNRGBA64(image.Rect(0, 0, 100, 100))
 		colors := make(map[int]color.NRGBA64)
 		colors[0] = color.NRGBA64{R: v, A: 0xffff}
@@ -65,7 +65,7 @@ func TestACESWrite(t *testing.T) {
 
 	for i, v := range vals {
 
-		//generate a box of certain colours
+		// generate a box of certain colours
 		box := aces.NewARGBA(image.Rect(0, 0, 100, 100))
 		colors := make(map[int]color.NRGBA64)
 		colors[0] = color.NRGBA64{R: v, A: 0xffff}
@@ -90,10 +90,10 @@ func TestACESWrite(t *testing.T) {
 		hnormal.Write(file)
 		htest.Write(mock.Bytes())
 
-		//png treats it as a rgb48 which aces is technically representing here
+		// png treats it as a rgb48 which aces is technically representing here
 		// so do tiff files
-		//f, _ := os.Create(fmt.Sprintf("p%v.exr", i))
-		//fmt.Println(Encode(f, box))
+		// f, _ := os.Create(fmt.Sprintf("p%v.exr", i))
+		// fmt.Println(Encode(f, box))
 		Convey("Checking the exr files are saved with aces", t, func() {
 			Convey(fmt.Sprintf("Compared the generated file to %v", target[i]), func() {
 				Convey("No error is returned and the file matches", func() {

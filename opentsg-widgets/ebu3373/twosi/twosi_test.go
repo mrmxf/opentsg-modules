@@ -24,6 +24,7 @@ func TestDemo(t *testing.T) {
 	}
 	// base example
 	twosiDemo := twosiJSON{}
+	twosiDemo.GridLoc = &config.Grid{Alias: "testlocation"}
 	examplejson.SaveExampleJson(twosiDemo, widgetType, "base", true)
 
 	getPostion = gridgen.GridSquareLocatorAndGenerator
@@ -37,7 +38,8 @@ func TestChannels(t *testing.T) {
 	explanation := []string{"uhd", "hd", "obtuse"}
 
 	for i, size := range sizes {
-		mock := twosiJSON{GridLoc: config.Grid{Alias: "testlocation"}}
+		mock := twosiJSON{}
+		mock.GridLoc = &config.Grid{Alias: "testlocation"}
 		myImage := image.NewNRGBA64(image.Rect(0, 0, size[0], size[1]))
 		examplejson.SaveExampleJson(mock, widgetType, explanation[i], false)
 		// Generate the ramp image
@@ -52,8 +54,10 @@ func TestChannels(t *testing.T) {
 			colour.Draw(chunk, chunk.Bounds(), &image.Uniform{color.White}, image.Point{}, draw.Src)
 
 			maskC := mask(b.X, b.Y, off[0], off[1])
-
 			colour.DrawMask(chunk, chunk.Bounds(), myImage, image.Point{}, maskC, image.Point{}, draw.Over)
+
+			// f, _ := os.Create(testBase[i] + let[j] + ".png")
+			// png.Encode(f, chunk)
 
 			file, _ := os.Open(testBase[i] + let[j] + ".png")
 			// Decode to get the colour values
@@ -67,7 +71,7 @@ func TestChannels(t *testing.T) {
 			hnormal.Write(readImage.Pix)
 			htest.Write(chunk.Pix)
 
-			//f, _ := os.Create(testBase[i] + let[j] + "er.png")
+			// f, _ := os.Create(testBase[i] + let[j] + "er.png")
 			// colour.PngEncode(f, chunk)
 
 			Convey("Checking the twosi images are generated", t, func() {

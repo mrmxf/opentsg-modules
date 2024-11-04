@@ -37,7 +37,7 @@ func (c *CNRGBA64) UpdateColorSpace(s ColorSpace) {
 	c.ColorSpace = s
 }
 
-func (c *CNRGBA64) RGBA() (R, G, B, A uint32) {
+func (c *CNRGBA64) RGBA() (r, g, b, a uint32) {
 	return color.NRGBA64{R: c.R, G: c.G, B: c.B, A: c.A}.RGBA()
 }
 
@@ -55,7 +55,7 @@ func (c *CyCbCr) UpdateSpace(s ColorSpace) {
 	c.Space = s
 }
 
-func (c *CyCbCr) RGBA() (R, G, B, A uint32) {
+func (c *CyCbCr) RGBA() (r, g, b, a uint32) {
 	return color.YCbCr{Y: c.Y, Cb: c.Cb, Cr: c.Cr}.RGBA()
 }
 
@@ -79,22 +79,22 @@ with the go value, but this is more accurate.
 This function is only recommended when using NRGB64 images that are colour space aware and
 you drawing with the same base images.
 */
-func DrawMask(dst draw.Image, r image.Rectangle, src image.Image, sp image.Point, mask image.Image, mp image.Point, op draw.Op) {
+func DrawMask(dest draw.Image, r image.Rectangle, src image.Image, sp image.Point, mask image.Image, mp image.Point, op draw.Op) {
 
-	switch dst.(type) {
+	switch dst := dest.(type) {
 	case *NRGBA64:
 
 		// follow the draw.DrawMask generic code
 		// with a few slight differences to ensure colour space is preserved.
 
-		clip(dst, &r, src, &sp, mask, &mp)
+		clip(dest, &r, src, &sp, mask, &mp)
 		if r.Empty() {
 			return
 		}
 
 		x0, x1, dx := r.Min.X, r.Max.X, 1
 		y0, y1, dy := r.Min.Y, r.Max.Y, 1
-		//set the colour to be colour space aware
+		// set the colour to be colour space aware
 		var out CNRGBA64
 		sy := sp.Y + y0 - r.Min.Y
 		my := mp.Y + y0 - r.Min.Y
@@ -109,7 +109,7 @@ func DrawMask(dst draw.Image, r image.Rectangle, src image.Image, sp image.Point
 					_, _, _, ma = mask.At(mx, my).RGBA()
 				}
 				switch {
-				//case op == draw.Over:
+				// case op == draw.Over:
 				// this differs from the go code
 				// as it sets straight on top as does not change to rGBA64 like
 				// teh draw.Drawmask function does
@@ -119,10 +119,10 @@ func DrawMask(dst draw.Image, r image.Rectangle, src image.Image, sp image.Point
 					if op == draw.Over {
 						// No-op.
 					} else { // reset to a transparent pixel
-						dst.Set(x, y, color.Transparent)
+						dest.Set(x, y, color.Transparent)
 					}
 				case ma == maxAlpha && op == draw.Src:
-					dst.Set(x, y, src.At(sx, sy))
+					dest.Set(x, y, src.At(sx, sy))
 				default:
 
 					/*
@@ -143,7 +143,7 @@ func DrawMask(dst draw.Image, r image.Rectangle, src image.Image, sp image.Point
 					} else if cspace, ok := src.At(sx, sy).(*CNRGBA64); ok {
 
 						// transform the colour before applying it
-						tCol := transform(cspace.ColorSpace, dst.(*NRGBA64).space, src.At(sx, sy))
+						tCol := transform(cspace.ColorSpace, dst.space, src.At(sx, sy))
 						ncol := tCol.(*CNRGBA64)
 						// making sure to cut out alpha multiplied values
 						//	atc := tCol.(*CNRGBA64)
@@ -170,16 +170,17 @@ func DrawMask(dst draw.Image, r image.Rectangle, src image.Image, sp image.Point
 						out.A = uint16(sa * ma / maxAlpha)
 
 					} else {
-						dstCol := dst.At(x, y).(*CNRGBA64)
+						dstCol := dest.At(x, y).(*CNRGBA64)
 						dr, dg, db, da := uint32(dstCol.R), uint32(dstCol.G), uint32(dstCol.B), uint32(dstCol.A)
 
-						if da == 0 {
+						switch {
+						case da == 0:
 							out = CNRGBA64{R: uint16(sr), G: uint16(sg), B: uint16(sb), A: uint16(sa)}
-						} else if sa == 0 {
+						case sa == 0:
 
 							// don't draw anything as its transparent
 							continue
-						} else {
+						default:
 
 							// else get the alpha multiplied version of the dst and src RGBA values
 							sr, sg, sb = ((sr * sa) / maxAlpha), ((sg * sa) / maxAlpha), ((sb * sa) / maxAlpha)
@@ -200,8 +201,8 @@ func DrawMask(dst draw.Image, r image.Rectangle, src image.Image, sp image.Point
 							// out.B = uint16((db*da + sb*sa) / (da + sa))
 							// out.A = uint16((da*a + sa*ma) / maxAlpha)
 
-							//midOut := color.NRGBA64Model.Convert(tempout).(color.NRGBA64)
-							//out.R, out.G, out.B, out.A = midOut.R, midOut.G, midOut.B, midOut.A
+							// midOut := color.NRGBA64Model.Convert(tempout).(color.NRGBA64)
+							// out.R, out.G, out.B, out.A = midOut.R, midOut.G, midOut.B, midOut.A
 
 							/*
 								var tempout color.RGBA64
@@ -228,13 +229,13 @@ func DrawMask(dst draw.Image, r image.Rectangle, src image.Image, sp image.Point
 					// conversion to color.Color here allocating memory in the
 					// inner loop if sizeof(color.RGBA64) > sizeof(uintptr).
 
-					dst.Set(x, y, &out)
+					dest.Set(x, y, &out)
 				}
 			}
 		}
 
 	default:
-		draw.DrawMask(dst, r, src, sp, mask, mp, op)
+		draw.DrawMask(dest, r, src, sp, mask, mp, op)
 
 	}
 

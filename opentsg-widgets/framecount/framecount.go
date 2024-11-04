@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"image"
-	"image/color"
 	"image/draw"
 	"math"
 	"strconv"
@@ -13,7 +12,6 @@ import (
 	"sync"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/colourgen"
 	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/gridgen"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/widgethandler"
@@ -112,30 +110,6 @@ func (f frameJSON) Generate(canvas draw.Image, extraOpts ...any) error {
 		return err
 	}
 
-	/*
-		background := userColour(f.BackColour, defaultBackground, f.ColourSpace)
-		// Generate a semi transparent grey background
-		for i := 0; i < frame.Bounds().Max.Y; i++ {
-			for j := 0; j < frame.Bounds().Max.X; j++ {
-				frame.Set(j, i, background)
-			}
-		}*/
-
-	// fmt.Println(f.TextProperties.DrawString(frame, c, mes))
-	// fmt.Println(mes, f.TextProperties.Textc)
-	/*
-		text := userColour(f.TextColour, colour.CNRGBA64{A: 65535, Space: f.ColourSpace}, f.ColourSpace)
-		yOff := (float64(square.Y) / 29) * 5 // This constant is to place the y at the text at the center of the square for each height
-		point := fixed.Point26_6{X: fixed.Int26_6(1 * 64), Y: fixed.Int26_6(((float64(height) / 2) + yOff) * 64)}
-		d := &font.Drawer{
-			Dst:  frame,
-			Src:  image.NewUniform(image.NewUniform(text)),
-			Face: myFace,
-			Dot:  point,
-		}
-
-		d.DrawString(mes)*/
-
 	fb := frame.Bounds().Max
 	// If pos not given then draw it here
 
@@ -158,19 +132,6 @@ func (f frameJSON) Generate(canvas draw.Image, extraOpts ...any) error {
 	colour.Draw(canvas, image.Rect(x, y, x+int(f.FontSize), y+int(f.FontSize)), frame, image.Point{}, draw.Over)
 
 	return nil
-}
-
-func userColour(input string, defaultC colour.CNRGBA64, colourSpace colour.ColorSpace) color.Color {
-	var gen color.Color // colour.CNRGBA64
-
-	if input == "" {
-		gen = &defaultC
-	} else {
-		gen = colourgen.HexToColour(input, colourSpace)
-		// gen = colourgen.ConvertNRGBA64(inter)
-	}
-
-	return gen
 }
 
 func intTo4(num int) (string, error) {

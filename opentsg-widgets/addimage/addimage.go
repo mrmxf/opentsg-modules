@@ -41,6 +41,7 @@ func ImageGen(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wg
 }
 
 func (i addimageJSON) Generate(canvas draw.Image, opts ...any) error {
+
 	filename := i.Image
 	if filename == "" {
 		return fmt.Errorf("0161 No image declared")
@@ -77,24 +78,43 @@ func (i addimageJSON) Generate(canvas draw.Image, opts ...any) error {
 		return err
 	}
 
-	// Get wh and resize if needed if wh>xy throw an exception
-	// w, h := canvas.Bounds().Max.X, canvas.Bounds().Max.Y // ImgSize()
+	var extraX, extraY int
+	// stretch the image if required
+	if i.ImgFill != "preserve" {
 
-	// Replace with our ownbrand eventually that is true 64 bit
-	// Make it 64 but it needs a proper method to change it
-	w, h := resizeParams(i.ImgFill, newImage.Bounds().Max, canvas.Bounds().Max)
+		// Get wh and resize if needed if wh>xy throw an exception
+		// w, h := canvas.Bounds().Max.X, canvas.Bounds().Max.Y // ImgSize()
 
-	if w != newImage.Bounds().Max.X || h != newImage.Bounds().Max.Y {
-		newImage = resize.Resize(uint(w), uint(h), newImage, resize.Bicubic)
-		// https://pkg.go.dev/golang.org/x/image/draw#pkg-variables use a different resize
+		// if image fill is not called then move it around.
+
+		// Replace with our own brand eventually that is true 64 bit
+		// Make it 64 but it needs a proper method to change it
+		w, h := resizeParams(i.ImgFill, newImage.Bounds().Max, canvas.Bounds().Max)
+
+		if w != newImage.Bounds().Max.X || h != newImage.Bounds().Max.Y {
+			newImage = resize.Resize(uint(w), uint(h), newImage, resize.Bicubic)
+			// https://pkg.go.dev/golang.org/x/image/draw#pkg-variables use a different resize
+		}
+	} else {
+		// get centre
+
+		extraX = (canvas.Bounds().Dx() - newImage.Bounds().Dx()) / 2
+		extraY = (canvas.Bounds().Dy() - newImage.Bounds().Dy()) / 2
 	}
-
 	// newImg64 := gridgen.ImageGenerator(*c, image.Rect(0, 0, newImage.Bounds().Max.X, newImage.Bounds().Max.Y))
 	if i.ColourSpace == nil {
 		i.ColourSpace = &colour.ColorSpace{}
 	}
 
 	newImg64 := colour.NewNRGBA64(*i.ColourSpace, newImage.Bounds())
+
+	imgOffset, err := i.CalcOffset(canvas.Bounds().Max)
+	imgOffset = imgOffset.Add(image.Point{X: extraX, Y: extraY})
+
+	// imgOffset = imgOffset.Add()
+	if err != nil {
+		return fmt.Errorf("0DEV error extracting the image offset %v", err)
+	}
 
 	if depth == 8 {
 		b := newImg64.Bounds().Max
@@ -104,7 +124,7 @@ func (i addimageJSON) Generate(canvas draw.Image, opts ...any) error {
 
 				// fullDepth := colourgen.ConvertNRGBA64(got)
 
-				newImg64.Set(x, y, got) //fullDepth)
+				newImg64.Set(x, y, got) // fullDepth)
 
 			}
 		}
@@ -112,18 +132,9 @@ func (i addimageJSON) Generate(canvas draw.Image, opts ...any) error {
 		colour.Draw(newImg64, newImg64.Bounds(), newImage, image.Point{}, draw.Over)
 	}
 
-	// set the final image to ensure
-	// colour space transformations are preserved
-	/*	b := canvas.Bounds().Max
-		for x := 0; x < b.X; x++ {
-			for y := 0; y < b.Y; y++ {
-				canvas.Set(x, y, newImg64.At(x, y))
-			}
-		}*/
-
 	// draw.Src ensures the colourspace transformations are kept
 	// as long as the picture has no alpha
-	colour.Draw(canvas, canvas.Bounds(), newImg64, image.Point{}, draw.Src)
+	colour.Draw(canvas, image.Rectangle{Min: canvas.Bounds().Min.Add(imgOffset), Max: canvas.Bounds().Max}, newImg64, image.Point{}, draw.Src)
 
 	return nil
 }

@@ -5,35 +5,24 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colourgen"
 )
 
-/*
-type TextboxJSON struct {
-	// Type       string       `json:"type" yaml:"type"`
-	Font        string            `json:"font" yaml:"font"`
-	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	Back        string            `json:"backgroundcolor" yaml:"backgroundcolor"`
-	Textc       string            `json:"textcolor" yaml:"textcolor"`
-	FillType    string
-	XAlignment  string
-	YAlignment  string
-}*/
-
 // TextboxProperties contains all the properties for generating a textbox
 type TextboxProperties struct {
 	// Type       string       `json:"type" yaml:"type"`
 	font             string            // `json:"font" yaml:"font"`
-	colourSpace      colour.ColorSpace //`json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	backgroundColour *colour.CNRGBA64  //`json:"backgroundcolor" yaml:"backgroundcolor"`
-	textColour       *colour.CNRGBA64  //`json:"textcolor" yaml:"textcolor"`
+	colourSpace      colour.ColorSpace // `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
+	backgroundColour *colour.CNRGBA64  // `json:"backgroundcolor" yaml:"backgroundcolor"`
+	textColour       *colour.CNRGBA64  // `json:"textcolor" yaml:"textcolor"`
 	fillType         string
 	xAlignment       string
 	yAlignment       string
+	verticalText     bool
 }
 
 // NewTextBoxer generates a new TextBoxProperties object.
 // Tailored to the options provided and the
 // order in which the options are specified are the order in which the executed
-func NewTextboxer(ColourSpace colour.ColorSpace, options ...func(*TextboxProperties)) *TextboxProperties {
-	txt := &TextboxProperties{colourSpace: ColourSpace}
+func NewTextboxer(colourSpace colour.ColorSpace, options ...func(*TextboxProperties)) *TextboxProperties {
+	txt := &TextboxProperties{colourSpace: colourSpace}
 	for _, opt := range options {
 		opt(txt)
 	}
@@ -103,5 +92,13 @@ func WithXAlignment(x string) func(t *TextboxProperties) {
 func WithYAlignment(y string) func(t *TextboxProperties) {
 	return func(t *TextboxProperties) {
 		t.yAlignment = y
+	}
+}
+
+// WithVerticalText sets the vertical text with true,
+// if false or not declared the text is horizontal
+func WithVerticalText(vertical bool) func(t *TextboxProperties) {
+	return func(t *TextboxProperties) {
+		t.verticalText = true
 	}
 }

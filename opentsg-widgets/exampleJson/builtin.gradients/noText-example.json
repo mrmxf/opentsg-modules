@@ -55,7 +55,6 @@
     },
     "type": "builtin.gradients",
     "widgetProperties": {
-        "cwRotation": "",
         "maxBitDepth": 8,
         "objectFitFill": false,
         "pixelValueRepeat": 1,

@@ -1,5 +1,5 @@
 {
-    "plateType": "sweep",
+    "plateType": "horizontalSweep",
     "colorSpace": {
         "Primaries": {
             "Red": {},
@@ -9,5 +9,7 @@
         }
     },
     "startColor": "white",
-    "angle": 90
+    "frequency": null,
+    "cwRotation": 90,
+    "offset": {}
 }

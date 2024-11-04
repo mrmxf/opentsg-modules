@@ -25,7 +25,10 @@ func TestDemo(t *testing.T) {
 			GradientSeparator: gradientSeparator{Colours: []string{"white", "black"}, Height: 1},
 			Gradients:         []Gradient{{Height: 5, BitDepth: 4, Label: "4b"}, {Height: 5, BitDepth: 6, Label: "6b"}, {Height: 5, BitDepth: 8, Label: "8b"}, {Height: 5, BitDepth: 10, Label: "10b"}}},
 		WidgetProperties: control{MaxBitDepth: 10, TextProperties: textObjectJSON{TextHeight: 30, TextColour: "#345AB6",
-			TextXPosition: text.AlignmentLeft, TextYPosition: text.AlignmentTop}, CwRotation: "π*31/20", PixelValueRepeat: 1}}
+			TextXPosition: text.AlignmentLeft, TextYPosition: text.AlignmentTop}, PixelValueRepeat: 1}}
+
+	// set the angle later
+	mockFull.WidgetProperties.CwRotation = "π*31/20"
 	examplejson.SaveExampleJson(mockFull, widgetType, "maximum", true)
 
 	mockNoGroupDiv := Ramp{Groups: []RampProperties{{Colour: "green"}, {Colour: "blue", InitialPixelValue: 0}, {Colour: "red", InitialPixelValue: 0}},
@@ -60,7 +63,7 @@ func TestTemp(t *testing.T) {
 			GradientSeparator: gradientSeparator{Colours: []string{"white", "black", "red", "blue"}, Height: 1},
 			Gradients:         []Gradient{{Height: 5, BitDepth: 4, Label: "4b"}, {Height: 5, BitDepth: 6, Label: "6b"}, {Height: 5, BitDepth: 8, Label: "8b"}, {Height: 5, BitDepth: 10, Label: "10b"}}},
 		WidgetProperties: control{MaxBitDepth: 10, TextProperties: textObjectJSON{TextHeight: 30, TextColour: "#345AB6", TextXPosition: text.AlignmentLeft, TextYPosition: text.AlignmentTop}}}
-	tester := image.NewNRGBA64(image.Rect(0, 0, 1024, 1000)) //960))
+	tester := image.NewNRGBA64(image.Rect(0, 0, 1024, 1000)) // 960))
 	mock.Generate(tester)
 
 	examplejson.SaveExampleJson(mock, widgetType, "demo", false)
@@ -68,49 +71,6 @@ func TestTemp(t *testing.T) {
 	f, _ := os.Create("./testdata/tester.png")
 	png.Encode(f, tester)
 
-	/*
-		rotates := []string{"π*1/2", "π*3/2", "π*2/2", "π*5/8"}
-		names := []string{"tester90.png", "tester270.png", "tester180.png", "testerwonk.png"}
-
-		for i, ang := range rotates {
-			mockAngle := mock
-			mockAngle.WidgetProperties.CwRotation = ang
-			// mock.WidgetProperties.TextProperties = textObjectJSON{TextColour: "#F32399"}
-
-			testerAng := image.NewNRGBA64(image.Rect(0, 0, 4000, 4000))
-			firstrun(testerAng, mockAngle)
-
-			fang, _ := os.Create(names[i])
-			png.Encode(fang, testerAng)
-		}
-
-		mock.Groups = []RampProperties{{Colour: "gray", InitialPixelValue: 1023, Reverse: true}}
-		mock.WidgetProperties = control{MaxBitDepth: 10, TextProperties: textObjectJSON{TextColour: "#F32399"}}
-		mock.Gradients.Gradients = []Gradient{{Height: 20, BitDepth: 8}, {Height: 20, BitDepth: 4}}
-		tester2 := image.NewNRGBA64(image.Rect(0, 0, 5000, 1000))
-		firstrun(tester2, mock)
-
-		f2, _ := os.Create("tester2.png")
-		png.Encode(f2, tester2)
-
-		mock = Ramp{Groups: []RampProperties{{Colour: "green", InitialPixelValue: 960}, {Colour: "gray", InitialPixelValue: 960}},
-			Gradients: groupContents{GroupSeparator: groupSeparator{Height: 0, Colour: "white"},
-				GradientSeparator: gradientSeparator{Colours: []string{"white", "black", "red", "blue"}, Height: 1},
-				Gradients:         []Gradient{{Height: 5, BitDepth: 4, Label: "4b"}, {Height: 5, BitDepth: 6, Label: "6b"}, {Height: 5, BitDepth: 8, Label: "8b"}, {Height: 5, BitDepth: 10, Label: "10b"}}},
-			WidgetProperties: control{MaxBitDepth: 10, TextProperties: textObjectJSON{TextColour: "#345AB6", TextHeight: 70}}}
-		Squeezer := image.NewNRGBA64(image.Rect(0, 0, 5000, 1000)) //960))
-		mock.WidgetProperties.ObjectFitFill = true
-		firstrun(Squeezer, mock)
-		fsqueeze, _ := os.Create("testerSqu.png")
-		png.Encode(fsqueeze, Squeezer)
-
-		twoer := image.NewNRGBA64(image.Rect(0, 0, 5000, 1000)) //960))
-		mock.WidgetProperties.ObjectFitFill = false
-		mock.WidgetProperties.PixelValueRepeat = 2
-		firstrun(twoer, mock)
-		fstwo, _ := os.Create("testerTwo.png")
-		png.Encode(fstwo, twoer)
-	*/
 }
 
 func TestRotation(t *testing.T) {
@@ -132,6 +92,7 @@ func TestRotation(t *testing.T) {
 		angleImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{4096, 2000}})
 		examplejson.SaveExampleJson(mock, widgetType, explanationRight[i], false)
 		genErr := mock.Generate(angleImage)
+
 		// Generate the ramp image
 		// genErr := mock.Generate(myImage)
 		// Open the image to compare to
@@ -186,7 +147,7 @@ func TestRotation(t *testing.T) {
 		hnormal.Write(readImage.Pix)
 		htest.Write(angleImage.Pix)
 
-		//f, _ := os.Create(testFRightOff[i] + ".png")
+		// f, _ := os.Create(testFRightOff[i] + ".png")
 		// 	png.Encode(f, angleImage)
 
 		Convey("Checking the ramps are generated at angles other than 90 degrees", t, func() {
@@ -200,37 +161,3 @@ func TestRotation(t *testing.T) {
 	}
 
 }
-
-/*
-this was a test to ensure colour spaces were being taken into account with the widgets.
-func TestCspace(t *testing.T) {
-	mockSpace := Ramp{Groups: []RampProperties{{Colour: "green", InitialPixelValue: 960}, {Colour: "red", InitialPixelValue: 960}},
-		Gradients: groupContents{GroupSeparator: groupSeparator{Height: 0, Colour: "white"},
-			GradientSeparator: gradientSeparator{Colours: []string{"white", "black", "red", "blue"}, Height: 1},
-			Gradients:         []Gradient{{Height: 5, BitDepth: 4, Label: "4b"}, {Height: 5, BitDepth: 6, Label: "6b"}, {Height: 5, BitDepth: 8, Label: "8b"}, {Height: 5, BitDepth: 10, Label: "10b"}}},
-		WidgetProperties: control{MaxBitDepth: 10, TextProperties: textObjectJSON{TextHeight: 30, TextColour: "#345AB6", TextXPosition: text.AlignmentLeft, TextYPosition: text.AlignmentTop}}}
-
-	spaces := []colour.ColorSpace{{ColorSpace: "rec709"}, {ColorSpace: "rec2020"}}
-	baseImage := colour.NewNRGBA64(colour.ColorSpace{ColorSpace: "rec2020"}, image.Rect(0, 0, 2000, 2000))
-	for i, s := range spaces {
-		mockSpace.ColourSpace = s
-
-		base := colour.NewNRGBA64(colour.ColorSpace{ColorSpace: "rec2020"}, image.Rect(0, 0, 2000, 1000))
-		// base = colour.NewNRGBA64(colour.ColorSpace{}, image.Rect(0, 0, 2000, 1000))
-		fmt.Println(mockSpace.Generate(base))
-
-	//	fmt.Println(base.At(500, 500))
-		//base.Set(500, 500, &colour.CNRGBA64{R: 65335, A: 0xffff, Space: colour.ColorSpace{ColorSpace: "rec709"}})
-
-	//	colour.Draw(base, image.Rect(400, 400, 600, 600), &image.Uniform{&colour.CNRGBA64{R: 65335, A: 0xffff, Space: s}}, image.Point{}, draw.Over)
-	//	fmt.Println(base.At(500, 500))
-		f, _ := os.Create(fmt.Sprintf("test%v.png", i))
-		png.Encode(f, base)
-
-		colour.Draw(baseImage, image.Rect(0, 1000*i, 2000, 10000*(i+1)), base, image.Point{}, draw.Over)
-	}
-
-	f, _ := os.Create("test.png")
-	png.Encode(f, baseImage)
-}
-*/

@@ -28,7 +28,8 @@ func TestBars(t *testing.T) {
 	explanation := []string{"uhd", "hd", "obtuse"}
 
 	for i, size := range sizes {
-		mock := barJSON{GridLoc: config.Grid{Alias: "testlocation"}}
+		mock := barJSON{}
+		mock.GridLoc = &config.Grid{Alias: "testlocation"}
 		myImage := image.NewNRGBA64(image.Rect(0, 0, size[0], size[1]))
 
 		examplejson.SaveExampleJson(mock, widgetType, explanation[i], false)
@@ -71,34 +72,6 @@ func compare(base, new draw.Image) {
 		}
 
 	}
-	/*
-		0 327.58620689655174
-		0 327.58620689655174
 
-
-		327.58620689655174
-		327.58620689655174 917.2413793103449
-		327.58620689655174 917.2413793103449
-
-
-		1244.8275862068965
-
-		1244.8275862068965 327.58620689655174
-		1244.8275862068967 327.58620689655174
-		1572.4137931034481
-		1572.4137931034481 327.58620689655174
-		1572.4137931034484 327.58620689655174
-		1899.9999999999998
-
-
-		0 327.58620689655174
-		327.58620689655174
-		327.58620689655174 917.2413793103449
-		1244.8275862068967
-		1244.8275862068967 327.58620689655174
-		1572.4137931034484
-		1572.4137931034484 327.58620689655174
-		1900
-	*/
 	fmt.Println(count, "non matches")
 }

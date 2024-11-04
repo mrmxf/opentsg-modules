@@ -1,0 +1,27 @@
+{
+    "colorSpace": {
+        "Primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "graticule": {
+        "position": "middle",
+        "textColor": "#C2A649"
+    },
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "type": "builtin.resize",
+    "xDetections": [
+        "75%",
+        "50%"
+    ],
+    "yDetections": [
+        "50%",
+        "25%"
+    ]
+}

@@ -66,7 +66,7 @@ func Randomspread(height, width int) []image.Rectangle {
 			start = image.Point{start.X, start.Y + height}
 		}
 
-		//recs = append(recs, image.Rectangle{vectorstart, image.Point{vectorstart.X + width, vectorstart.Y + height}})
+		// recs = append(recs, image.Rectangle{vectorstart, image.Point{vectorstart.X + width, vectorstart.Y + height}})
 		direction++
 	}
 
@@ -92,7 +92,7 @@ func linearneighbour(tiles []image.Rectangle) []nodal {
 		// 	adjaceny[j] = make([]int, len(tiles))
 		for k, neighbour := range tiles {
 
-			if k == j { //skip its self
+			if k == j { // skip its self
 
 				continue
 			}

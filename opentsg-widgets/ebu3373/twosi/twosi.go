@@ -89,17 +89,6 @@ func (t twosiJSON) Generate(canvas draw.Image, opt ...any) error {
 	letterSize := aPos(int(math.Round(72 * xScale)))
 
 	// Get the title font to be used
-	// @TODO susbtitute this all with the new text box functionality
-	/*
-		fontByte := textbox.Title
-		fontain, err := freetype.ParseFont(fontByte)
-		if err != nil {
-
-			return err
-		}
-		// Assign the font all the relative size information
-		opt2 := truetype.Options{Size: 105 * xScale, SubPixelsY: 8, Hinting: 2}
-		myFace := truetype.NewFace(fontain, &opt2)*/
 
 	connections := make(map[string]channel)
 	connections["A"] = channel{yOff: 0, xOff: 0, Letter: "A"}

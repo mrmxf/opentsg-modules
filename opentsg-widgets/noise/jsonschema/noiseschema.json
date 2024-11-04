@@ -29,6 +29,29 @@
             "minimum": 0,
             "maximum": 4095
         },
+        "yOffset": {
+            "description": "the offset between the left side and the right side of the noise in pixels, this is used to create guillotine shaped widgets. If yOffset is positive then the guillotine is right sided and if and it is negative it is left sided.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "bottomLeft": {
+                    "type":"integer",
+                    "minimum":0
+                },
+                "bottomRight": {
+                    "type":"integer",
+                    "minimum":0
+                },
+                "topLeft": {
+                    "type":"integer",
+                    "minimum":0
+                },
+                "topRight": {
+                    "type":"integer",
+                    "minimum":0
+                }
+            }
+        },
        "noiseType": {
         "enum": [
             "white noise"

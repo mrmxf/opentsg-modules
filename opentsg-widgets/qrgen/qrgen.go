@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"image"
 	"image/draw"
-	"math"
 	"sync"
 
 	"github.com/boombuler/barcode"
@@ -35,7 +34,7 @@ func (qrC qrcodeJSON) Generate(canvas draw.Image, opt ...any) error {
 		return nil
 	}
 	/*
-		TODO: utilise this information for metadata in the barcode
+		@ TODO: utilise this information for metadata in the barcode
 			if qrC.Query != nil {
 				// Do some more metadata extraction
 				for _, q := range *qrC.Query {
@@ -62,19 +61,19 @@ func (qrC qrcodeJSON) Generate(canvas draw.Image, opt ...any) error {
 		}
 	}
 
-	var x, y int
-	if qrC.Imgpos != nil { // Scale x and y as a percentage
-		x = int(math.Floor((qrC.Imgpos.X / 100) * float64(b.X)))
-		y = int(math.Floor((qrC.Imgpos.Y / 100) * float64(b.Y)))
+	offset, err := qrC.CalcOffset(b)
+
+	if err != nil {
+		return fmt.Errorf("0DEV error finding the offset :%v", err)
 	}
 
-	if x > (b.X - code.Bounds().Max.X) {
-		return fmt.Errorf("0133 the x position %v is greater than the x boundary of %v", x, canvas.Bounds().Max.X)
-	} else if y > b.Y-code.Bounds().Max.Y {
-		return fmt.Errorf("0133 the y position %v is greater than the y boundary of %v", y, canvas.Bounds().Max.Y)
+	if offset.X > (b.X - code.Bounds().Max.X) {
+		return fmt.Errorf("0133 the x position %v is greater than the x boundary of %v", offset.X, canvas.Bounds().Max.X)
+	} else if offset.Y > b.Y-code.Bounds().Max.Y {
+		return fmt.Errorf("0133 the y position %v is greater than the y boundary of %v", offset.Y, canvas.Bounds().Max.Y)
 	}
 	// draw qr code as a mid point, or make colour space agnostic
-	colour.Draw(canvas, canvas.Bounds().Add(image.Point{x, y}), code, image.Point{}, draw.Over)
+	colour.Draw(canvas, canvas.Bounds().Add(offset), code, image.Point{}, draw.Over)
 
 	return nil
 }

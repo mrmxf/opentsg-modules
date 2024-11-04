@@ -16,21 +16,19 @@ import (
 ////////////////
 // This is a base of useful things that are used across the config files. Will be designed to be something used by each one
 
-type testKey struct {
-	tag   string
-	added int
-}
+type testKey string
 
-var (
-	updates = testKey{"update key for the array of objects", 0}
-	baseKey = testKey{"base key for widgets", 1}
-	//	widgetbases  = testKey{"widget bases", 2}
-	frameHolders    = testKey{"The key for holding all the generated json", 3}
-	aliasKey        = testKey{"base for aliases to run through out the program", 4}
-	lines           = testKey{"the holder of the hashes of the name+content for line numbers and files", 5}
-	addedWidgets    = testKey{"the key to access the list of added widgets to find missed aliases", 6}
-	factoryDir      = testKey{"the directory of the main widget factory and everything is relative to", 7}
-	credentialsAuth = testKey{"the holder of all the auth information provided by the user for accessing http sources", 7}
+const (
+	updates testKey = "update key for the array of objects"
+	baseKey testKey = "base key for widgets"
+	//	widgetbases  = "widget bases", 2}
+	frameHolders    testKey = "The key for holding all the generated json"
+	aliasKey        testKey = "base for aliases to run through out the program"
+	lines           testKey = "the holder of the hashes of the name+content for line numbers and files"
+	addedWidgets    testKey = "the key to access the list of added widgets to find missed aliases"
+	factoryDir      testKey = "the directory of the main widget factory and everything is relative to"
+	credentialsAuth testKey = "the holder of all the auth information provided by the user for accessing http sources"
+	poskey          testKey = "the key that holds the frame position"
 )
 
 // then the rest is additions to the alias
@@ -46,17 +44,6 @@ type factory struct {
 type arguments struct {
 	Name string `json:"name,omitempty" yaml:"name,omitempty"`
 	Type string `json:"type,omitempty" yaml:"type,omitempty"`
-}
-
-// getArgs returns the list of arguments from a factory
-// we only need the list of argument names and no their description.
-func (f factory) getArgs() []string {
-	results := make([]string, len(f.Args))
-	for i, k := range f.Args {
-		results[i] = k.Name
-	}
-
-	return results
 }
 
 type factoryarr struct {
@@ -113,7 +100,7 @@ func GetAlias(c context.Context) SyncMap {
 
 		return Alias.(SyncMap)
 	}
-	//else return an empty map
+	// else return an empty map
 	var newmu sync.Mutex
 
 	return SyncMap{Mu: &newmu, Data: make(map[string]string)}
@@ -157,12 +144,30 @@ func GetDir(c context.Context) string {
 	return s
 }
 
+// GetFramePosition returns the frame number of openTSG.
+func GetFramePosition(c context.Context) int {
+	pos := c.Value(poskey)
+	if pos != nil {
+		p, ok := pos.(int)
+		if ok {
+			return p
+		}
+	}
+
+	return 0
+}
+
 // GetWebBytes is a wrapper of `credentials` where the configuration body is stored in config.
 // This is to prevent several intialisations of the authbody or the data being passed around.
-func GetWebBytes(c *context.Context, URI string) ([]byte, error) {
+func GetWebBytes(c *context.Context, uri string) ([]byte, error) {
 
-	auth, ok := (*c).Value(credentialsAuth).(credentials.Decoder)
-	//if there is not an authorisation body make a new one with no credentials
+	var ok = false
+	var auth credentials.Decoder
+
+	if c != nil {
+		auth, ok = (*c).Value(credentialsAuth).(credentials.Decoder)
+	}
+	// if there is not an authorisation body make a new one with no credentials
 	if !ok {
 		var err error
 		auth, err = credentials.AuthInit("")
@@ -171,5 +176,5 @@ func GetWebBytes(c *context.Context, URI string) ([]byte, error) {
 		}
 	}
 
-	return auth.Decode(URI)
+	return auth.Decode(uri)
 }

@@ -92,7 +92,7 @@ func (bar barJSON) Generate(canvas draw.Image, opt ...any) error {
 
 		boxHeight := hOff + barHeight
 
-		//accounting for rounding errors at the end of the bars
+		// accounting for rounding errors at the end of the bars
 		if math.Abs(float64(b.Y)-boxHeight) < 0.002 {
 			boxHeight = float64(b.Y)
 		}

@@ -13,19 +13,19 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestCsv(t *testing.T) { //("testing the csvs generated against a known value", func() {
-	//this is the standard 16 bit image as a tiff
+func TestCsv(t *testing.T) { // ("testing the csvs generated against a known value", func() {
+	// this is the standard 16 bit image as a tiff
 	file, _ := os.Open("./tests/base.png")
-	//decode to get the colour values
+	// decode to get the colour values
 	baseVals, _ := png.Decode(file)
 
 	readImage := image.NewNRGBA64(baseVals.Bounds())
-	//transfer to nrgba64
+	// transfer to nrgba64
 	draw.Draw(readImage, readImage.Bounds(), baseVals, image.Point{0, 0}, draw.Over)
 	f, _ := os.Create("./tests/base.csv")
 	Encode(f, readImage)
 
-	//Test the outputs in the next section
+	// Test the outputs in the next section
 	shaGen := func(normal, test string) (hash.Hash, hash.Hash) {
 		hnormal := sha256.New()
 		htest := sha256.New()

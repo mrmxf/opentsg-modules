@@ -10,7 +10,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-
 var timeReg = regexp.MustCompile(`^[\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}:[\d]{2}:[\d]{2}\.[\d]{3}Z$`)
 
 func TestLogGenerate(t *testing.T) {

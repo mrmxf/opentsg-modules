@@ -12,36 +12,6 @@ import (
 	"time"
 )
 
-/*
-insert an embed struct here or something for our own error processing
-now there is a new struct for errors these changes can be added more easily and incorporated.
-
-type idea struct {
-	error string
-	level warn debug info error and anyothers
-	wrapped
-	count e.g. if this error number is repeated for several wrapped errors then just slap it in for certain levels of user base
-}
-
-errors.Is(err, fs.ErrExist) for enumerating errors
-
- simple way to create wrapped errors is to call fmt.Errorf and apply the %w verb to the error argument:
-
-errors.Unwrap(fmt.Errorf("... %w ...", ..., err, ...))
-
-the error design is the error number - main text as a go template
-design is translation of message
-and translation of generic items
-
-Errors that I have to wrap:
-- file systems errors these are provided
-- yaml unmarshall errors
-
-
-
-
-*/
-
 // logInit initialises a log with a writer specified by the input. If no input is given it does not write.
 // mnt gives a mount point for any files/folders to be written
 // It initialises a middleware that prefixes the error with
@@ -59,7 +29,7 @@ func LogInit(logType, mnt string) *Logger {
 	logType = strings.ToLower(logType)
 	logs := log.Default()
 	fileName := regexp.MustCompile(`^file:[a-zA-Z0-9\.\/]{1,30}\.[lL][oO][gG]$`)
-	//middle := handler{}
+	// middle := handler{}
 	switch {
 	case logType == "stdout":
 		log.SetOutput(os.Stdout)
@@ -68,18 +38,18 @@ func LogInit(logType, mnt string) *Logger {
 	case logType == "file":
 		folTformat := "2006-01-02"
 		fol := time.Now().Format(folTformat)
-		log.SetOutput(logToFile(mnt + "open-tpg_" + fol + ".log"))
+		log.SetOutput(logToFile(mnt + "open-tag_" + fol + ".log"))
 	case fileName.MatchString(logType):
 		log.SetOutput(logToFile(filepath.Join(mnt, logType[5:])))
 	default:
 		log.SetOutput(io.Discard)
 	}
 	// set the writer as the middleware writer
-	//log.SetOutput(middle)
+	// log.SetOutput(middle)
 	// set so there's no flags and we use our own magic
 	logs.SetFlags(0)
 
-	//logsWrapper :=
+	// logsWrapper :=
 	//	fmt.Println(logsWrapper)
 	return &Logger{log: logs, errors: make(chan loggedMessage, 1000)}
 }
@@ -98,7 +68,7 @@ type loggedMessage struct {
 }
 
 type Logger struct {
-	//channel is safe for concurrency when the logger is being used by several widgets
+	// channel is safe for concurrency when the logger is being used by several widgets
 	errors chan loggedMessage
 	log    *log.Logger
 	prefix string
@@ -136,13 +106,13 @@ func (l *Logger) PrintErrorMessage(prefix string, message error, debug bool) {
 		erroCount := len(l.errors)
 		l.LogFlush()
 		panic(fmt.Sprintf("channel is full, %v\n", erroCount))
-		//panic errors out of range, more errors assigned then we have capacity for etc?
+		// panic errors out of range, more errors assigned then we have capacity for etc?
 	}
 }
 
 // LogFlush flushes the error messages, writing the stored time of error, the prefix and the error message in that order
 func (l *Logger) LogFlush() {
-	//loop through the channel until its empty
+	// loop through the channel until its empty
 	for len(l.errors) > 0 {
 		mes := <-l.errors
 		l.log.Printf("%v %v%v", mes.errorTime, l.prefix, mes.errorMessage)
@@ -153,4 +123,3 @@ func (l *Logger) LogFlush() {
 func (l *Logger) SetPrefix(prefix string) {
 	l.prefix = prefix
 }
-

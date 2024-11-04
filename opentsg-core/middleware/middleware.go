@@ -40,7 +40,7 @@ func Check(functions []Functions, frame int) (bool, map[string]json.RawMessage, 
 			return pass, funcs.Action, "middleware functions :" + strings.Join(funcs.AnyOf, ",") // a map of the raw json to replace the one being used
 		}
 	}
-	
+
 	return false, nil, ""
 }
 

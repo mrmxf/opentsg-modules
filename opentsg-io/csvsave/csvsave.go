@@ -18,7 +18,7 @@ func Encode(w io.Writer, content *image.NRGBA64) error {
 		//	f, fErr := os.OpenFile(files[i], os.O_RDWR|os.O_CREATE, 0777)
 		//	defer f.Close()
 
-		//assign a way to write to the file
+		// assign a way to write to the file
 		cw := csv.NewWriter(w)
 		cw.WriteAll(colourStrings[i])
 
@@ -28,7 +28,7 @@ func Encode(w io.Writer, content *image.NRGBA64) error {
 }
 
 func imageToString(canvas *image.NRGBA64) [][][]string {
-	//make an array of rgb
+	// make an array of rgb
 	imgString := make([][][]string, 3)
 	for i := range imgString {
 		imgString[i] = make([][]string, canvas.Bounds().Max.Y)
@@ -36,7 +36,7 @@ func imageToString(canvas *image.NRGBA64) [][][]string {
 			imgString[i][j] = make([]string, canvas.Bounds().Max.X)
 		}
 	}
-	//loop through each position and assign the rgb section of the array with the values
+	// loop through each position and assign the rgb section of the array with the values
 	for i := 0; i < canvas.Bounds().Max.Y; i++ {
 		for j := 0; j < canvas.Bounds().Max.X; j++ {
 			cVal := canvas.At(j, i)

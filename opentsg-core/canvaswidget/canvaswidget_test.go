@@ -76,7 +76,7 @@ func TestInitStage(t *testing.T) {
 	cIn, _, _ = core.FileImport("testdata/doubleloader.json", "", false)
 	cDouble, _ := core.FrameWidgetsGenerator(cIn, 0, false)
 	err := LoopInit(&cDouble)
-	expectedDoubleErr := []error{fmt.Errorf("0061 2 configs have been assigned, only assign one config")}
+	expectedDoubleErr := []error{fmt.Errorf("0061 too many \"builtin.canvasoptions\" widgets have been loaded (Got 2 wanted 1), can not configure openTSG")}
 
 	Convey("Checking loopinit registers errors", t, func() {
 		Convey("run using a input of ./testdata/doubleloader.json", func() {

@@ -40,7 +40,7 @@ func TestTransfromRT(t *testing.T) {
 		finalDest := NewNRGBA64(ColorSpace{ColorSpace: "p3"}, image.Rect(0, 0, 1, 1))
 		Draw(finalDest, finalDest.Bounds(), testSquare, image.Point{}, draw.Src)
 
-		//ret := transform(ColorSpace{ColorSpace: "rec2020"}, ColorSpace{ColorSpace: "p3"}, res)
+		// ret := transform(ColorSpace{ColorSpace: "rec2020"}, ColorSpace{ColorSpace: "p3"}, res)
 		fmt.Println(finalDest.At(0, 0))
 
 		//	gR,gG,gB _ := finalDest.At(0, 0).RGBA
@@ -48,7 +48,7 @@ func TestTransfromRT(t *testing.T) {
 		gR, gG, gB, _ := finalDest.At(0, 0).RGBA()
 		fmt.Println(finalDest.At(0, 0).RGBA())
 		fmt.Println(R, uint16(math.Round(float64(gR)/16)), G, gG>>4, B, gB>>4)
-		//works with a rounding method that i computationally expensve than bit sifting
+		// works with a rounding method that i computationally expensve than bit sifting
 		// +1 an be accounted for -1 can not as the bytes go in the other direction leading to differences
 		//	fmt.Printf("R:%016b, gR:%016b, G:%016b, gG:%016b, b:%016b, gB:%016b\n", R, gR, G, gG, B, gB)
 		// fmt.Printf("R:%016b, gR:%016b, G:%016b, gG:%016b, b:%016b, gB:%016b\n", R, gR>>4, G, gG>>4, B, gB>>4)
