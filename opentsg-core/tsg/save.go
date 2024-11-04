@@ -24,7 +24,7 @@ import (
 
 // CanvasSave saves the file according to the extensions provided
 // the name add is for debug to allow to identify images
-func (tpg *opentsg) canvasSave(canvas draw.Image, filename []string, bitdeph int, mnt, framenumber string, debug bool, logs *errhandle.Logger) {
+func (tpg *openTSG) canvasSave(canvas draw.Image, filename []string, bitdeph int, mnt, framenumber string, debug bool, logs *errhandle.Logger) {
 	for _, name := range filename {
 		truepath, err := filepath.Abs(filepath.Join(mnt, name))
 		if err != nil {
@@ -60,7 +60,7 @@ func baseSaves() map[string]func(io.Writer, draw.Image, int) error {
 	"CSV": WriteCSVFile,
 } */
 
-func (tpg *opentsg) savefile(filename, framenumber string, base draw.Image, bitdepth int) error {
+func (tpg *openTSG) savefile(filename, framenumber string, base draw.Image, bitdepth int) error {
 	// regTIFF := regexp.MustCompile(`^[\w\W]{1,255}\.[tT][iI][fF]{1,2}$`)
 	// regPNG := regexp.MustCompile(`^[\w\W]{1,255}\.[pP][nN][gG]$`)
 	// regCSV := regexp.MustCompile(`^[\w\W]{1,255}\.[cC][sS][Vv]$`)
@@ -125,10 +125,9 @@ func (tpg *opentsg) savefile(filename, framenumber string, base draw.Image, bitd
 ////////////////////////////
 
 // writeTiffFile saves the file as a tiff
-func WriteTiffFile(w io.Writer, img draw.Image, empty int) error {
+func WriteTiffFile(w io.Writer, img draw.Image, _ int) error {
 
 	// check for opaque
-
 	bound := img.Bounds()
 	for x := bound.Min.X; x < bound.Max.X; x++ {
 		for y := bound.Min.Y; y < bound.Max.Y; y++ {
@@ -158,11 +157,11 @@ func WriteTiffFile(w io.Writer, img draw.Image, empty int) error {
 }
 
 // writePngFile saves the file as a png
-func WritePngFile(w io.Writer, image draw.Image, empty int) error {
+func WritePngFile(w io.Writer, image draw.Image, _ int) error {
 	return colour.PngEncode(w, image)
 }
 
-func WriteExrFile(w io.Writer, image draw.Image, empty int) error {
+func WriteExrFile(w io.Writer, image draw.Image, _ int) error {
 	return exr.Encode(w, image)
 }
 

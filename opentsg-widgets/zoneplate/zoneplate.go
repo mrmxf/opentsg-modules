@@ -29,7 +29,6 @@ func ZoneGen(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc
 func (z ZConfig) Generate(canvas draw.Image, opts ...any) error {
 
 	frequency, _ := z.Frequency.GetAngle()
-	fmt.Println(frequency)
 	if frequency > math.Pi {
 		frequency = math.Pi
 	} else if frequency == 0 {
