@@ -9,6 +9,7 @@ import (
 
 	_ "embed"
 
+	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/validator"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/credentials"
 )
@@ -24,6 +25,7 @@ const (
 	//	widgetbases  = "widget bases", 2}
 	frameHolders    testKey = "The key for holding all the generated json"
 	aliasKey        testKey = "base for aliases to run through out the program"
+	aliasKeyBox     testKey = "base for aliases to run through out the program, but with the box method"
 	lines           testKey = "the holder of the hashes of the name+content for line numbers and files"
 	addedWidgets    testKey = "the key to access the list of added widgets to find missed aliases"
 	factoryDir      testKey = "the directory of the main widget factory and everything is relative to"
@@ -65,6 +67,7 @@ var incschema []byte
 // Processing structs
 type base struct {
 	authBody              credentials.Decoder
+	frameBase             context.Context
 	jsonFileLines         validator.JSONLines
 	importedFactories     map[string]factory
 	importedWidgets       map[string]json.RawMessage
@@ -73,18 +76,57 @@ type base struct {
 	metadataBucket        map[string]map[string]any
 }
 
-// widgetContents is the content of each widget within a frame and its position in the run order
 type widgetContents struct {
+	Data        json.RawMessage
+	Pos         int
+	arrayPos    []int
+	Tag         string
+	Widget      bool
+	Location    string
+	Alias       string
+	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
+}
+
+// WidgetContents contains the raw widget properties
+type WidgetContents struct {
 	Data     json.RawMessage
 	Pos      int
 	arrayPos []int
-	Tag      string
+	WidgetEssentials
 }
 
-// AliasIdentity is the name and zposition of a widget. Where zposition is the widgets position in the global array of widgets
+// AliasIdentity is the name and zposition of a widget. Where zposition is the widgets position in the global array of widgets.
+// As well as any other properties associated with the widget
+type AliasIdentityHandle struct {
+	FullName string
+	ZPos     int
+	WidgetEssentials
+}
+
+// AliasIdentity is the name and zposition of a widget. Where zposition is the widgets position in the global array of widgets.
+// As well as any other properties associated with the widget
+// This is the legacy version
 type AliasIdentity struct {
-	Alias string
-	ZPos  int
+	FullName    string
+	ZPos        int
+	WType       string
+	Location    string
+	GridAlias   string
+	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
+}
+
+// GetFrameWidgets returns a map of all the widgets and their properties
+// This is the legacy version
+func GetFrameWidgets(c context.Context) map[string]widgetContents {
+
+	return c.Value(baseKey).(map[string]widgetContents)
+}
+
+// GetFrameWidgets returns  a map of all the widgets and their properties
+// this contains the widgets "props" properties.
+func GetFrameWidgetsHandle(c context.Context) map[string]WidgetContents {
+
+	return c.Value(baseKey).(map[string]WidgetContents)
 }
 
 // SyncMap  is a map with a sync.Mutex to prevent concurrent writes.
@@ -93,27 +135,8 @@ type SyncMap struct {
 	Mu   *sync.Mutex
 }
 
-// Get alias returns a map of the locations alias and their grid positions.
-func GetAlias(c context.Context) SyncMap {
-	Alias := c.Value(aliasKey)
-	if Alias != nil {
-
-		return Alias.(SyncMap)
-	}
-	// else return an empty map
-	var newmu sync.Mutex
-
-	return SyncMap{Mu: &newmu, Data: make(map[string]string)}
-}
-
-// GetFrameWidgets returns a map of the alias
-func GetFrameWidgets(c context.Context) map[string]widgetContents {
-
-	return c.Value(baseKey).(map[string]widgetContents)
-}
-
-// GetApplied widgets returns a syncMap that contains all the widget names that have been assigned an alias
-func GetAppliedWidgets(c context.Context) SyncMap {
+// GetAliasMap returns a syncMap that contains all the widget names that have been assigned an alias
+func GetAliasMap(c context.Context) SyncMap {
 
 	return c.Value(addedWidgets).(SyncMap)
 }
@@ -123,13 +146,6 @@ func GetAppliedWidgets(c context.Context) SyncMap {
 func GetJSONLines(c context.Context) validator.JSONLines {
 
 	return c.Value(lines).(validator.JSONLines)
-}
-
-// PutAlias inits a map of the alias in a context
-func PutAlias(c context.Context) context.Context {
-	n := SyncMap{make(map[string]string), &sync.Mutex{}}
-
-	return context.WithValue(c, aliasKey, n)
 }
 
 // GetDir returns the directory that the base factory resides in.

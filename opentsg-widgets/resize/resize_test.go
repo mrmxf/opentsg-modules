@@ -11,9 +11,9 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/parameters"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/text"
+	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
 	"github.com/nfnt/resize"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -44,7 +44,7 @@ func TestExample(t *testing.T) {
 
 	for i, example := range examples {
 
-		examplejson.SaveExampleJson(example, widgetType, desc[i], true)
+		examplejson.SaveExampleJson(example, WidgetType, desc[i], true)
 	}
 
 }

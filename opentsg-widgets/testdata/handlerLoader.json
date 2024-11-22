@@ -1,0 +1,40 @@
+
+{
+    "include": [
+        {
+            "uri": "handlerLoaders/bars.json",
+            "name": "bars"
+          },
+          {
+            "uri": "handlerLoaders/sat.json",
+            "name": "saturation"
+          },
+          {
+            "uri": "handlerLoaders/twosi.json",
+            "name": "twosi"
+          },
+          {
+            "uri": "handlerLoaders/nb.json",
+            "name": "black"
+          },
+          {
+            "uri": "handlerLoaders/luma.json",
+            "name": "lum"
+          },
+      {
+        "uri": "handlerLoaders/base.json",
+        "name": "canvas"
+      }
+    ],
+  "create":[{
+    
+        "canvas":{    "name": [
+            "./testdata/handlerLoaders/ebuHandler{{framenumber}}.png"
+        ]},
+        "bars":{},
+        "saturation":{},
+        "lum":{},
+        "black":{},
+        "twosi" :{}}
+   ]
+}
