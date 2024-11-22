@@ -1,0 +1,7 @@
+{
+		"type": "test.fill",
+		"props":{
+		    "type": "test.fill",
+			"location":{"box":{"x":0,"y":0,"x2":3,"y2":3}}
+		}
+}			

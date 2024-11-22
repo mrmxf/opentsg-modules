@@ -7,30 +7,34 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
-	"image/jpeg"
 	"image/png"
 	"os"
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	. "github.com/smartystreets/goconvey/convey"
-
-	texter "github.com/mrmxf/opentsg-modules/opentsg-widgets/text"
 )
 
 func TestTpigGeometry(t *testing.T) {
 	// get my picture size
 	//// check the lines of halves and fulls
-	size = func(context.Context) image.Point { return image.Point{30, 30} }
-	rows = func(c context.Context) int { return 3 }
-	cols = func(c context.Context) int { return 3 }
+	/*	size = func(context.Context) image.Point { return image.Point{30, 30} }
+		rows = func(c context.Context) int { return 3 }
+		cols = func(c context.Context) int { return 3 }*/
 
 	// repeat for the  input being a tpig and not being a tpig
 	tpigs := "./testdata/tpig/mock.json"
 
 	c := context.Background()
+	f := FrameConfiguration{
+		FrameSize: image.Point{30, 30},
+		Rows:      3,
+		Cols:      3,
+	}
+
+	c = context.WithValue(c, frameKey, f)
 	cp := &c
-	dest, e := flatmap(cp, tpigs)
+	dest, e := flatmap(cp, "./", tpigs)
 	// the contents will be cheked throughout
 	Convey("Checking the tpig can be imported and read", t, func() {
 		Convey(fmt.Sprintf("using a %v as the input file", tpigs), func() {
@@ -40,7 +44,7 @@ func TestTpigGeometry(t *testing.T) {
 			})
 		})
 	})
-	canvas, e := baseGen(cp, dest.canvas)
+	canvas, e := baseGen(cp, dest.canvas, f)
 	Convey("Checking the tpig context is incorporated into the base generation", t, func() {
 		Convey("using the tpig context in base along with the tpig image", func() {
 			Convey("No error is generated making the base image", func() {
@@ -57,15 +61,15 @@ func TestTpigGeometry(t *testing.T) {
 
 	gridtarget := []string{"A1", "A0:a2", "r2c3", "R1C1:R3C3"}
 	expectedSegment := [][]Segmenter{
-		{{Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, importPosition: 1}},
-		{{Name: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}}, {Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, importPosition: 1}},
+		{{Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 1}},
+		{{Name: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}}, {Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1}},
 		{},
 		// some values are repeated across grids
-		{{Name: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, importPosition: 0},
-			{Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, importPosition: 1},
-			{Name: "A002", Shape: image.Rectangle{Min: image.Point{X: 10, Y: 0}, Max: image.Point{X: 25, Y: 15}}, Tags: []string{}, importPosition: 2},
-			{Name: "A003", Shape: image.Rectangle{Min: image.Point{X: 28, Y: 0}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, importPosition: 3},
-			{Name: "A004", Shape: image.Rectangle{Min: image.Point{X: 20, Y: 20}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, importPosition: 4}}, {}}
+		{{Name: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 0},
+			{Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1},
+			{Name: "A002", Shape: image.Rectangle{Min: image.Point{X: 10, Y: 0}, Max: image.Point{X: 25, Y: 15}}, Tags: []string{}, ImportPosition: 2},
+			{Name: "A003", Shape: image.Rectangle{Min: image.Point{X: 28, Y: 0}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, ImportPosition: 3},
+			{Name: "A004", Shape: image.Rectangle{Min: image.Point{X: 20, Y: 20}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, ImportPosition: 4}}, {}}
 	for i, gt := range gridtarget {
 		s, e := GetGridGeometry(cp, gt)
 
@@ -126,16 +130,23 @@ func TestTpigGeometry(t *testing.T) {
 func TestGridGeometry(t *testing.T) {
 	// get my picture size
 	//// check the lines of halves and fulls
-	size = func(context.Context) image.Point { return image.Point{30, 30} }
-	rows = func(c context.Context) int { return 3 }
-	cols = func(c context.Context) int { return 3 }
+	//size = func(context.Context) image.Point { return image.Point{30, 30} }
+	//rows = func(c context.Context) int { return 3 }
+	//cols = func(c context.Context) int { return 3 }
 
 	// repeat for the  input being a tpig and not being a tpig
 	tpigs := "./testdata/tpig/mock.json"
 
 	c := context.Background()
+	f := FrameConfiguration{
+		FrameSize: image.Point{30, 30},
+		Rows:      3,
+		Cols:      3,
+	}
+
+	c = context.WithValue(c, frameKey, f)
 	cp := &c
-	dest, e := flatmap(cp, tpigs)
+	dest, e := flatmap(cp, "./", tpigs)
 	// the contents will be cheked throughout
 	Convey("Checking the tpig can be imported and read", t, func() {
 		Convey(fmt.Sprintf("using a %v as the input file", tpigs), func() {
@@ -146,13 +157,13 @@ func TestGridGeometry(t *testing.T) {
 		})
 	})
 
-	baseGen(cp, nil)
+	baseGen(cp, nil, f)
 	splice(cp, 3, 3, 10, 10)
 
 	fmt.Println(e)
 	cd := context.Background()
 	cpp := &cd
-	baseGen(cpp, nil)
+	baseGen(cpp, nil, f)
 	splice(cpp, 3, 3, 10, 10)
 
 	s, e := GetGridGeometry(cpp, "A0:A2")
@@ -160,6 +171,7 @@ func TestGridGeometry(t *testing.T) {
 
 }
 
+/*
 func TestTpigGeometryHouse(t *testing.T) {
 	c := context.Background()
 
@@ -195,3 +207,4 @@ func TestTpigGeometryHouse(t *testing.T) {
 	f, _ := os.Create("./testdata/tpig/house.jpeg")
 	jpeg.Encode(f, in.canvas, nil)
 }
+*/

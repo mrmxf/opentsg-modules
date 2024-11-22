@@ -14,50 +14,51 @@ import (
 	"strings"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config/core"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/credentials"
 )
 
-type TPIGCompile struct {
-	TPIGS      []Imports  `json:"tpig include"`
+// TSIG is the top level TSIG struct for importing 3d geometry
+type TSIG struct {
+	Tilelayout []TileLayout `json:"Tile layout"`
+	// Dimensions of the flat image and any carving
 	Dimensions Dimensions `json:"Dimensions"`
-}
-
-type Imports struct {
-	Include string `json:"uri"`
-	Alias   string `json:"alias"`
-}
-
-type TPIG struct {
-	Tilelayout []Tilelayout    `json:"Tile layout"`
-	Dimensions Dimensions      `json:"Dimensions"`
-	Carve      map[string]XY2D `json:"Carve"`
+	// Layout of any carved widgets
+	Carve map[string]XY2D `json:"Carve"`
 	// NAme?
 }
 
-type Tilelayout struct {
+// TileLayout contains the layout of each individual tsig tile
+type TileLayout struct {
 	Name       string    `json:"Name"`
 	Tags       []string  `json:"Tags"`
 	Neighbours []string  `json:"Neighbours"`
 	Layout     Positions `json:"Layout"`
 }
 
+// Positions list the XY coordinates
+// of the tsig in its different locations in pixels
 type Positions struct {
-	Carve XY `json:"Carve"`
-	Flat  XY `json:"Flat"`
-	Size  XY `json:"XY"`
+	Carve      XY `json:"Carve"`
+	Flat       XY `json:"Flat"`
+	Dimensions XY `json:"XY"`
 }
 
+// Dimensions contains the information for the
+// size of each TSIG destination
 type Dimensions struct {
 	Carve XY2D `json:"Carve"`
 	Flat  XY2D `json:"Flat"`
 }
 
+// The XY position
+// and the carve destination, if required
 type XY struct {
 	Destination string `json:"Destination,omitempty"`
 	X           int    `json:"X"`
 	Y           int    `json:"Y"`
 }
 
+// XY"D contains the 2d dimensions
 type XY2D struct {
 	X0 int `json:"X0"`
 	Y0 int `json:"Y0"`
@@ -65,11 +66,11 @@ type XY2D struct {
 	Y1 int `json:"Y1"`
 }
 
-func flatmap(c *context.Context, tpigpath string) (canvasAndMask, error) {
+func flatmap(c *context.Context, basePath, tpigpath string) (canvasAndMask, error) {
 
 	// update the path getting to be localised
-	basePath := core.GetDir(*c)
-	file, err := core.GetWebBytes(c, tpigpath)
+	// basePath := core.GetDir(*c)
+	file, err := credentials.GetWebBytes(c, tpigpath)
 	if err != nil {
 		fullpath := filepath.Join(basePath, tpigpath)
 		file, err = os.ReadFile(fullpath)
@@ -78,7 +79,7 @@ func flatmap(c *context.Context, tpigpath string) (canvasAndMask, error) {
 		}
 	}
 
-	var segmentLayout TPIG
+	var segmentLayout TSIG
 	err = json.Unmarshal(file, &segmentLayout)
 	if err != nil {
 		return canvasAndMask{}, fmt.Errorf("0DEV error extracting the TPIG file %v", err)
@@ -95,14 +96,16 @@ func flatmap(c *context.Context, tpigpath string) (canvasAndMask, error) {
 
 	// Make a flat image of the geometrhy with corresponding mask
 	flatbase := ImageGenerator(*c, image.Rect(segmentLayout.Dimensions.Flat.X0, segmentLayout.Dimensions.Flat.Y0, segmentLayout.Dimensions.Flat.X1, segmentLayout.Dimensions.Flat.Y1))
-	basemask := ImageGenerator(*c, image.Rect(segmentLayout.Dimensions.Flat.X0, segmentLayout.Dimensions.Flat.Y0, segmentLayout.Dimensions.Flat.X1, segmentLayout.Dimensions.Flat.Y1))
+
+	// basemask := ImageGenerator(*c, image.Rect(segmentLayout.Dimensions.Flat.X0, segmentLayout.Dimensions.Flat.Y0, segmentLayout.Dimensions.Flat.X1, segmentLayout.Dimensions.Flat.Y1))
+	basemask := image.NewAlpha16(image.Rect(segmentLayout.Dimensions.Flat.X0, segmentLayout.Dimensions.Flat.Y0, segmentLayout.Dimensions.Flat.X1, segmentLayout.Dimensions.Flat.Y1))
 	// create the empty mask here. Keep it as empty as we want only bits that match the
 	// geometry layout.
 
 	// TPIGS layout will just be one deep for the moment
 
 	// Extract all the tile information
-	utilitySegements := make([]Segmenter, len(segmentLayout.Tilelayout))
+	utilitySegements := make([]*Segmenter, len(segmentLayout.Tilelayout))
 
 	locs := make([]image.Rectangle, len(segmentLayout.Tilelayout))
 
@@ -112,15 +115,15 @@ func flatmap(c *context.Context, tpigpath string) (canvasAndMask, error) {
 		// carve is an array of the original and the destination
 
 		// colour in flat at the same time
-		locs[i] = image.Rect(t.Layout.Flat.X, t.Layout.Flat.Y, t.Layout.Flat.X+t.Layout.Size.X, t.Layout.Flat.Y+t.Layout.Size.Y)
+		locs[i] = image.Rect(t.Layout.Flat.X, t.Layout.Flat.Y, t.Layout.Flat.X+t.Layout.Dimensions.X, t.Layout.Flat.Y+t.Layout.Dimensions.Y)
 
-		utilitySegements[i] = Segmenter{
+		utilitySegements[i] = &Segmenter{
 			Shape: locs[i],
 			Tags:  t.Tags,
-			Name:  t.Name, importPosition: i}
+			Name:  t.Name, ImportPosition: i}
 
 		// figure out the optimisation here, or error handling as not everything will be carved
-		carves := image.Rect(t.Layout.Carve.X, t.Layout.Carve.Y, t.Layout.Carve.X+t.Layout.Size.X, t.Layout.Carve.Y+t.Layout.Size.Y)
+		carves := image.Rect(t.Layout.Carve.X, t.Layout.Carve.Y, t.Layout.Carve.X+t.Layout.Dimensions.X, t.Layout.Carve.Y+t.Layout.Dimensions.Y)
 		// extract the carve for each area, appending it to the carve map
 		carved := carveSegements[t.Layout.Carve.Destination]
 
@@ -132,7 +135,7 @@ func flatmap(c *context.Context, tpigpath string) (canvasAndMask, error) {
 			carveSegements[t.Layout.Carve.Destination] = carved
 		}
 		// fill in the global base mask
-		colour.Draw(basemask, utilitySegements[i].Shape, &image.Uniform{color.NRGBA64{A: 0xffff}}, image.Point{}, draw.Src)
+		colour.Draw(basemask, utilitySegements[i].Shape, &image.Uniform{color.Alpha16{A: 0xffff}}, image.Point{}, draw.Src)
 	}
 
 	for k, v := range carveSegements {
@@ -156,21 +159,20 @@ func flatmap(c *context.Context, tpigpath string) (canvasAndMask, error) {
 // Carve checks if the resulting image needs to be carved.
 // Returning the carved image and amended target names for each carve
 // , as well as the original image
-func Carve(c *context.Context, canvas draw.Image, target []string) []ImageLocation {
+func Carve(c *context.Context, canvas draw.Image, target []string) []CarvedImagePaths {
 	// take in the flat image and generate filename(tpigname).extension using string manipulation
 	// save the flat and carved images at the moment
 
 	/*
 		get segments and carve information from a map
 		create a mask of the complete thing to run over the whole bit
-
 	*/
 	carveTargets := (*c).Value(carvekey)
 	// .(map[string]carver)
 
 	if carveTargets != nil {
 		carveTargets := carveTargets.(map[string]carvedImageLayout)
-		carvedTargets := make([]ImageLocation, len(carveTargets)+1)
+		carvedTargets := make([]CarvedImagePaths, len(carveTargets)+1)
 
 		count := 0
 		for name, ct := range carveTargets {
@@ -189,16 +191,16 @@ func Carve(c *context.Context, canvas draw.Image, target []string) []ImageLocati
 				names[i] = strings.Join(parts, ".")
 			}
 
-			carvedTargets[count] = ImageLocation{Image: carved, Location: names}
+			carvedTargets[count] = CarvedImagePaths{Image: carved, Location: names}
 			count++
 		}
 		// add the full image at the end just for a flat debug
-		carvedTargets[count] = ImageLocation{Image: canvas, Location: target}
+		carvedTargets[count] = CarvedImagePaths{Image: canvas, Location: target}
 		return carvedTargets
 	}
 
 	// return the original image if there's nothing to carve
-	return []ImageLocation{{Image: canvas, Location: target}}
+	return []CarvedImagePaths{{Image: canvas, Location: target}}
 
 }
 
@@ -209,9 +211,9 @@ func splice(c *context.Context, x, y int, xscale, yscale float64) {
 	geometryHolder := (*c).Value(tilekey) // , utilitySegements)
 
 	// List the geometry per grid section
-	var sections map[string][]Segmenter
+	var sections map[string][]*Segmenter
 	if geometryHolder != nil {
-		geometry := geometryHolder.([]Segmenter)
+		geometry := geometryHolder.([]*Segmenter)
 		sections = splicetpig(geometry, x, y, xscale, yscale)
 	} else {
 		sections = splicegrid(x, y, xscale, yscale)
@@ -221,8 +223,8 @@ func splice(c *context.Context, x, y int, xscale, yscale float64) {
 	*c = cmid
 }
 
-func splicetpig(segments []Segmenter, x, y int, xscale, yscale float64) map[string][]Segmenter {
-	sections := make(map[string][]Segmenter)
+func splicetpig(segments []*Segmenter, x, y int, xscale, yscale float64) map[string][]*Segmenter {
+	sections := make(map[string][]*Segmenter)
 	for xpos := 0; xpos < x; xpos++ {
 
 		for ypos := 0; ypos < y; ypos++ {
@@ -231,7 +233,7 @@ func splicetpig(segments []Segmenter, x, y int, xscale, yscale float64) map[stri
 			gridCoord := fmt.Sprintf("%v%v", gridToScale(xpos), ypos)
 			gridRCCoord := fmt.Sprintf("R%vC%v", xpos+1, ypos+1)
 
-			matches := []Segmenter{}
+			matches := []*Segmenter{}
 			bounding := image.Rect(int(float64(xpos)*xscale), int(float64(ypos)*yscale), int(float64(xpos+1)*xscale), int(float64(ypos+1)*yscale))
 
 			// check every segment to see where if it is within the grid
@@ -249,8 +251,8 @@ func splicetpig(segments []Segmenter, x, y int, xscale, yscale float64) map[stri
 	return sections
 }
 
-func splicegrid(x, y int, xscale, yscale float64) map[string][]Segmenter {
-	sections := make(map[string][]Segmenter)
+func splicegrid(x, y int, xscale, yscale float64) map[string][]*Segmenter {
+	sections := make(map[string][]*Segmenter)
 	count := 0
 	for xpos := 0; xpos < x; xpos++ {
 
@@ -284,8 +286,8 @@ func splicegrid(x, y int, xscale, yscale float64) map[string][]Segmenter {
 				tagsRC = append(tagsRC, fmt.Sprintf("neighbour:R%vC%v", xpos+1, ypos+1))
 			}
 
-			sections[gridCoord] = []Segmenter{{Name: gridCoord, Shape: bounding, Tags: tagsC, importPosition: count}}
-			sections[gridRCCoord] = []Segmenter{{Name: gridRCCoord, Shape: bounding, Tags: tagsRC, importPosition: count}}
+			sections[gridCoord] = []*Segmenter{{Name: gridCoord, Shape: bounding, Tags: tagsC, ImportPosition: count}}
+			sections[gridRCCoord] = []*Segmenter{{Name: gridRCCoord, Shape: bounding, Tags: tagsRC, ImportPosition: count}}
 
 			count++
 		}
@@ -335,8 +337,9 @@ func GetGridGeometry(c *context.Context, coordinate string) ([]Segmenter, error)
 	// cleanse positions of duplicate entries
 
 	cleanorder := make(map[int]Segmenter)
+
 	for _, pos := range positions {
-		cleanorder[pos.importPosition] = pos
+		cleanorder[pos.ImportPosition] = *pos
 	}
 
 	// get the positions of all the ones called
@@ -352,7 +355,7 @@ func GetGridGeometry(c *context.Context, coordinate string) ([]Segmenter, error)
 		return keys[i] < keys[j]
 	})
 
-	// add teh values in order they were declared
+	// add the values in order they were declared
 	cleanSegments := make([]Segmenter, len(cleanorder))
 	for i, pos := range keys {
 		cleanSegments[i] = cleanorder[pos]
@@ -364,9 +367,9 @@ func GetGridGeometry(c *context.Context, coordinate string) ([]Segmenter, error)
 
 // getGridGeometry breaks the location into every grid location it covers.
 // And extracts the results from the map of coordiantes and their geometry.
-func getGridGeometry(c *context.Context, coordinate string) ([]Segmenter, error) {
+func getGridGeometry(c *context.Context, coordinate string) ([]*Segmenter, error) {
 	coordinate = strings.ToUpper(coordinate)
-	sections := (*c).Value(gridkey).(map[string][]Segmenter)
+	sections := (*c).Value(gridkey).(map[string][]*Segmenter)
 
 	// get all the sections
 	// if they are 1 grid return sections[coordinate]
@@ -380,7 +383,7 @@ func getGridGeometry(c *context.Context, coordinate string) ([]Segmenter, error)
 	regRC := regexp.MustCompile(`^[Rr]([\d]{2,}|[1-9]{1})[Cc]([\d]{2,}|[1-9]{1})$`)
 	regRCArea := regexp.MustCompile(`^[Rr]([\d]{2,}|[1-9]{1})[Cc]([\d]{2,}|[1-9]{1}):[Rr]([\d]{2,}|[1-9]{1})[Cc]([\d]{2,}|[1-9]{1})$`)
 
-	aliasMap := core.GetAlias(*c)
+	aliasMap := GetAlias(*c)
 
 	// check what the location is
 	switch {
@@ -389,7 +392,7 @@ func getGridGeometry(c *context.Context, coordinate string) ([]Segmenter, error)
 		x, y, err := gridSplit(coordinateLow)
 		if err != nil {
 
-			return []Segmenter{}, err
+			return []*Segmenter{}, err
 		}
 
 		offseted := segementWithOffset(image.Point{int(float64(-x) * squareX), int(float64(-y) * squareY)}, sections[coordinate])
@@ -401,16 +404,16 @@ func getGridGeometry(c *context.Context, coordinate string) ([]Segmenter, error)
 		x, y, err := gridSplit(grids[0])
 		if err != nil {
 
-			return []Segmenter{}, err
+			return []*Segmenter{}, err
 		}
 		xend, yend, err := gridSplit(grids[1])
 		if err != nil {
 
-			return []Segmenter{}, err
+			return []*Segmenter{}, err
 		}
 
 		// make sure the coordinates are in a valid direction
-		var segements []Segmenter
+		var segements []*Segmenter
 
 		if xend < x || yend < y {
 
@@ -441,7 +444,7 @@ func getGridGeometry(c *context.Context, coordinate string) ([]Segmenter, error)
 		xs, ys, xe, ye := 0, 0, 0, 0
 		fmt.Sscanf(coordinate, "R%dC%d:R%dC%d", &xs, &ys, &xe, &ye)
 
-		var segements []Segmenter
+		var segements []*Segmenter
 		if xe < xs || ye < ys {
 
 			return segements, fmt.Errorf(invalidCoordinates, coordinate, xs, ys, xe, ye)
@@ -469,24 +472,27 @@ func getGridGeometry(c *context.Context, coordinate string) ([]Segmenter, error)
 
 	default:
 
-		return []Segmenter{}, fmt.Errorf(invalidGrid, coordinate)
+		return []*Segmenter{}, fmt.Errorf(invalidGrid, coordinate)
 	}
 
 }
 
 // segment with offset applies an offset to a slice of Segmenter
-func segementWithOffset(offset image.Point, input []Segmenter) []Segmenter {
-	output := make([]Segmenter, len(input))
+func segementWithOffset(offset image.Point, input []*Segmenter) []*Segmenter {
+	output := make([]*Segmenter, len(input))
 
 	for i, seg := range input {
-		seg.Shape = seg.Shape.Add(offset)
-		output[i] = seg
+		outputMid := *seg
+		outputMid.Shape = outputMid.Shape.Add(offset)
+		output[i] = &outputMid
 	}
 
 	return output
 }
 
-type ImageLocation struct {
+// CarvedImagePaths contains the base image and paths
+// for saving a carved image
+type CarvedImagePaths struct {
 	Image    draw.Image
 	Location []string
 }
@@ -505,5 +511,5 @@ type Segmenter struct {
 	Name           string
 	Shape          image.Rectangle
 	Tags           []string // neighbours will be included in a string? match to neighbours then
-	importPosition int
+	ImportPosition int
 }

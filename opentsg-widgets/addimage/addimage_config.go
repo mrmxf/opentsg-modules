@@ -5,10 +5,10 @@ import (
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/parameters"
+	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
 )
 
-type addimageJSON struct {
+type Config struct {
 	// Type    string            `json:"type" yaml:"type"`
 	Image string `json:"image" yaml:"image"`
 	// Imgsize *config.Framesize `json:"imagesize,omitempty" yaml:"imagesize,omitempty"`
@@ -25,7 +25,7 @@ type addimageJSON struct {
 }
 
 //go:embed jsonschema/addimageschema.json
-var schemaInit []byte
+var Schema []byte
 
 /*
 func (a addimageJSON) Alias() string {
