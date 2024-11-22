@@ -104,10 +104,12 @@ func DrawMask(dest draw.Image, r image.Rectangle, src image.Image, sp image.Poin
 			sx := sp.X + x0 - r.Min.X
 			mx := mp.X + x0 - r.Min.X
 			for x := x0; x != x1; x, sx, mx = x+dx, sx+dx, mx+dx {
+
 				ma := uint32(maxAlpha)
 				if mask != nil {
 					_, _, _, ma = mask.At(mx, my).RGBA()
 				}
+
 				switch {
 				// case op == draw.Over:
 				// this differs from the go code
@@ -143,7 +145,7 @@ func DrawMask(dest draw.Image, r image.Rectangle, src image.Image, sp image.Poin
 					} else if cspace, ok := src.At(sx, sy).(*CNRGBA64); ok {
 
 						// transform the colour before applying it
-						tCol := transform(cspace.ColorSpace, dst.space, src.At(sx, sy))
+						tCol := transform(cspace.ColorSpace, dst.ColourSpace, src.At(sx, sy))
 						ncol := tCol.(*CNRGBA64)
 						// making sure to cut out alpha multiplied values
 						//	atc := tCol.(*CNRGBA64)

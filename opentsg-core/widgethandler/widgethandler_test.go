@@ -15,7 +15,6 @@ import (
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/canvaswidget"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/colourgen"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/core"
 	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/gridgen"
@@ -56,12 +55,25 @@ func contMocker(file, target, extra string) (*context.Context, draw.Image) {
 
 	c, _, _ := core.FileImport(file, "", false)
 
-	cFrame, _ := core.FrameWidgetsGenerator(c, 0, false)
+	cFrame, _ := core.FrameWidgetsGenerator(c, 0)
 
 	mockC := MetaDataInit(cFrame)
 	canvaswidget.LoopInit(mockC)
 
-	canvas, _ := gridgen.GridGen(mockC)
+	canvas, _ := gridgen.GridGen(mockC, "./",
+		gridgen.FrameConfiguration{
+
+			Rows:       canvaswidget.GetGridRows(*mockC),
+			Cols:       canvaswidget.GetGridColumns(*mockC),
+			LineWidth:  canvaswidget.GetLWidth(*mockC),
+			FrameSize:  canvaswidget.GetPictureSize(*mockC),
+			CanvasType: canvaswidget.GetCanvasType(*mockC),
+			CanvasFill: canvaswidget.GetFillColour(*mockC),
+			LineColour: canvaswidget.GetLineColour(*mockC),
+			ColorSpace: canvaswidget.GetBaseColourSpace(*mockC),
+			Geometry:   canvaswidget.GetGeometry(*mockC),
+			BaseImage:  canvaswidget.GetBaseImage(*mockC),
+		})
 
 	return mockC, canvas
 }
@@ -212,7 +224,7 @@ func TestErrorZpos(t *testing.T) {
 		time.Sleep(time.Second) // mock the external wait function
 
 		// mock an extra waitgroup
-		time.Sleep(1 * time.Second)
+		time.Sleep(5 * time.Second)
 		file, _ := os.Open(ftarget)
 		// decode to get the colour values
 		baseVals, _ := png.Decode(file)
@@ -226,8 +238,8 @@ func TestErrorZpos(t *testing.T) {
 		hnormal.Write(readImage.Pix)
 		htest.Write(canvas.(*image.NRGBA64).Pix)
 
-		// td, _ := os.Create(fmt.Sprintf("%vr.png", ftarget))
-		// png.Encode(td, canvas)
+		//	td, _ := os.Create(fmt.Sprintf("%vr.png", ftarget))
+		//	png.Encode(td, canvas)
 
 		Convey("Checking that generator runs in the zOrder when errors are emitted", t, func() {
 			Convey(fmt.Sprintf("using the file of %s with the additional call of %s to generate the widgets", additions[i], extras[i]), func() {
@@ -248,9 +260,22 @@ type test struct {
 
 // Mock generator functions
 func (tt test) Generate(i draw.Image, t ...any) error {
-	c := colourgen.HexToColour(tt.Colour, colour.ColorSpace{})
-	// fmt.Println(tt.Fill)
-	colour.Draw(i.(*image.NRGBA64), i.Bounds(), &image.Uniform{c}, image.Point{}, draw.Src)
+	var fill color.Color
+
+	switch tt.Colour {
+	case "#FF0000":
+		fill = &colour.CNRGBA64{R: 0xff << 8, A: 0xffff}
+	case "#0000FF":
+		fill = &colour.CNRGBA64{B: 0xff << 8, A: 0xffff}
+	case "#00FF00":
+		fill = &colour.CNRGBA64{G: 0xff << 8, A: 0xffff}
+	case "#FFFFFF":
+		fill = &colour.CNRGBA64{G: 0xff << 8, R: 0xff << 8, B: 0xff << 8, A: 0xffff}
+	default:
+		fill = &colour.CNRGBA64{A: 0xffff}
+	}
+	fmt.Println(fill, tt)
+	colour.Draw(i.(*image.NRGBA64), i.Bounds(), &image.Uniform{fill}, image.Point{}, draw.Src)
 
 	return nil
 }
@@ -314,7 +339,7 @@ func TestPut(t *testing.T) {
 	for i, ts := range tests {
 		// map to add
 		gen := make(map[core.AliasIdentity]interface{})
-		gen[core.AliasIdentity{Alias: names[i], ZPos: 0}] = ts
+		gen[core.AliasIdentity{FullName: names[i], ZPos: 0}] = ts
 		err := put(gen, newC)
 
 		// add to the expected total
@@ -359,7 +384,7 @@ func TestExtract(t *testing.T) {
 	top.Nest = middle
 
 	gen := make(map[core.AliasIdentity]nested)
-	gen[core.AliasIdentity{Alias: "testKey", ZPos: 0}] = top
+	gen[core.AliasIdentity{FullName: "testKey", ZPos: 0}] = top
 	dummy := context.TODO()
 	newC := MetaDataInit(dummy)
 	_ = put(gen, newC)

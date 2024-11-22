@@ -19,14 +19,46 @@ func widgetFactory(tag string, c *context.Context) map[core.AliasIdentity]json.R
 	frameWidgets := core.GetFrameWidgets(*c) // use  a get function here with contents exported
 	for k, wf := range frameWidgets {
 		if wf.Tag == tag {
-			tagBytes[core.AliasIdentity{Alias: k, ZPos: wf.Pos}] = wf.Data
+			tagBytes[core.AliasIdentity{FullName: k, ZPos: wf.Pos}] = wf.Data
 		}
 	}
 
 	return tagBytes
 }
 
-// ExtractWidgetStructs uses generics to generate the maps for each frame,
+// ExtractAllWidgets returns every widget used in a frame.
+// This is the legacy version of the function.
+func ExtractAllWidgets(c *context.Context) map[core.AliasIdentity]json.RawMessage {
+
+	frameWidgets := core.GetFrameWidgets(*c)
+	tagBytes := make(map[core.AliasIdentity]json.RawMessage)
+	for k, wf := range frameWidgets {
+		// skip factories that don't have types
+
+		tagBytes[core.AliasIdentity{FullName: k, ZPos: wf.Pos, WType: wf.Tag, GridAlias: wf.Alias, Location: wf.Location, ColourSpace: wf.ColourSpace}] = wf.Data
+
+	}
+
+	return tagBytes
+}
+
+// ExtractAllWidgets returns every widget used in a frame. Each widget contains its
+// properties and is the
+func ExtractAllWidgetsHandle(c *context.Context) map[core.AliasIdentityHandle]json.RawMessage {
+
+	frameWidgets := core.GetFrameWidgetsHandle(*c)
+	tagBytes := make(map[core.AliasIdentityHandle]json.RawMessage)
+	for k, wf := range frameWidgets {
+		// skip factories that don't have types
+		tagBytes[core.AliasIdentityHandle{FullName: k, ZPos: wf.Pos, WidgetEssentials: wf.WidgetEssentials}] = wf.Data
+
+	}
+
+	return tagBytes
+}
+
+// ExtractWidgetStructs uses generics to extract the widgets of type x, into
+// their struct,
 // an error is returned for failed the validations.
 // It is used by widget handler module to get the maps for each widget, and kept in config to utilise the context
 func ExtractWidgetStructs[T any](ftype string, schema []byte, c *context.Context) (map[core.AliasIdentity]T, []error) {
@@ -34,16 +66,15 @@ func ExtractWidgetStructs[T any](ftype string, schema []byte, c *context.Context
 	base := make(map[core.AliasIdentity]T)
 	var errors []error
 
-	names := core.GetAppliedWidgets(*c) // get the names and file locations
+	names := core.GetAliasMap(*c) // get the names and file locations
 	lineErrs := core.GetJSONLines(*c)
 	names.Mu.Lock() // prevent concurrent map writes
 
 	defer names.Mu.Unlock()
 
 	for key, val := range get {
-		k := key.Alias
+		k := key.FullName
 		var baseWidg T
-
 		// check it passes the schema
 		err := validator.SchemaValidator(schema, val, k, lineErrs)
 		if err != nil {
@@ -68,12 +99,12 @@ func ExtractWidgetStructs[T any](ftype string, schema []byte, c *context.Context
 // of the image generation.
 func MissingWidgetCheck(c context.Context) map[core.AliasIdentity]string {
 	bases := core.GetFrameWidgets(c)
-	appliedWidgets := core.GetAppliedWidgets(c)
+	appliedWidgets := core.GetAliasMap(c)
 	// update name map
 	missed := make(map[core.AliasIdentity]string)
 	for widgetName, content := range bases {
-		if appliedWidgets.Data[widgetName] == "" && content.Tag != "" { // if it wasn't assigned a tag and isn't a factory
-			missed[core.AliasIdentity{Alias: widgetName, ZPos: content.Pos}] = widgetName
+		if appliedWidgets.Data[widgetName] == "" { // if it wasn't assigned a tag and isn't a factory
+			missed[core.AliasIdentity{FullName: widgetName, ZPos: content.Pos}] = widgetName
 		}
 	}
 

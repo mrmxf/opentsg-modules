@@ -3,8 +3,10 @@ package canvaswidget
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"image"
+	"image/color"
 	"image/draw"
 
 	_ "embed"
@@ -12,6 +14,8 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/widgets"
+	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
+	"gopkg.in/yaml.v3"
 )
 
 type key struct {
@@ -24,20 +28,20 @@ var (
 
 // ConfigVals is the go struct of all the configuration values that may be called by an input.
 type ConfigVals struct {
-	Type        string            `json:"type" yaml:"type"`
-	Name        []string          `json:"name,omitempty" yaml:"name,omitempty"`
-	ColourSpace colour.ColorSpace `json:"ColorSpace,omitempty" yaml:"ColorSpace,omitempty"`
-	Framesize   config.Framesize  `json:"frameSize,omitempty" yaml:"frameSize,omitempty"`
-	LineWidth   float64           `json:"linewidth,omitempty" yaml:"linewidth,omitempty"`
-	FileDepth   int               `json:"filedepth,omitempty" yaml:"filedepth,omitempty"`
-	GridRows    int               `json:"gridRows,omitempty" yaml:"gridRows,omitempty"`
-	GridColumns int               `json:"gridColumns,omitempty" yaml:"gridColumns,omitempty"`
-	BaseImage   string            `json:"baseImage,omitempty" yaml:"baseImage,omitempty"`
-	Geometry    string            `json:"geometry,omitempty" yaml:"geometry,omitempty"`
-	LineColor   string            `json:"lineColor,omitempty" yaml:"lineColor,omitempty"`
-	Background  string            `json:"backgroundFillColor,omitempty" yaml:"backgroundFillColor,omitempty"`
-	ImageType   string            `json:"imageType,omitempty" yaml:"imageType,omitempty"`
-	Analytics   analytics         `json:"frame analytics" yaml:"frame analytics"`
+	Type        string               `json:"type" yaml:"type"`
+	Name        []string             `json:"name,omitempty" yaml:"name,omitempty"`
+	ColourSpace colour.ColorSpace    `json:"ColorSpace,omitempty" yaml:"ColorSpace,omitempty"`
+	Framesize   config.Framesize     `json:"frameSize,omitempty" yaml:"frameSize,omitempty"`
+	LineWidth   float64              `json:"linewidth,omitempty" yaml:"linewidth,omitempty"`
+	FileDepth   int                  `json:"filedepth,omitempty" yaml:"filedepth,omitempty"`
+	GridRows    int                  `json:"gridRows,omitempty" yaml:"gridRows,omitempty"`
+	GridColumns int                  `json:"gridColumns,omitempty" yaml:"gridColumns,omitempty"`
+	BaseImage   string               `json:"baseImage,omitempty" yaml:"baseImage,omitempty"`
+	Geometry    string               `json:"geometry,omitempty" yaml:"geometry,omitempty"`
+	LineColor   parameters.HexString `json:"lineColor,omitempty" yaml:"lineColor,omitempty"`
+	Background  parameters.HexString `json:"backgroundFillColor,omitempty" yaml:"backgroundFillColor,omitempty"`
+	ImageType   string               `json:"imageType,omitempty" yaml:"imageType,omitempty"`
+	Analytics   analytics            `json:"frame analytics" yaml:"frame analytics"`
 }
 
 type analytics struct {
@@ -71,28 +75,71 @@ func (c ConfigVals) Generate(canvas draw.Image, opts ...any) error {
 //go:embed jsonschema/baseschema.json
 var baseschema []byte
 
+const WType = "builtin.canvasoptions"
+
+// Loop init extracts and applies the canvas properties for each frame.
+// This is to be run as the first step after generating the frame widgets,
+// because other modules rely on this information for generating their own structs.
+func LoopInitHandle(frameContext *context.Context) []error {
+	conf := widgets.ExtractAllWidgetsHandle(frameContext)
+
+	canvas := make([]json.RawMessage, 0)
+	for widg, v := range conf {
+		if widg.WType == WType {
+			canvas = append(canvas, v)
+		}
+
+	}
+
+	//if errs != nil {
+	//	return errs
+	// }
+	globParams := ConfigVals{}
+
+	switch len(canvas) {
+	case 1:
+		for _, v := range canvas {
+			err := yaml.Unmarshal(v, &globParams)
+			if err != nil {
+				return []error{fmt.Errorf("error extracting %s widget: %s", WType, err)}
+			}
+		}
+
+	case 0:
+		return []error{fmt.Errorf("0061 no \"%s\" widget has been loaded, can not configure openTSG", WType)}
+
+	default:
+
+		return []error{fmt.Errorf("0061 too many \"%s\" widgets have been loaded (Got %v wanted 1), can not configure openTSG", WType, len(canvas))}
+	}
+
+	midC := context.WithValue(*frameContext, generatedConfig, globParams)
+	*frameContext = midC // update the context pointer
+
+	return []error{}
+}
+
 // Loop init extracts and applies the canvas properties for each frame.
 // This is to be run as the first step after generating the frame widgets,
 // because other modules rely on this information for generating their own structs.
 func LoopInit(frameContext *context.Context) []error {
-	conf, errs := widgets.ExtractWidgetStructs[ConfigVals]("builtin.canvasoptions", baseschema, frameContext)
+	conf, errs := widgets.ExtractWidgetStructs[ConfigVals](WType, baseschema, frameContext)
 
 	if errs != nil {
 		return errs
 	}
 	globParams := ConfigVals{}
-
 	switch len(conf) {
 	case 1:
 		for _, v := range conf {
 			globParams = v
 		}
 	case 0:
-		return []error{fmt.Errorf("0061 no \"%s\" widget has been loaded, can not configure openTSG", "builtin.canvasoptions")}
+		return []error{fmt.Errorf("0061 no \"%s\" widget has been loaded, can not configure openTSG", WType)}
 
 	default:
 
-		return []error{fmt.Errorf("0061 too many \"%s\" widgets have been loaded (Got %v wanted 1), can not configure openTSG", "builtin.canvasoptions", len(conf))}
+		return []error{fmt.Errorf("0061 too many \"%s\" widgets have been loaded (Got %v wanted 1), can not configure openTSG", WType, len(conf))}
 	}
 
 	midC := context.WithValue(*frameContext, generatedConfig, globParams)
@@ -179,17 +226,17 @@ func GetGeometry(c context.Context) string {
 }
 
 // GetFillColour returns the colour string of the background
-func GetFillColour(c context.Context) string {
+func GetFillColour(c context.Context) color.Color {
 	g := contToConf(c)
 
-	return g.Background
+	return g.Background.ToColour(g.ColourSpace)
 }
 
 // GetLineColour returns the user defined colour string sof the grid lines
-func GetLineColour(c context.Context) string {
+func GetLineColour(c context.Context) color.Color {
 	g := contToConf(c)
 
-	return g.LineColor
+	return g.LineColor.ToColour(g.ColourSpace)
 }
 
 // GetPictureSize returns the image size as an image.Point so it can be used without

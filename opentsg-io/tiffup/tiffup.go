@@ -62,7 +62,10 @@ func ifd(w io.Writer, img *image.NRGBA64) error {
 		return err
 	}
 	// add the image after the ifd
-	encodeRGB(w, img.Pix, d.X, d.Y)
+	err := encodeRGB(w, img.Pix, d.X, d.Y)
+	if err != nil {
+		return err
+	}
 
 	photometricInterpretation := uint32(2) // prgb is 2
 	samplesPerPixel := uint32(3)
