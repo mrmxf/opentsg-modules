@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/core"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -29,7 +30,7 @@ var types = all{6, 6.01, map[string]any{"some": "map"}, []any{3, 4, "5"}}
 func TestExtract(t *testing.T) {
 
 	fc, _, _ := core.FileImport("./testdata/types_loader.json", "", true)
-	c, _ := core.FrameWidgetsGenerator(fc, 0, false)
+	c, _ := core.FrameWidgetsGenerator(fc, 0)
 	// fill the struct with predicted values
 
 	// generate the results of the struct
@@ -39,7 +40,7 @@ func TestExtract(t *testing.T) {
 		Convey("using ./testdata/types_loader.json as the input file then extract the bytes into the all struct", func() {
 			Convey(fmt.Sprintf("No error is returned and the filled struct should match %v", types), func() {
 				So(errs, ShouldBeNil)
-				So(frames[core.AliasIdentity{Alias: "types", ZPos: 0}], ShouldResemble, types)
+				So(frames[core.AliasIdentity{FullName: "types", ZPos: 0}], ShouldResemble, types)
 			})
 		})
 	})
@@ -47,10 +48,12 @@ func TestExtract(t *testing.T) {
 func TestMissed(t *testing.T) {
 
 	fc, _, _ := core.FileImport("./testdata/types_loader.json", "", true)
-	c2, _ := core.FrameWidgetsGenerator(fc, 0, false)
+	c2, _ := core.FrameWidgetsGenerator(fc, 0)
 	typeWrapper(c2, types, "missed")
 	missed := MissingWidgetCheck(c2)
-	actualMiss := map[core.AliasIdentity]string{{Alias: "types", ZPos: 0}: "types"}
+	// actualMiss := map[core.AliasIdentity]string{{FullName: "types", ZPos: 0}: "types"}
+	// actualMiss := map[core.AliasIdentity]string{}
+	actualMiss := map[core.AliasIdentity]string{core.AliasIdentity{FullName: "types", ZPos: 0, WType: "", Location: "", GridAlias: "", ColourSpace: colour.ColorSpace{ColorSpace: "", TransformType: "", Primaries: colour.Primaries{Red: colour.XY{X: 0, Y: 0}, Green: colour.XY{X: 0, Y: 0}, Blue: colour.XY{X: 0, Y: 0}, WhitePoint: colour.XY{X: 0, Y: 0}}}}: "types"}
 	Convey("Checking that missed structs are found", t, func() {
 		Convey("using ./testdata/types_loader.json as the input file then not searching for the widget type", func() {
 			Convey(fmt.Sprintf("The missed map of %v is returned", actualMiss), func() {

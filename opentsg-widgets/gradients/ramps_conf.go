@@ -3,7 +3,7 @@ package gradients
 import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/parameters"
+	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
 
 	_ "embed"
 )
@@ -86,7 +86,7 @@ type control struct {
 }
 
 //go:embed jsonschema/gradientSchema.json
-var textBoxSchema []byte
+var Schema []byte
 
 /*
 func (r Ramp) Alias() string {

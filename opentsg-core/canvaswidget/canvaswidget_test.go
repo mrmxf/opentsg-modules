@@ -6,6 +6,7 @@ import (
 	"image"
 	"testing"
 
+	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/core"
 	. "github.com/smartystreets/goconvey/convey"
@@ -31,7 +32,9 @@ func TestStructExtraction(t *testing.T) {
 		GetGridRows(testContext), GetGridColumns(testContext), GetBaseImage(testContext), GetFillColour(testContext), GetLineColour(testContext),
 		GetLWidth(testContext)}
 	results := []any{16, "NRGBA64", []string{"testname.png"}, image.Point{4096, 2160},
-		16, 1, "test.png", "#247AE0", "#CCDDAA", 23.4}
+		16, 1, "test.png", &colour.CNRGBA64{R: 9216, G: 31232, B: 57344, A: 65535, ColorSpace: colour.ColorSpace{ColorSpace: "", TransformType: "", Primaries: colour.Primaries{Red: colour.XY{X: 0, Y: 0}, Green: colour.XY{X: 0, Y: 0}, Blue: colour.XY{X: 0, Y: 0}, WhitePoint: colour.XY{X: 0, Y: 0}}}},
+		&colour.CNRGBA64{R: 52224, G: 56576, B: 43520, A: 65535, ColorSpace: colour.ColorSpace{ColorSpace: "", TransformType: "", Primaries: colour.Primaries{Red: colour.XY{X: 0, Y: 0}, Green: colour.XY{X: 0, Y: 0}, Blue: colour.XY{X: 0, Y: 0}, WhitePoint: colour.XY{X: 0, Y: 0}}}},
+		23.4}
 
 	for i, got := range extractedFromCont {
 		Convey(fmt.Sprintf("Checking that values can be extracted from the base using a function of %s", funcNames[i]), t, func() {
@@ -57,7 +60,7 @@ func TestStructExtraction(t *testing.T) {
 
 func TestInitStage(t *testing.T) {
 	cIn, _, _ := core.FileImport("testdata/baseloader.json", "", false)
-	cFrame, _ := core.FrameWidgetsGenerator(cIn, 0, false)
+	cFrame, _ := core.FrameWidgetsGenerator(cIn, 0)
 	LoopInit(&cFrame)
 	f := config.Framesize{W: 4096, H: 2160}
 	expected := ConfigVals{Name: []string{"testname.png"}, FileDepth: 16, Framesize: f, GridRows: 16,
@@ -74,7 +77,7 @@ func TestInitStage(t *testing.T) {
 	})
 
 	cIn, _, _ = core.FileImport("testdata/doubleloader.json", "", false)
-	cDouble, _ := core.FrameWidgetsGenerator(cIn, 0, false)
+	cDouble, _ := core.FrameWidgetsGenerator(cIn, 0)
 	err := LoopInit(&cDouble)
 	expectedDoubleErr := []error{fmt.Errorf("0061 too many \"builtin.canvasoptions\" widgets have been loaded (Got 2 wanted 1), can not configure openTSG")}
 

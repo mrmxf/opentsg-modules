@@ -5,10 +5,10 @@ import (
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/parameters"
+	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
 )
 
-type qrcodeJSON struct {
+type Config struct {
 	// Type    string             `json:"type" yaml:"type"`
 	Code              string `json:"code" yaml:"code"`
 	parameters.Offset `yaml:",inline"`
@@ -29,7 +29,7 @@ type objectQueryJSON struct {
 }
 
 //go:embed jsonschema/qrgenschema.json
-var schemaInit []byte
+var Schema []byte
 
 /*
 func (q qrcodeJSON) Alias() string {
