@@ -47,7 +47,7 @@ func (gt Config) Handle(resp tsg.Response, req *tsg.Request) {
 
 		// go for 2:1 height to width
 		// find which length of letters fits this ratio the best
-		tagLength := float64(len(f.Name))
+		tagLength := float64(len(f.ID))
 		bestLength := tagLength
 		bestRatio := float64(f.Shape.Dy()) / (float64(f.Shape.Dx()) / tagLength)
 		for i := 1.0; i < tagLength; i *= 2 {
@@ -64,10 +64,10 @@ func (gt Config) Handle(resp tsg.Response, req *tsg.Request) {
 		tagLines := make([]string, lines)
 		for i := 0; i < len(tagLines); i++ {
 			end := i*int(bestLength) + int(bestLength)
-			if end > len(f.Name) {
-				end = len(f.Name)
+			if end > len(f.ID) {
+				end = len(f.ID)
 			}
-			tagLines[i] = f.Name[i*int(bestLength) : end]
+			tagLines[i] = f.ID[i*int(bestLength) : end]
 		}
 		// lines := strings.Split(f.Name, " ")
 		geomBox.DrawStringsHandler(segment, req, tagLines)
@@ -114,7 +114,7 @@ func (gt Config) Generate(canvas draw.Image, opt ...any) error {
 
 		// go for 2:1 height to width
 		// find which length of letters fits this ratio the best
-		tagLength := float64(len(f.Name))
+		tagLength := float64(len(f.ID))
 		bestLength := tagLength
 		bestRatio := float64(f.Shape.Dy()) / (float64(f.Shape.Dx()) / tagLength)
 		for i := 1.0; i < tagLength; i *= 2 {
@@ -131,10 +131,10 @@ func (gt Config) Generate(canvas draw.Image, opt ...any) error {
 		tagLines := make([]string, lines)
 		for i := 0; i < len(tagLines); i++ {
 			end := i*int(bestLength) + int(bestLength)
-			if end > len(f.Name) {
-				end = len(f.Name)
+			if end > len(f.ID) {
+				end = len(f.ID)
 			}
-			tagLines[i] = f.Name[i*int(bestLength) : end]
+			tagLines[i] = f.ID[i*int(bestLength) : end]
 		}
 		// lines := strings.Split(f.Name, " ")
 		geomBox.DrawStrings(segment, c, tagLines)

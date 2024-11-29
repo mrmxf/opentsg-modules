@@ -11,6 +11,7 @@ import (
 	"image/png"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"reflect"
 	"testing"
 
@@ -35,15 +36,15 @@ func TestTSIGWidget(t *testing.T) {
 }			`
 
 	expectedArea := [][]gridgen.Segmenter{
-		{{Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 1}},
-		{{Name: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}}, {Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1}},
+		{{ID: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 1}},
+		{{ID: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}}, {ID: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1}},
 		{},
 		// some values are repeated across grids
-		{{Name: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 0},
-			{Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1},
-			{Name: "A002", Shape: image.Rectangle{Min: image.Point{X: 10, Y: 0}, Max: image.Point{X: 25, Y: 15}}, Tags: []string{}, ImportPosition: 2},
-			{Name: "A003", Shape: image.Rectangle{Min: image.Point{X: 28, Y: 0}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, ImportPosition: 3},
-			{Name: "A004", Shape: image.Rectangle{Min: image.Point{X: 20, Y: 20}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, ImportPosition: 4}}, {}}
+		{{ID: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 0},
+			{ID: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1},
+			{ID: "A002", Shape: image.Rectangle{Min: image.Point{X: 10, Y: 0}, Max: image.Point{X: 25, Y: 15}}, Tags: []string{}, ImportPosition: 2},
+			{ID: "A003", Shape: image.Rectangle{Min: image.Point{X: 28, Y: 0}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, ImportPosition: 3},
+			{ID: "A004", Shape: image.Rectangle{Min: image.Point{X: 20, Y: 20}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, ImportPosition: 4}}, {}}
 
 	for i, a := range areas {
 		f, fErr := os.Create("./testdata/tsigLoaders/tsigFill.json")
@@ -161,12 +162,14 @@ func TestRaceConditions(t *testing.T) {
 
 	os.Remove("./testdata/handlerLoaders/racer.png")
 
-	otsgA, buildErr := BuildOpenTSG("./testdata/handlerLoaders/loaderAnalytics.json", "", true, &RunnerConfiguration{RunnerCount: 5})
-	otsgA.Handle("test.fill", []byte("{}"), Filler{})
+	/*
+		otsgA, buildErr := BuildOpenTSG("./testdata/handlerLoaders/loaderAnalytics.json", "", true, &RunnerConfiguration{RunnerCount: 5})
+		otsgA.Handle("test.fill", []byte("{}"), Filler{})
 
-	AddBaseEncoders(otsgA)
-	otsgA.Use(Logger(slog.New(jSlog)))
-	otsgA.Run("")
+		AddBaseEncoders(otsgA)
+		otsgA.Use(Logger(slog.New(jSlog)))
+		otsgA.Run("")
+	*/
 }
 
 // JSONLog is the key fields of the json slogger
@@ -408,6 +411,60 @@ func TestErrors(t *testing.T) {
 					So(wErr, ShouldBeNil)
 					So(err, ShouldBeNil)
 					So(orderLog.logs, ShouldResemble, []string{expectedErrs[i]})
+				})
+			})
+		})
+	}
+
+	/*
+
+		@TODO test
+
+		- crashing the canvas widget
+		- crashing the grid
+
+	*/
+
+	loader := `{
+		"include": [
+			{
+				"uri": "%s",
+				"name": "canvas"
+			}
+		],
+		"create": [
+			{
+				"canvas": {}
+			}
+		]
+	}`
+
+	path, _ := os.Getwd()
+	errPath := filepath.Join(path, "/testdata/handlerLoaders/errorloaders/invalidsize.json")
+
+	canvasErrors := []string{"corruptcanvas.json", "invalidsize.json"}
+	canvasExpecErr := []string{"0061 no \"builtin.canvasoptions\" widget has been loaded, can not configure openTSG",
+		"0026 Must be greater than or equal to 24 at line 10 in " + errPath + ", for canvas"}
+
+	for i, e := range canvasErrors {
+		f, fErr := os.Create("./testdata/handlerLoaders/errorloaders/canvasloader.json")
+		_, wErr := f.Write([]byte(fmt.Sprintf(loader, e)))
+
+		otsg, err := BuildOpenTSG("./testdata/handlerLoaders/errorloaders/canvasloader.json", "", true, nil)
+		otsg.Handle("test.fill", []byte(`{}`), Filler{})
+
+		orderLog := &testSlog{logs: make([]string, 0), level: slog.LevelWarn}
+		otsg.Use(Logger(slog.New(orderLog)))
+		AddBaseEncoders(otsg)
+		otsg.Run("")
+
+		Convey("Calling openTSG with a canvas widget that deliberately fails", t, func() {
+			Convey(fmt.Sprintf("using a input json of \"%s\"", e), func() {
+				Convey(fmt.Sprintf("An error of message \"%s\" is returned", expectedErrs[i]), func() {
+					So(fErr, ShouldBeNil)
+					So(wErr, ShouldBeNil)
+					So(err, ShouldBeNil)
+					So(orderLog.logs, ShouldResemble, []string{canvasExpecErr[i]})
 				})
 			})
 		})

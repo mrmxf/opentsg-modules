@@ -38,6 +38,8 @@ layout as shown below. See the grid [documentation](../opentsg-core/gridgen/read
 The widget type is also required. Each widget has a unique `"type"`,
 so OpenTSG can identify and handle the widget.
 
+More information about the `TSIG` can be found [here.](../opentsg-core/gridgen/readme.md#the-tsig-property)
+
 ```json
 "props"{
     "type" : "builtin.example",
@@ -47,6 +49,9 @@ so OpenTSG can identify and handle the widget.
             "x": 0,
             "y": 0
         }
+    },
+    "TSIG": {
+        "grouping":"example"
     }
 }
 

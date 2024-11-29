@@ -10,17 +10,17 @@ import (
 type Config struct {
 	//	Type         string            `json:"type" yaml:"type"`
 	FrameCounter      bool        `json:"frameCounter,omitempty" yaml:"frameCounter,omitempty"`
-	Imgpos            interface{} `json:"gridPosition" yaml:"gridPosition"`
-	TextColour        string      `json:"textColor" yaml:"textColor"`
-	BackColour        string      `json:"backgroundColor" yaml:"backgroundColor"`
-	Font              string      `json:"font" yaml:"font"`
-	FontSize          float64     `json:"fontSize" yaml:"fontSize"`
+	Imgpos            interface{} `json:"gridPosition,omitempty" yaml:"gridPosition,omitempty"`
+	TextColour        string      `json:"textColor,omitempty" yaml:"textColor,omitempty"`
+	BackColour        string      `json:"backgroundColor,omitempty" yaml:"backgroundColor,omitempty"`
+	Font              string      `json:"font,omitempty" yaml:"font,omitempty"`
+	FontSize          float64     `json:"fontSize,omitempty" yaml:"fontSize,omitempty"`
 	config.WidgetGrid `yaml:",inline"`
 	ColourSpace       colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
 
 	//	DesignScale  string       `json:"designScale" yaml:"designScale"`
 	// This is added in for metadata purposes
-	FrameNumber int `json:"frameNumber"`
+	frameNumber int `json:"frameNumber"`
 }
 
 // start the count at -1 as it is incremented before being returned

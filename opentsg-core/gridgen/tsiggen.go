@@ -17,53 +17,55 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/credentials"
 )
 
-// TSIG is the top level TSIG struct for importing 3d geometry
+// TSIG is the top level TSIG struct for importing 3d geometry.
+// Version 0.5
 type TSIG struct {
-	Tilelayout []TileLayout `json:"Tile layout"`
+	Tilelayout []TileLayout `json:"tileLayout,omitempty" yaml:"tileLayout,omitempty"`
 	// Dimensions of the flat image and any carving
-	Dimensions Dimensions `json:"Dimensions"`
+	Dimensions Dimensions `json:"dimensions,omitempty" yaml:"dimensions,omitempty"`
 	// Layout of any carved widgets
-	Carve map[string]XY2D `json:"Carve"`
+	Carve map[string]XY2D `json:"carve,omitempty" yaml:"carve,omitempty"`
 	// NAme?
 }
 
 // TileLayout contains the layout of each individual tsig tile
 type TileLayout struct {
-	Name       string    `json:"Name"`
-	Tags       []string  `json:"Tags"`
-	Neighbours []string  `json:"Neighbours"`
-	Layout     Positions `json:"Layout"`
+	ID         string            `json:"ID,omitempty" yaml:"ID,omitempty"`
+	Tags       []string          `json:"tags,omitempty" yaml:"tags,omitempty"`
+	Neighbours []string          `json:"neighbours,omitempty" yaml:"neighbours,omitempty"`
+	Layout     Positions         `json:"layout,omitempty" yaml:"layout,omitempty"`
+	Groups     map[string]string `json:"groups,omitempty" yaml:"groups,omitempty"`
 }
 
 // Positions list the XY coordinates
 // of the tsig in its different locations in pixels
 type Positions struct {
-	Carve      XY `json:"Carve"`
-	Flat       XY `json:"Flat"`
-	Dimensions XY `json:"XY"`
+	Carve      XY `json:"carve,omitempty" yaml:"carve,omitempty"`
+	Flat       XY `json:"flat,omitempty" yaml:"flat,omitempty"`
+	Dimensions XY `json:"XY,omitempty" yaml:"XY,omitempty"`
 }
 
 // Dimensions contains the information for the
 // size of each TSIG destination
 type Dimensions struct {
-	Carve XY2D `json:"Carve"`
-	Flat  XY2D `json:"Flat"`
+	Carve XY2D `json:"carve,omitempty" yaml:"carve,omitempty"`
+	Flat  XY2D `json:"flat,omitempty" yaml:"flat,omitempty"`
 }
 
 // The XY position
 // and the carve destination, if required
 type XY struct {
-	Destination string `json:"Destination,omitempty"`
-	X           int    `json:"X"`
-	Y           int    `json:"Y"`
+	Destination string `json:"destination,omitempty" yaml:"destination,omitempty"`
+	X           int    `json:"x,omitempty" yaml:"x,omitempty"`
+	Y           int    `json:"y,omitempty" yaml:"y,omitempty"`
 }
 
-// XY"D contains the 2d dimensions
+// XY2D contains the 2d dimensions
 type XY2D struct {
-	X0 int `json:"X0"`
-	Y0 int `json:"Y0"`
-	X1 int `json:"X1"`
-	Y1 int `json:"Y1"`
+	X0 int `json:"X0,omitempty" yaml:"X0,omitempty"`
+	Y0 int `json:"Y0,omitempty" yaml:"Y0,omitempty"`
+	X1 int `json:"X1,omitempty" yaml:"X1,omitempty"`
+	Y1 int `json:"Y1,omitempty" yaml:"Y1,omitempty"`
 }
 
 func flatmap(c *context.Context, basePath, tpigpath string) (canvasAndMask, error) {
@@ -118,9 +120,12 @@ func flatmap(c *context.Context, basePath, tpigpath string) (canvasAndMask, erro
 		locs[i] = image.Rect(t.Layout.Flat.X, t.Layout.Flat.Y, t.Layout.Flat.X+t.Layout.Dimensions.X, t.Layout.Flat.Y+t.Layout.Dimensions.Y)
 
 		utilitySegements[i] = &Segmenter{
-			Shape: locs[i],
-			Tags:  t.Tags,
-			Name:  t.Name, ImportPosition: i}
+			Neighbours: t.Neighbours,
+			Shape:      locs[i],
+			Tags:       t.Tags,
+			ID:         t.ID, ImportPosition: i,
+			Groups: t.Groups,
+		}
 
 		// figure out the optimisation here, or error handling as not everything will be carved
 		carves := image.Rect(t.Layout.Carve.X, t.Layout.Carve.Y, t.Layout.Carve.X+t.Layout.Dimensions.X, t.Layout.Carve.Y+t.Layout.Dimensions.Y)
@@ -168,7 +173,6 @@ func Carve(c *context.Context, canvas draw.Image, target []string) []CarvedImage
 		create a mask of the complete thing to run over the whole bit
 	*/
 	carveTargets := (*c).Value(carvekey)
-	// .(map[string]carver)
 
 	if carveTargets != nil {
 		carveTargets := carveTargets.(map[string]carvedImageLayout)
@@ -286,8 +290,8 @@ func splicegrid(x, y int, xscale, yscale float64) map[string][]*Segmenter {
 				tagsRC = append(tagsRC, fmt.Sprintf("neighbour:R%vC%v", xpos+1, ypos+1))
 			}
 
-			sections[gridCoord] = []*Segmenter{{Name: gridCoord, Shape: bounding, Tags: tagsC, ImportPosition: count}}
-			sections[gridRCCoord] = []*Segmenter{{Name: gridRCCoord, Shape: bounding, Tags: tagsRC, ImportPosition: count}}
+			sections[gridCoord] = []*Segmenter{{ID: gridCoord, Shape: bounding, Tags: tagsC, ImportPosition: count}}
+			sections[gridRCCoord] = []*Segmenter{{ID: gridRCCoord, Shape: bounding, Tags: tagsRC, ImportPosition: count}}
 
 			count++
 		}
@@ -508,8 +512,10 @@ type carveshift struct {
 }
 
 type Segmenter struct {
-	Name           string
+	ID             string
 	Shape          image.Rectangle
 	Tags           []string // neighbours will be included in a string? match to neighbours then
+	Groups         map[string]string
+	Neighbours     []string
 	ImportPosition int
 }

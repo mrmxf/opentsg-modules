@@ -1,0 +1,13 @@
+{
+		"include": [
+			{
+				"uri": "invalidsize.json",
+				"name": "canvas"
+			}
+		],
+		"create": [
+			{
+				"canvas": {}
+			}
+		]
+	}

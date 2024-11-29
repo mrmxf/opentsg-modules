@@ -11,6 +11,23 @@ As part of the coordinates system it generates any geometry from TSIGs.
 It also has the art key functionality, to allow for different
 backgrounds to be used, where the background is to be preserved.
 
+## Contents
+
+- [Location](#the-location-system)
+  - [Coordiante Units](#coordinate-units)
+  - [Border Radius](#border-radius)
+  - [Grid Keys](#gridkeys)
+- [The TSIG Property](#the-tsig-property)
+- [Legacy Coordinates](#the-legacy-coordinates-systems)
+- [Art Keys](#art-key)
+- [TSIGs](#tsig-test-signal-input-geometry)
+  - [How Do TSIGs Work](#how-do-tsigs-work)
+  - [What is in a TSIG](#what-is-in-a-tsig)
+  - [TSIG Tags](#tsig-tags)
+  - [Carving](#carving)
+  - [TSIGs and widgets](#tsigs-and-widgets)
+  - [Building a TSIG](#building-a-tsig)
+
 ## The location system
 
 The coordinates of an area a widget covers can be defined
@@ -65,7 +82,7 @@ for x2 and y2.
     }
 ```
 
-### Distance units
+### Coordinate units
 
 There are several units that can be used to call the coordinates.
 
@@ -81,7 +98,7 @@ They can be called like so.
 - `"20%"`
 
 Pixel units, these are the absolute pixel values on the test card.
-and are called as so.
+and are called like so.
 
 - `"500px"`
 
@@ -102,9 +119,44 @@ A widget with rounded corners can be created with the
     }
 ```
 
-This uses all the same units as the coordinates but with the percentage
+This uses all the same units as the coordinates, but with the percentage
 being the height and width of the widget (which ever is smallest), instead of the whole
 testcard.
+
+### GridKeys
+
+`"useGridKeys"` is an alternative way of generating the area a widget patch will cover.
+It is an array of strings of areas for the widget to cover, the available prefixes are:
+
+- `key:` - for [art key](#art-key) calls
+- `tsig:` - for selecting:
+  - tile IDs - e.g. `tsig:A1`
+  - groups - e.g. `tsig:ExampleGroup`
+  - Specific types of groups - e.g. `tsig:ExampleGroup.ExampleField`
+
+The patch that is generated, is compiled of every grid key that is called. It is masked
+so that tiles not associated with the grid keys are not included.
+
+## The TSIG property
+
+The `TSIG` field of thw widget properties allows manipulation of the TSIGs that
+the widget receives as part of its request.
+
+`grouping` groups the TSIGs into the groups given in the TSIG,
+instead of the default base units of the TSIG. e.g. 3 tiles that have the groups:
+
+1. `example:A1`
+2. `example:A2`
+3. `example:A1`
+
+Will produce 2 TSIgs of A1 and A2.
+If every TSIG tile does not have the unit searched for than an error has returned.
+
+```json
+ "TSIG": {
+        "grouping":"example"
+    }
+```
 
 ## The legacy coordinates systems
 
@@ -207,17 +259,22 @@ It has the following layout:
 
 ```json
 {
-    "Tile layout": [
+    "tileLayout": [
         {
-            "Name": "A000",
-            "Tags": [],
-            "Layout": {
-                "Carve": {
-                    "Destination": "C1",
+            "ID": "A000",
+            "tags": [],
+            "neighbours":[],
+            "units": {
+                "cube": "A11",
+                "grid": "A1"
+            },
+            "layout": {
+                "carve": {
+                    "destination": "C1",
                     "X": 0,
                     "Y": 0
                 },
-                "Flat": {
+                "flat": {
                     "X": 0,
                     "Y": 0
                 },
@@ -228,15 +285,15 @@ It has the following layout:
             }
         }
     ],
-    "Dimensions": {
-        "Flat": {
+    "dimensions": {
+        "flat": {
             "X0": 0,
             "Y0": 0,
             "X1": 30,
             "Y1": 30
         }
     },
-    "Carve": {
+    "carve": {
         "C1": {
             "X0": 0,
             "Y0": 0,
@@ -247,13 +304,15 @@ It has the following layout:
 }
 ```
 
-The `"Tile layout"` field contains a data array for each tile face. It contains
+The `"tileLayout"` field contains a data array for each tile face. It contains
 
-- `"Name"` - the name of that polygon, often used for labelling. - OPTIONAL
-- `"Tags"` - any tags associated with that polygon, see [here](#tsig-tags) for more information about tags. - OPTIONAL
-- `"Layout"` - the XY coordinate layout of the face. It has the following sub fields:
-  - `"Carve"` - the name of the carve destination, and the XY coordinates - OPTIONAL
-  - `""Flat"` - The initial XY coordinates of the object in its flat layout. - REQUIRED
+- `"ID"` - the ID of that polygon, often used for labelling, it must be unique. - OPTIONAL
+- `"groups"` - Any groups associated with that tile
+- `"neighbours"` - The IDs of any neighbours to that polygon - OPTIONAL
+- `"tags"` - any tags associated with that polygon, see [here](#tsig-tags) for more information about tags. - OPTIONAL
+- `"layout"` - the XY coordinate layout of the face. It has the following sub fields:
+  - `"carve"` - the name of the carve destination, and the XY coordinates - OPTIONAL
+  - `"flat"` - The initial XY coordinates of the object in its flat layout. - REQUIRED
   - `"XY"` - The height and width of the face. - REQUIRED
 
 For carve and flat only the initial XY coordinates are required,

@@ -16,17 +16,17 @@ func Mockgeom(w, h int, nameLength int) []gridgen.Segmenter {
 	mocksegments := make([]gridgen.Segmenter, len(ns))
 
 	for i, n := range ns {
-		neighs := make([]string, len(n.neighbours))
+
+		trueNeighs := make([]string, len(n.neighbours))
 		for j, neigh := range n.neighbours {
-			neighs[j] = fmt.Sprintf("neighbour:%04x%04x", neigh, neigh)
+			trueNeighs[j] = fmt.Sprintf("%04x%04x", neigh, neigh)
 		}
 
 		name := ""
-
 		for j := 0; j < nameLength; j += 4 {
 			name += fmt.Sprintf("%04x", i)
 		}
-		mocksegments[i] = gridgen.Segmenter{Name: name, Shape: n.area, Tags: neighs}
+		mocksegments[i] = gridgen.Segmenter{ID: name, Shape: n.area, Neighbours: trueNeighs}
 	}
 
 	return mocksegments

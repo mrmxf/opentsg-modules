@@ -15,21 +15,22 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/gridgen"
+	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	geometrymock "github.com/mrmxf/opentsg-modules/opentsg-widgets/geometryMock"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestFillMethod(t *testing.T) {
-	rand.Seed(1320)
-	/*mg := geometrymock.Mockgeom(1000, 1000)
+	mg := geometrymock.Mockgeom(1000, 1000, 8)
 	getGeometry = func(c *context.Context, coordinate string) ([]gridgen.Segmenter, error) {
 		return mg, nil
-	}*/
+	}
 
 	mockG := config.Grid{Location: "Nothing"}
 	mockJson4 := Config{GridLoc: &mockG, TextColour: "#C2A649"}
-
+	examplejson.SaveExampleJson(mockJson4, WidgetType, fmt.Sprintf("TextLength%v", 8), true)
 	nameLength := []int{8, 12, 16, 18}
+	rand.Seed(1320)
 
 	for _, n := range nameLength {
 
@@ -43,8 +44,8 @@ func TestFillMethod(t *testing.T) {
 
 		c := context.Background()
 		genErr := mockJson4.Generate(canvas, &c)
-		f, _ := os.Create(fmt.Sprintf("./testdata/generatecheck%v.png", n))
-		png.Encode(f, canvas)
+		//f, _ := os.Create(fmt.Sprintf("./testdata/generatecheck%v.png", n))
+		// png.Encode(f, canvas)
 
 		file, _ := os.Open(fmt.Sprintf("./testdata/generatecheck%v.png", n))
 		// Decode to get the colour values

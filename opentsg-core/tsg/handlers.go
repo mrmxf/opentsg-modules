@@ -434,8 +434,8 @@ func (tsg *OpenTSG) widgetHandle(c *context.Context, canvas draw.Image, monit *m
 	allWidgetsArr := make([]core.AliasIdentityHandle, len(allWidgets))
 	for alias, data := range allWidgets {
 
-		allWidgetsArr[alias.ZPos] = alias
-		put(c, alias.WidgetEssentials, alias.FullName, data)
+		allWidgetsArr[data.ZPos] = data
+		put(c, data.WidgetEssentials, alias, data.Contents)
 
 	}
 
@@ -477,7 +477,6 @@ func (tsg *OpenTSG) widgetHandle(c *context.Context, canvas draw.Image, monit *m
 			defer runPool.PutRunner(runner)
 			defer wg.Done()
 
-			widg := allWidgets[allWidgetsArr[i]]
 			widgProps := allWidgetsArr[i]
 			p.WID = widgProps.FullName
 			p.Wtype = widgProps.WType
@@ -532,7 +531,7 @@ func (tsg *OpenTSG) widgetHandle(c *context.Context, canvas draw.Image, monit *m
 				case HandlerFunc:
 					Han = hdler
 				default:
-					Han, err = Unmarshal(handlers.handler)(widg)
+					Han, err = Unmarshal(handlers.handler)(widgProps.Contents)
 				}
 
 				if err != nil {
@@ -540,7 +539,7 @@ func (tsg *OpenTSG) widgetHandle(c *context.Context, canvas draw.Image, monit *m
 					return
 				}
 
-				gridCanvas, imgLocation, mask, err = widgProps.Loc.GridSquareLocatorAndGenerator(c)
+				gridCanvas, imgLocation, mask, err = widgProps.Loc.GeneratePatch(c)
 
 				// when the function am error is returned,
 				// the function just becomes return an error
@@ -549,7 +548,7 @@ func (tsg *OpenTSG) widgetHandle(c *context.Context, canvas draw.Image, monit *m
 					return
 				}
 
-				flats, err := widgProps.Loc.GetGridGeometry(c)
+				flats, err := widgProps.Loc.GetGridGeometry(c, widgProps.TSIGProperties.Grouping)
 				if err != nil {
 					Han = GenErrorHandler(400, err.Error())
 					return
@@ -567,7 +566,7 @@ func (tsg *OpenTSG) widgetHandle(c *context.Context, canvas draw.Image, monit *m
 				//	Han, err := Unmarshal(handlers.handler)(widg)
 				resp = response{baseImg: gridCanvas}
 				req.FrameProperties = fp
-				req.RawWidgetYAML = widg
+				req.RawWidgetYAML = widgProps.Contents
 				req.searchWithCredentials = webSearch
 				req.PatchProperties = pp
 
