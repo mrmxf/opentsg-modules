@@ -304,7 +304,7 @@ func FrameWidgetsGeneratorHandle(c context.Context, framePos int) (context.Conte
 			}
 			props, _ := json.Marshal(properties)
 			// get the props
-			validator.SchemaValidator([]byte(`{}`), props, k, mainBase.jsonFileLines)
+			validator.SchemaValidator(propsSchema, props, k, mainBase.jsonFileLines)
 
 			// then parse it
 			var essential WidgetEssentials
@@ -370,10 +370,11 @@ type jsonUpdate struct {
 // WidgetEssentials contains the essential properties for each widget.
 // These are removed and stored as a sidecar to the widget when the widgets are parsed.
 type WidgetEssentials struct {
-	WType       string            `json:"type,omitempty" yaml:"type,omitempty"`
-	GridLoc     Grid              `json:"grid,omitempty" yaml:"grid,omitempty"`
-	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	Loc         gridgen.Location  `json:"location,omitempty" yaml:"location,omitempty"`
+	WType          string                 `json:"type,omitempty" yaml:"type,omitempty"`
+	GridLoc        Grid                   `json:"grid,omitempty" yaml:"grid,omitempty"`
+	ColourSpace    colour.ColorSpace      `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
+	Loc            gridgen.Location       `json:"location,omitempty" yaml:"location,omitempty"`
+	TSIGProperties gridgen.TSIGProperties `json:"TSIG,omitempty" yaml:"TSIG,omitempty"`
 }
 
 // Grid gives the grid system with the coordinates and an alias

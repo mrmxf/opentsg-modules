@@ -1,0 +1,16 @@
+{
+    "colorSpace": {
+        "primaries": {
+            "Blue": {},
+            "Green": {},
+            "Red": {},
+            "WhitePoint": {}
+        }
+    },
+    "grid": {
+        "alias": " A demo alias",
+        "location": "a1"
+    },
+    "textColor": "#C2A649",
+    "type": "builtin.geometrytext"
+}

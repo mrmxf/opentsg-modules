@@ -23,7 +23,7 @@ func TestTpigGeometry(t *testing.T) {
 		cols = func(c context.Context) int { return 3 }*/
 
 	// repeat for the  input being a tpig and not being a tpig
-	tpigs := "./testdata/tpig/mock.json"
+	tsigs := "./testdata/tpig/mock.json"
 
 	c := context.Background()
 	f := FrameConfiguration{
@@ -34,10 +34,10 @@ func TestTpigGeometry(t *testing.T) {
 
 	c = context.WithValue(c, frameKey, f)
 	cp := &c
-	dest, e := flatmap(cp, "./", tpigs)
+	dest, e := flatmap(cp, "./", tsigs)
 	// the contents will be cheked throughout
 	Convey("Checking the tpig can be imported and read", t, func() {
-		Convey(fmt.Sprintf("using a %v as the input file", tpigs), func() {
+		Convey(fmt.Sprintf("using a %v as the input file", tsigs), func() {
 			Convey("No error is generated extracting the file", func() {
 				So(e, ShouldBeNil)
 				So(dest.canvas.Bounds(), ShouldResemble, image.Rect(0, 0, 30, 30))
@@ -61,15 +61,15 @@ func TestTpigGeometry(t *testing.T) {
 
 	gridtarget := []string{"A1", "A0:a2", "r2c3", "R1C1:R3C3"}
 	expectedSegment := [][]Segmenter{
-		{{Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 1}},
-		{{Name: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}}, {Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1}},
+		{{ID: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 1}},
+		{{ID: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}}, {ID: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1}},
 		{},
 		// some values are repeated across grids
-		{{Name: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 0},
-			{Name: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1},
-			{Name: "A002", Shape: image.Rectangle{Min: image.Point{X: 10, Y: 0}, Max: image.Point{X: 25, Y: 15}}, Tags: []string{}, ImportPosition: 2},
-			{Name: "A003", Shape: image.Rectangle{Min: image.Point{X: 28, Y: 0}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, ImportPosition: 3},
-			{Name: "A004", Shape: image.Rectangle{Min: image.Point{X: 20, Y: 20}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, ImportPosition: 4}}, {}}
+		{{ID: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 0},
+			{ID: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1},
+			{ID: "A002", Shape: image.Rectangle{Min: image.Point{X: 10, Y: 0}, Max: image.Point{X: 25, Y: 15}}, Tags: []string{}, ImportPosition: 2},
+			{ID: "A003", Shape: image.Rectangle{Min: image.Point{X: 28, Y: 0}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, ImportPosition: 3},
+			{ID: "A004", Shape: image.Rectangle{Min: image.Point{X: 20, Y: 20}, Max: image.Point{X: 30, Y: 30}}, Tags: []string{}, ImportPosition: 4}}, {}}
 	for i, gt := range gridtarget {
 		s, e := GetGridGeometry(cp, gt)
 

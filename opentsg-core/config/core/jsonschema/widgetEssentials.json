@@ -1,0 +1,103 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "WidgetEssentials Schema",
+    "description": "The schema for the widget essentials",
+    "type": "object",
+    "properties": {
+        "type": {
+            "type": "string"
+        },
+        "location": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "type": "string"
+                },
+                "box": {
+                    "type": "object",
+                    "properties": {
+                        "useAlias": {
+                            "type": "string"
+                        },
+                        "useGridKeys": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "x": {
+                            "$ref": "#/$defs/coordinate"
+                        },
+                        "y": {
+                            "$ref": "#/$defs/coordinate"
+                        },
+                        "x2": {
+                            "$ref": "#/$defs/coordinate"
+                        },
+                        "y2": {
+                            "$ref": "#/$defs/coordinate"
+                        },
+                        "width": {
+                            "$ref": "#/$defs/coordinate"
+                        },
+                        "height": {
+                            "$ref": "#/$defs/coordinate"
+                        },
+                        "border-radius": {
+                            "$ref": "#/$defs/coordinate"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "TSIG": {
+            "type": "object",
+            "properties": {
+                "grouping": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "colorSpace" :{
+            "type":"object", 
+            "colorSpace" : {
+                "type" : "string"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "pixel": {
+            "type": "string",
+            "desciption": "pattern requires a pi then star with a number, which can be divided by a resulting number",
+            "pattern": "^-{0,1}\\d{1,}[pP][Xx]$",
+            "description": "pixel value to move the image"
+        },
+        "percent1": {
+            "type": "string",
+            "desciption": "pattern requires a pi then star with a number, which can be divided by a resulting number",
+            "pattern": "^-{0,1}\\d{0,2}\\.{1}\\d{0,}%$|^-{0,1}\\d{0,2}%$|^-{0,1}(100)%$",
+            "description": "percentage value to move the image, e.g. 25%"
+        },
+        "grid": {
+            "type": "integer",
+            "description": "The integer grid values"
+        },
+        "coordinate": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/percent1"
+                },
+                {
+                    "$ref": "#/$defs/pixel"
+                },
+                {
+                    "$ref": "#/$defs/grid"
+                }
+            ]
+        }
+    }
+}

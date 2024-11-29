@@ -2,6 +2,7 @@
     "props":{
         "type": "builtin.canvasoptions"
     },
+    "type": "builtin.canvasoptions",
     "name": [
         "./invalidPath/out.png"
     ],

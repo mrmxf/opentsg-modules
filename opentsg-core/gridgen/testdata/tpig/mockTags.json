@@ -1,0 +1,119 @@
+{
+    "tileLayout": [
+        {
+            "ID": "A000",
+            "neighbours": [
+                "A001",
+                "A002"
+            ],
+            "layout": {
+                "flat": {
+                    "X": 0,
+                    "Y": 0
+                },
+                "XY": {
+                    "X": 20,
+                    "Y": 20
+                }
+            },
+            "groups": {
+                "quad": "A",
+                "area": "TopLeft"
+            }
+        },
+        {
+            "ID": "A001",
+            "neighbours": [
+                "A000",
+                "A002",
+                "A003"
+            ],
+            "layout": {
+                "flat": {
+                    "X": 0,
+                    "Y": 20
+                },
+                "XY": {
+                    "X": 30,
+                    "Y": 10
+                }
+            },
+            "groups": {
+                "quad": "B",
+                "area": "TopLeft"
+            }
+        },
+        {
+            "ID": "A002",
+            "groups": {
+                "quad": "B",
+                "area": "TopLeft"
+            },
+            "neighbours": [
+                "A000",
+                "A001",
+                "A004"
+            ],
+            "layout": {
+                "flat": {
+                    "X": 20,
+                    "Y": 0
+                },
+                "XY": {
+                    "X": 10,
+                    "Y": 20
+                }
+            }
+        },
+        {
+            "ID": "A003",
+            "groups": {
+                "quad": "C",
+                "area": "BottomRight"
+            },
+            "neighbours": [
+                "A001",
+                "A004"
+            ],
+            "layout": {
+                "flat": {
+                    "X": 0,
+                    "Y": 30
+                },
+                "XY": {
+                    "X": 40,
+                    "Y": 10
+                }
+            }
+        },
+        {
+            "ID": "A004",
+            "groups": {
+                "quad": "C",
+                "area": "BottomRight"
+            },
+            "neighbours": [
+                "A002",
+                "A003"
+            ],
+            "layout": {
+                "flat": {
+                    "X": 30,
+                    "Y": 0
+                },
+                "XY": {
+                    "X": 10,
+                    "Y": 30
+                }
+            }
+        }
+    ],
+    "dimensions": {
+        "flat": {
+            "X0": 0,
+            "Y0": 0,
+            "X1": 40,
+            "Y1": 40
+        }
+    }
+}

@@ -1,7 +1,7 @@
 {
     "backgroundColor": "#91B645",
     "colorSpace": {
-        "Primaries": {
+        "primaries": {
             "Blue": {},
             "Green": {},
             "Red": {},
@@ -11,7 +11,6 @@
     "font": "title",
     "fontSize": 25,
     "frameCounter": true,
-    "frameNumber": 0,
     "grid": {
         "alias": " A demo alias",
         "location": "a1"

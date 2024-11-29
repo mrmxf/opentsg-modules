@@ -122,7 +122,7 @@ var pos = framePos
 
 func (f Config) Helper(key string, c *context.Context) {
 	// Update the frame number add amend context with it
-	f.FrameNumber = pos()
+	f.frameNumber = pos()
 	fc := make(map[string]Config)
 	fc[key] = f
 

@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"title": "Test Card Schema",
-	"description": "The Schmea for the textbox widget of the test signal generator",
+	"description": "The Schmea for the fourcolour widget of the test signal generator",
 	"type": "object",
 	"properties": {
 		"type": {
@@ -9,7 +9,7 @@
 			"enum": [
 				"builtin.fourcolor"
 			],
-			"description": "This to be labelled as \"builtin.textbox\", so that the json is correclty configured"
+			"description": "This to be labelled as \"builtin.fourcolor\", so that the json is correclty configured"
 		},
 		"grid": {
 			"$ref": "#/$defs/gridschema"
@@ -57,9 +57,6 @@
 					"description": "The name to refer to the chosen grid location for the module, these are reset for each section in the array and are optional"
 				}
 			},
-			"required": [
-				"location"
-			],
 			"additionalProperties": false
 		},
 		"anycolour":{"anyOf":[{"$ref": "#/$defs/colourReg/6hex"},

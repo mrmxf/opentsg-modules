@@ -1,7 +1,7 @@
 {
     "waveType": "cos",
     "colorSpace": {
-        "Primaries": {
+        "primaries": {
             "Red": {},
             "Green": {},
             "Blue": {},

@@ -44,13 +44,13 @@ func ExtractAllWidgets(c *context.Context) map[core.AliasIdentity]json.RawMessag
 
 // ExtractAllWidgets returns every widget used in a frame. Each widget contains its
 // properties and is the
-func ExtractAllWidgetsHandle(c *context.Context) map[core.AliasIdentityHandle]json.RawMessage {
+func ExtractAllWidgetsHandle(c *context.Context) map[string]core.AliasIdentityHandle {
 
 	frameWidgets := core.GetFrameWidgetsHandle(*c)
-	tagBytes := make(map[core.AliasIdentityHandle]json.RawMessage)
+	tagBytes := make(map[string]core.AliasIdentityHandle)
 	for k, wf := range frameWidgets {
 		// skip factories that don't have types
-		tagBytes[core.AliasIdentityHandle{FullName: k, ZPos: wf.Pos, WidgetEssentials: wf.WidgetEssentials}] = wf.Data
+		tagBytes[k] = core.AliasIdentityHandle{FullName: k, ZPos: wf.Pos, WidgetEssentials: wf.WidgetEssentials, Contents: wf.Data}
 
 	}
 

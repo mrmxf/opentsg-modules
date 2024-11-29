@@ -26,7 +26,8 @@ const (
 	WidgetType = "builtin.resize"
 )
 
-var Schema = []byte(`{}`)
+//go:embed jsonschema/resize.json
+var Schema []byte
 
 // zoneGen takes a canvas and then returns an image of the zone plate layered ontop of the image
 func Gen(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *errhandle.Logger) {

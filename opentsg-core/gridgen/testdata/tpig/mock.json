@@ -1,15 +1,15 @@
 {
-    "Tile layout": [
+    "tileLayout": [
         {
-            "Name": "A000",
-            "Tags": [],
-            "Layout": {
-                "Carve": {
-                    "Destination": "C1",
+            "ID": "A000",
+            "tags": [],
+            "layout": {
+                "carve": {
+                    "destination": "C1",
                     "X": 0,
                     "Y": 0
                 },
-                "Flat": {
+                "flat": {
                     "X": 0,
                     "Y": 0
                 },
@@ -20,15 +20,15 @@
             }
         },
         {
-            "Name": "A001",
-            "Tags": [],
-            "Layout": {
-                "Carve": {
-                    "Destination": "C1",
+            "ID": "A001",
+            "tags": [],
+            "layout": {
+                "carve": {
+                    "destination": "C1",
                     "X": 0,
                     "Y": 10
                 },
-                "Flat": {
+                "flat": {
                     "X": 0,
                     "Y": 10
                 },
@@ -39,11 +39,11 @@
             }
         },
         {
-            "Name": "A002",
-            "Tags": [],
-            "Layout": {
-                "Carve": {
-                    "Destination": "C2",
+            "ID": "A002",
+            "tags": [],
+            "layout": {
+                "carve": {
+                    "destination": "C2",
                     "X": 0,
                     "Y": 0
                 },
@@ -58,15 +58,15 @@
             }
         },
         {
-            "Name": "A003",
-            "Tags": [],
-            "Layout": {
-                "Carve": {
-                    "Destination": "C3",
+            "ID": "A003",
+            "tags": [],
+            "layout": {
+                "carve": {
+                    "destination": "C3",
                     "X": 28,
                     "Y": 0
                 },
-                "Flat": {
+                "flat": {
                     "X": 28,
                     "Y": 0
                 },
@@ -77,15 +77,15 @@
             }
         },
         {
-            "Name": "A004",
-            "Tags": [],
-            "Layout": {
-                "Carve": {
-                    "Destination": "C3",
+            "ID": "A004",
+            "tags": [],
+            "layout": {
+                "carve": {
+                    "destination": "C3",
                     "X": 0,
                     "Y": 0
                 },
-                "Flat": {
+                "flat": {
                     "X": 20,
                     "Y": 20
                 },
