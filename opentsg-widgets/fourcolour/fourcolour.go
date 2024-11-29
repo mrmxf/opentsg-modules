@@ -49,28 +49,23 @@ func (f Config) Handle(resp tsg.Response, req *tsg.Request) {
 	for i, flat := range flats {
 		neighs := []int{}
 
-		for _, ftag := range flat.Tags {
-			if len(ftag) < 10 {
-				continue
-			}
+		for _, neigh := range flat.Neighbours {
 
-			if ftag[:10] == "neighbour:" {
-				// do some maths about incrementing the start point as more neighbours are found
-				neigh := ftag[10:]
-				neighpos, ok := namelocations[neigh]
-				if !ok {
-					for j, f := range flats {
-						if f.Name == neigh {
-							neighpos = j
-							namelocations[neigh] = j
-							ok = true
-						}
+			// do some maths about incrementing the start point as more neighbours are found
+			neighpos, ok := namelocations[neigh]
+			if !ok {
+				for j, f := range flats {
+					if f.ID == neigh {
+						neighpos = j
+						namelocations[neigh] = j
+						ok = true
 					}
 				}
-				if ok {
-					neighs = append(neighs, neighpos)
-				}
 			}
+			if ok {
+				neighs = append(neighs, neighpos)
+			}
+
 		}
 		nodes[i] = nodal{neighbours: neighs, area: flat.Shape}
 		//	fmt.Println(len(neighs), neighs)
@@ -127,28 +122,23 @@ func (f Config) Generate(canvas draw.Image, opt ...any) error {
 	for i, flat := range flats {
 		neighs := []int{}
 
-		for _, ftag := range flat.Tags {
-			if len(ftag) < 10 {
-				continue
-			}
+		for _, neigh := range flat.Neighbours {
 
-			if ftag[:10] == "neighbour:" {
-				// do some maths about incrementing the start point as more neighbours are found
-				neigh := ftag[10:]
-				neighpos, ok := namelocations[neigh]
-				if !ok {
-					for j, f := range flats {
-						if f.Name == neigh {
-							neighpos = j
-							namelocations[neigh] = j
-							ok = true
-						}
+			// do some maths about incrementing the start point as more neighbours are found
+			neighpos, ok := namelocations[neigh]
+			if !ok {
+				for j, f := range flats {
+					if f.ID == neigh {
+						neighpos = j
+						namelocations[neigh] = j
+						ok = true
 					}
 				}
-				if err == nil && ok {
-					neighs = append(neighs, neighpos)
-				}
 			}
+			if ok {
+				neighs = append(neighs, neighpos)
+			}
+
 		}
 		nodes[i] = nodal{neighbours: neighs, area: flat.Shape}
 		//	fmt.Println(len(neighs), neighs)

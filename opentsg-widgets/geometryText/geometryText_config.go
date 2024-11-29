@@ -3,6 +3,8 @@ package geometrytext
 import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
+
+	_ "embed"
 )
 
 type Config struct {
@@ -11,13 +13,8 @@ type Config struct {
 	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
 }
 
-var Schema = []byte(`{
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://example.com/product.schema.json",
-	"title": "Allow anything through for tests",
-	"description": "An empty schema to allow custom structs to run through",
-	"type": "object"
-	}`)
+//go:embed jsonschema/geometryText.json
+var Schema []byte
 
 func (f Config) Alias() string {
 	return f.GridLoc.Alias

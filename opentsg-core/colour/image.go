@@ -15,11 +15,11 @@ ColorSpace contains all the information of a colours colourspace.
 */
 type ColorSpace struct {
 	// Short form to be used for common colour spaces e.g. "rec709"
-	ColorSpace string `json:"ColorSpace,omitempty" yaml:"ColorSpace,omitempty"`
+	ColorSpace string `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
 	// Preffered transformtype. Not currently in use
-	TransformType string `json:"TransformType,omitempty" yaml:"TransformType,omitempty"`
+	TransformType string `json:"transformType,omitempty" yaml:"transformType,omitempty"`
 	// for custom colourspaces, the primaries can be declared in XY space
-	Primaries Primaries `json:"Primaries,omitempty" yaml:"Primaries,omitempty"`
+	Primaries Primaries `json:"primaries,omitempty" yaml:"primaries,omitempty"`
 }
 
 // The Primaries of a colour space consist of the XY coordinates

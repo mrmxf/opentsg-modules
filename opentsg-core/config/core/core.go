@@ -64,6 +64,9 @@ type generate struct {
 //go:embed jsonschema/includeschema.json
 var incschema []byte
 
+//go:embed jsonschema/widgetEssentials.json
+var propsSchema []byte
+
 // Processing structs
 type base struct {
 	authBody              credentials.Decoder
@@ -98,8 +101,9 @@ type WidgetContents struct {
 // AliasIdentity is the name and zposition of a widget. Where zposition is the widgets position in the global array of widgets.
 // As well as any other properties associated with the widget
 type AliasIdentityHandle struct {
-	FullName string
 	ZPos     int
+	FullName string
+	Contents json.RawMessage
 	WidgetEssentials
 }
 

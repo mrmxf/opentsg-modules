@@ -13,6 +13,8 @@ import (
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/config/core"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/config/validator"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/widgets"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
 	"gopkg.in/yaml.v3"
@@ -84,9 +86,17 @@ func LoopInitHandle(frameContext *context.Context) []error {
 	conf := widgets.ExtractAllWidgetsHandle(frameContext)
 
 	canvas := make([]json.RawMessage, 0)
-	for widg, v := range conf {
-		if widg.WType == WType {
-			canvas = append(canvas, v)
+	// GetJSONLines returns the hash map of all the imported files and their lines.
+	validlines := core.GetJSONLines(*frameContext)
+	for _, v := range conf {
+		if v.WType == WType {
+			errs := validator.SchemaValidator(baseschema, v.Contents, v.FullName, validlines)
+
+			if len(errs) > 0 {
+				return errs
+			}
+			canvas = append(canvas, v.Contents)
+
 		}
 
 	}

@@ -1,7 +1,7 @@
 {
     "backgroundColor": "rgb12(816,816,816)",
     "colorSpace": {
-        "Primaries": {
+        "primaries": {
             "Blue": {},
             "Green": {},
             "Red": {},
@@ -9,14 +9,11 @@
         }
     },
     "font": "body",
-    "fontSize": 0,
     "frameCounter": true,
-    "frameNumber": 0,
     "grid": {
         "alias": " A demo alias",
         "location": "a1"
     },
-    "gridPosition": null,
     "textColor": "rgb(154,58,115)",
     "type": "builtin.frameCounter"
 }

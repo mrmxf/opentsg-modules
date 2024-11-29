@@ -91,14 +91,14 @@ func (b *base) factoryInit(jsonFactory factory, mainPath, parent string, factory
 
 		// can we find the file
 		fileBytes, path, err := FileSearch(b.authBody, f.URI, mainPath, factoryPaths)
-
+		fPath := filepath.Join(path, f.URI)
 		if err == nil {
 
 			// check if the bytes have children by being a json factory
 			var newF factory
 			err := yaml.Unmarshal(fileBytes, &newF)
 			if err != nil {
-				return fmt.Errorf("0005 error parsing %s: %v", path, err)
+				return fmt.Errorf("0005 error parsing %s: %v", path+string(os.PathSeparator)+f.URI, err)
 			}
 
 			if _, ok := b.importedWidgets[parent+f.Name]; ok {
@@ -109,7 +109,7 @@ func (b *base) factoryInit(jsonFactory factory, mainPath, parent string, factory
 
 			// schema validation to sort between widgets and factories
 			factLines := make(validator.JSONLines)
-			err = validator.Liner(fileBytes, path, "factory", factLines) // treat it as a factory update
+			err = validator.Liner(fileBytes, fPath, "factory", factLines) // treat it as a factory update
 			if err != nil {
 				return err
 			}
@@ -118,11 +118,11 @@ func (b *base) factoryInit(jsonFactory factory, mainPath, parent string, factory
 			if err := validator.SchemaValidator(incschema, fileBytes, parent, factLines); err != nil {
 				// @TODO include a better error handling method
 				b.importedWidgets[parent+f.Name] = fileBytes
-				validatorError = validator.Liner(fileBytes, path, "widget", b.jsonFileLines)
+				validatorError = validator.Liner(fileBytes, fPath, "widget", b.jsonFileLines)
 			} else {
 				// schema check here?
 				b.importedFactories[parent+f.Name] = newF
-				validatorError = validator.Liner(fileBytes, path, "factory", b.jsonFileLines)
+				validatorError = validator.Liner(fileBytes, fPath, "factory", b.jsonFileLines)
 			}
 
 			if validatorError != nil {
@@ -170,7 +170,6 @@ func FileSearch(authBody credentials.Decoder, uri, mainPath string, parentPaths 
 	inputPath, _ := url.JoinPath(mainPath, uri)
 	// inputPath = filepath.Clean(filepath.Join(inputPath, f.URI))
 	fileBytes, fileErr = authBody.Decode(inputPath)
-
 	if fileErr == nil {
 		return fileBytes, mainPath, nil
 	}

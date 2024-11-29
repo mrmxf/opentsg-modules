@@ -4,8 +4,8 @@
         "rec2020"
     ],
     "colorSpace": {
-        "ColorSpace": "rec2020",
-        "Primaries": {
+        "colorSpace": "rec2020",
+        "primaries": {
             "Red": {},
             "Green": {},
             "Blue": {},
