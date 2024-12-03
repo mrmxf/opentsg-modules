@@ -1,7 +1,7 @@
 {
     "include": [
         {
-            "uri": "blue.json",
+            "uri": "bluer.json",
             "name": "blue"
         },
         {

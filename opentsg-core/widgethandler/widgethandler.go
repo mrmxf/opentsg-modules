@@ -328,7 +328,6 @@ func Extract(c *context.Context, alias string, keys ...string) interface{} {
 
 func mapToFace(find map[string]any, keys ...string) interface{} {
 
-	fmt.Println(keys)
 	if find == nil {
 
 		return find
