@@ -1,6 +1,6 @@
 ---
-type: "builtin.canvasoptions"
-name:
+type: "builtin.canvas"
+outputs:
   - "x{{framenumber}}.png"
 frameSize:
   w: 4096

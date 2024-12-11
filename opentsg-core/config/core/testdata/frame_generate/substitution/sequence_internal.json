@@ -3,8 +3,8 @@
         {"uri": "frame.json", "name":"frame", "args":["swatchType"]}
     ],
     "create":[
-        {"frame": {"swatchType":"green"},"frame.green":{"swatchType":"green", "name": ["green-{{framenumber}}-{{bad mustache}}.png"]}},
-        {"frame": {"swatchType":"blue"},"frame.swatch.pyramid":{"swatchType":"blue","name": ["green-{{framenumber}}-{{swatchParams}}.png"]}}
+        {"frame": {"swatchType":"green"},"frame.green":{"swatchType":"green",  "outputs": ["green-{{framenumber}}-{{bad mustache}}.png"]}},
+        {"frame": {"swatchType":"blue"},"frame.swatch.pyramid":{"swatchType":"blue", "outputs": ["green-{{framenumber}}-{{swatchParams}}.png"]}}
       
     ]
 }

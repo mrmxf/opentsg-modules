@@ -393,7 +393,7 @@ func ExtractWidget(c *context.Context, types ...string) []widgetProperties {
 // MockCanvasGen mocks the canvas widget, so that the zposition is updated and the canvas information is added to the metadata
 func MockCanvasGen(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *errhandle.Logger) {
 	defer wg.Done()
-	conf := GenConf[canvaswidget.ConfigVals]{Debug: debug, Schema: canvaswidget.GetCanvasSchema(), WidgetType: "builtin.canvasoptions"}
+	conf := GenConf[canvaswidget.ConfigVals]{Debug: debug, Schema: canvaswidget.GetCanvasSchema(), WidgetType: "builtin.canvas"}
 	WidgetRunner(canvasChan, conf, c, logs, wgc) // update this to pass an error which is then formatted afterwards
 }
 

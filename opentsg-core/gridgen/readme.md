@@ -225,7 +225,7 @@ the following code.
 
 ```json
 {
-    "type": "builtin.canvasoptions",
+    "type": "builtin.canvas",
     ...
     "geometry":"./path/to/TSIG.json"
 }

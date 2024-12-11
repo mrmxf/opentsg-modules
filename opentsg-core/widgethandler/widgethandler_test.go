@@ -87,7 +87,7 @@ func TestWidgetRun(t *testing.T) {
 
 	mLog := errhandle.LogInit("stdout", "")
 
-	mockCanvas := GenConf[canvaswidget.ConfigVals]{true, mockSchema, "builtin.canvasoptions", nil}
+	mockCanvas := GenConf[canvaswidget.ConfigVals]{true, mockSchema, "builtin.canvas", nil}
 	mockConfig := GenConf[test]{true, mockSchema, "mocktest", nil}
 
 	canvasChan := make(chan draw.Image, 1)
@@ -144,7 +144,7 @@ func TestZposRun(t *testing.T) {
 		mockC, canvas := contMocker(files[i], additions[i], extras[i])
 
 		mockConfig := GenConf[test]{true, mockSchema, "mocktest", nil}
-		mockCanvas := GenConf[canvaswidget.ConfigVals]{true, mockSchema, "builtin.canvasoptions", nil}
+		mockCanvas := GenConf[canvaswidget.ConfigVals]{true, mockSchema, "builtin.canvas", nil}
 		mockhook := GenConf[testhook]{true, mockSchema, "mockhook", nil}
 
 		// add canvas
@@ -205,7 +205,7 @@ func TestErrorZpos(t *testing.T) {
 		mockC, canvas := contMocker(files[i], additions[i], extras[i])
 
 		mockConfig := GenConf[test]{true, mockSchema, "mocktest", nil}
-		mockCanvas := GenConf[canvaswidget.ConfigVals]{true, mockSchema, "builtin.canvasoptions", nil}
+		mockCanvas := GenConf[canvaswidget.ConfigVals]{true, mockSchema, "builtin.canvas", nil}
 		mockhook := GenConf[testhook]{true, mockSchema, "mockhook", nil}
 
 		// add canvas

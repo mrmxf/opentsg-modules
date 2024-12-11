@@ -19,7 +19,7 @@ type Result interface {
 func TestStructExtraction(t *testing.T) {
 	// run file import here to assign the global array, then check everything for an extraction
 	f := config.Framesize{W: 4096, H: 2160}
-	mock := ConfigVals{Name: []string{"testname.png"}, FileDepth: 16, Framesize: f, GridRows: 16,
+	mock := ConfigVals{Outputs: []string{"testname.png"}, FileDepth: 16, Framesize: f, GridRows: 16,
 		ImageType: "NRGBA64", BaseImage: "test.png", LineColor: "#CCDDAA", Background: "#247AE0",
 		LineWidth: 23.4}
 	testContext := context.Background()
@@ -28,7 +28,7 @@ func TestStructExtraction(t *testing.T) {
 	funcNames := []string{"GetFileDepth", "GetCanvasType", "getFileName", "GetPictureSize",
 		"GetGridRows", " GetGridColumns", "GetBaseImage", "GetFillColour", "GetLineColour",
 		"GetLWidth"}
-	extractedFromCont := []any{GetFileDepth(testContext), GetCanvasType(testContext), GetFileName(testContext), GetPictureSize(testContext),
+	extractedFromCont := []any{GetFileDepth(testContext), GetCanvasType(testContext), GetOutputs(testContext), GetPictureSize(testContext),
 		GetGridRows(testContext), GetGridColumns(testContext), GetBaseImage(testContext), GetFillColour(testContext), GetLineColour(testContext),
 		GetLWidth(testContext)}
 	results := []any{16, "NRGBA64", []string{"testname.png"}, image.Point{4096, 2160},
@@ -63,8 +63,8 @@ func TestInitStage(t *testing.T) {
 	cFrame, _ := core.FrameWidgetsGenerator(cIn, 0)
 	LoopInit(&cFrame)
 	f := config.Framesize{W: 4096, H: 2160}
-	expected := ConfigVals{Name: []string{"testname.png"}, FileDepth: 16, Framesize: f, GridRows: 16,
-		ImageType: "NRGBA64", BaseImage: "test.png", LineColor: "#CCDDAA", Background: "#247AE0", Type: "builtin.canvasoptions",
+	expected := ConfigVals{Outputs: []string{"testname.png"}, FileDepth: 16, Framesize: f, GridRows: 16,
+		ImageType: "NRGBA64", BaseImage: "test.png", LineColor: "#CCDDAA", Background: "#247AE0", Type: WType,
 		LineWidth: 23.4}
 	got := cFrame.Value(generatedConfig).(ConfigVals)
 
@@ -79,7 +79,7 @@ func TestInitStage(t *testing.T) {
 	cIn, _, _ = core.FileImport("testdata/doubleloader.json", "", false)
 	cDouble, _ := core.FrameWidgetsGenerator(cIn, 0)
 	err := LoopInit(&cDouble)
-	expectedDoubleErr := []error{fmt.Errorf("0061 too many \"builtin.canvasoptions\" widgets have been loaded (Got 2 wanted 1), can not configure openTSG")}
+	expectedDoubleErr := []error{fmt.Errorf("0061 too many \"builtin.canvas\" widgets have been loaded (Got 2 wanted 1), can not configure openTSG")}
 
 	Convey("Checking loopinit registers errors", t, func() {
 		Convey("run using a input of ./testdata/doubleloader.json", func() {

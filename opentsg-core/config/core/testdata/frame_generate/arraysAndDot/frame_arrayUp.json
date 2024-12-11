@@ -19,7 +19,7 @@
     ],
     "create":[
         {
-            "canvas":{"linewidth": 0.5,"name":["000-{{swatchType}}-{{framenumber}}.json"]}},{
+            "canvas":{"linewidth": 0.5, "outputs":["000-{{swatchType}}-{{framenumber}}.json"]}},{
             "swatch":{}
         },
         {"swatch[0][0:4]": {"bordercolor": "#123456"}}

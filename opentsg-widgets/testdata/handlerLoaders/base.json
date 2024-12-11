@@ -1,7 +1,7 @@
 {
     "props": {
-        "type": "builtin.canvasoptions"},
-    "name": [
+        "type": "builtin.canvas"},
+     "outputs": [
         "./legacyLoaders/ebuHandler{{framenumber}}.png"
     ],
     "ColorSpace": {"ColorSpace" : "rec709"},

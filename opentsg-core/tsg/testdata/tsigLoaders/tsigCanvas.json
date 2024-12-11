@@ -1,9 +1,9 @@
 {
     "props":{
-        "type": "builtin.canvasoptions"
+        "type": "builtin.canvas"
     },
-    "type": "builtin.canvasoptions",
-    "name": [
+    "type": "builtin.canvas",
+     "outputs": [
         "./invalidPath/out.png"
     ],
     "frameSize": {

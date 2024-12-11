@@ -7,9 +7,9 @@
 		"type": {
 			"type": "string",
 			"enum": [
-				"builtin.canvasoptions"
+				"builtin.canvas"
 			],
-			"description": "This to be labelled as \"builtin.canvasoptions\", so that the json is correctly configured"
+			"description": "This to be labelled as \"builtin.canvas\", so that the json is correctly configured"
 		},
 		"imageType": {
 			"enum": [
@@ -38,7 +38,7 @@
 		"geometry": {
 			"type": "string"
 		},
-		"name": {
+		"outputs": {
 			"type": "array",
 			"minItems": 1,
 			"items": {
@@ -54,9 +54,6 @@
 					},
 					{
 						"$ref": "#/$defs/fileinput/csv"
-					},
-					{
-						"$ref": "#/$defs/fileinput/sth"
 					},
 					{
 						"$ref": "#/$defs/fileinput/exr"
@@ -140,7 +137,7 @@
 		}
 	},
 	"required": [
-		"name",
+		 "outputs",
 		"type",
 		"gridRows",
 		"gridColumns"
@@ -177,11 +174,6 @@
 				"type": "string",
 				"pattern": "^[\\w\\W]{1,255}\\.[dD][pP][xX]$",
 				"description": "## Example\n### Acceptable inputs\n- myfile.dpx\n- ./myfolder/myfile.DPX\n- 這是有效的文件名.dpX\n### Invalid Inputs\n- ramps.dp_x"
-			},
-			"sth": {
-				"type": "string",
-				"pattern": "^[\\w\\W]{1,255}\\.[7][tT][hH]$",
-				"description": "## Example\n### Acceptable inputs\n- myfile.7th\n- ./myfolder/myfile.7TH\n- 這是有效的文件名.7Th\n### Invalid Inputs\n- ramps.7p_h"
 			},
 			"exr": {
 				"type": "string",

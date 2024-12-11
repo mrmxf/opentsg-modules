@@ -31,7 +31,7 @@ var (
 // ConfigVals is the go struct of all the configuration values that may be called by an input.
 type ConfigVals struct {
 	Type        string               `json:"type" yaml:"type"`
-	Name        []string             `json:"name,omitempty" yaml:"name,omitempty"`
+	Outputs     []string             `json:"outputs,omitempty" yaml:"outputs,omitempty"`
 	ColourSpace colour.ColorSpace    `json:"ColorSpace,omitempty" yaml:"ColorSpace,omitempty"`
 	Framesize   config.Framesize     `json:"frameSize,omitempty" yaml:"frameSize,omitempty"`
 	LineWidth   float64              `json:"linewidth,omitempty" yaml:"linewidth,omitempty"`
@@ -77,7 +77,7 @@ func (c ConfigVals) Generate(canvas draw.Image, opts ...any) error {
 //go:embed jsonschema/baseschema.json
 var baseschema []byte
 
-const WType = "builtin.canvasoptions"
+const WType = "builtin.canvas"
 
 // Loop init extracts and applies the canvas properties for each frame.
 // This is to be run as the first step after generating the frame widgets,
@@ -194,10 +194,10 @@ func GetBaseColourSpace(c context.Context) colour.ColorSpace {
 
 // GetFileType returns the file name for the image to be saved.
 // e.g. "multiramp-4b-pc-hd"
-func GetFileName(c context.Context) []string {
+func GetOutputs(c context.Context) []string {
 	g := contToConf(c)
 
-	return g.Name
+	return g.Outputs
 }
 
 // GetGridRows returns the number of rows required, the minimum returned value is 1

@@ -28,7 +28,7 @@
     ],
   "create":[{
     
-        "canvas":{    "name": [
+        "canvas":{     "outputs": [
             "./testdata/handlerLoaders/ebuHandler{{framenumber}}.png"
         ]},
         "bars":{},

@@ -145,6 +145,7 @@ func TestYamlRead(t *testing.T) {
 		fmt.Println(frameJSON, "end")
 
 		b, _ := json.Marshal(frameJSON)
+
 		res, _ := os.Create("./testdata/frame_generate2/res.json")
 		res.Write(b)
 

@@ -9,7 +9,7 @@
     "create":[
     {},
     {"canvas":{
-        "name":["newhello2.png"]},
+        "outputs":["newhello2.png"]},
     "sweepzone":{    
         "platetype": "circular"}
     }

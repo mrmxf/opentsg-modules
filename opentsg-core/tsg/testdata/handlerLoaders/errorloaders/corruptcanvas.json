@@ -1,7 +1,7 @@
 {
     "props" :{
         "type": "builtin.NotACanvasOptions"},
-    "name": [
+     "outputs": [
         "./testdata/handlerLoaders/racer.png"
     ],
     "frameSize": {
