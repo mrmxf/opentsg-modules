@@ -1,6 +1,6 @@
 {
-    "type":"builtin.canvasoptions",
-    "name": [
+    "type":"builtin.canvas",
+    "outputs": [
         "testname.png"
     ],
     "frameSize": {

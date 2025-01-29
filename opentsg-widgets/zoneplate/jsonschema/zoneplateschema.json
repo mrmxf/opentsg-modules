@@ -4,19 +4,11 @@
     "description": "The Schmea for the zone plate section of the test card generator",
     "type": "object",
     "properties": {
-        "grid": {
-            "$ref": "#/$defs/gridschema"
-        },
         "colorSpace" : {
 			"type" : "object"
 		},
         "frequency" : {
 		},
-        "type": {
-            "type": "string",
-            "enum": ["builtin.zoneplate"],
-            "description": "This to be labelled as \"builtin.zoneplate\", so that the json is correctly configured"
-        },
         "plateType": {
             "enum": [
                 "circular",
@@ -128,10 +120,6 @@
             "additionalProperties": false
         }
     },
-    "required": [
-        "type",
-		"grid"
-    ],
     "additionalProperties": false,
     "$defs": {
         "pixel": {

@@ -4,15 +4,6 @@
 	"description": "The Schmea for the add image section of the test card generator",
 	"type": "object",
     "properties": {
-        "grid": {
-            "$ref": "#/$defs/gridschema",
-            "description":"The coordiantes of the location to be added, a->p is the x axis, 0->9 are the allowed y axis parameters. Alternativley an alias can be used if already declared"
-        },
-        "type": {
-            "type": "string",
-            "enum": ["builtin.addimage"],
-            "description": "This to be labelled as \"builtin.addimage\", so that the json is correctly configured"
-        },
         "imageFill":{
             "type": "string",
             "enum": ["x scale", "y scale", "xy scale", "fill", "preserve"],
@@ -64,7 +55,7 @@
             "description":"The offset of the image placement in the x and y direction"
         } 
     },
-    "required": ["image","type","grid"],
+    "required": ["image"],
     "additionalProperties":false,
     "$defs": {
         "pixel": {

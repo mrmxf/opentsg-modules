@@ -1,6 +1,6 @@
 {
     "type": "canvas options",
-    "name": [
+    "outputs": [
         "testname.png"
     ],
     "frameSize": {

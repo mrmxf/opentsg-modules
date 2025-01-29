@@ -1,8 +1,8 @@
 {
     "props": {
-        "type": "builtin.canvasoptions"
+        "type": "builtin.canvas"
     },
-    "name": [
+     "outputs": [
         "./testdata/handlerLoaders/racer.png"
     ],
     "frameSize": {

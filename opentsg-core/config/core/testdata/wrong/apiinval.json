@@ -1,5 +1,5 @@
 {
-    "name": ["./genimages/multiramp-12b-pc-hd"],
+     "outputs": ["./genimages/multiramp-12b-pc-hd"],
     "frameSize": {
         "w": 4096,
         "h": 2160

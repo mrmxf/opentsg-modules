@@ -7,6 +7,6 @@ frame.canvas:
     gridColumns: 1024
     gridRows: 540
     linewidth: 0.5
-    name:
+    outputs:
         - sequence-TestTitle-0000.png
-    type: builtin.canvasoptions
+    type: builtin.canvas

@@ -443,7 +443,7 @@ func TestErrors(t *testing.T) {
 	errPath := filepath.Join(path, "/testdata/handlerLoaders/errorloaders/invalidsize.json")
 
 	canvasErrors := []string{"corruptcanvas.json", "invalidsize.json"}
-	canvasExpecErr := []string{"0061 no \"builtin.canvasoptions\" widget has been loaded, can not configure openTSG",
+	canvasExpecErr := []string{"0061 no \"builtin.canvas\" widget has been loaded, can not configure openTSG",
 		"0026 Must be greater than or equal to 24 at line 10 in " + errPath + ", for canvas"}
 
 	for i, e := range canvasErrors {

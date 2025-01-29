@@ -19,8 +19,17 @@ It has the subfields:
   - `TopRight`  - The offset from the top right corner
 
 ```json
-{
-    "type" :  "builtin.noise",
+{    
+    "props": {
+    "type": "builtin.noise",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
+    },
     "noiseType": "white noise",
     "minimum": 0,
     "maximum": 4095,
@@ -29,10 +38,6 @@ It has the subfields:
         "bottomRight": 50,
         "topLeft": 50,
         "topRight": 0
-    },
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
     }
 }
 ```

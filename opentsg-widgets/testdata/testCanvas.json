@@ -1,7 +1,7 @@
 {
     "props": {
-    "type": "builtin.canvasoptions"},
-    "name": [
+    "type": "builtin.canvas"},
+     "outputs": [
         "./testdata/legacyLoaders/ebuold{{framenumber}}.png"
     ],
     "frameSize": {

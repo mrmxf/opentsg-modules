@@ -1,6 +1,6 @@
 {
-    "type": "builtin.canvasoptions",
-    "name": ["green-{{framenumber}}.png"],
+    "type": "builtin.canvas",
+     "outputs": ["green-{{framenumber}}.png"],
     "frameSize": { "w": 4096, "h": 2160 },
     "linewidth": 199,
     "filedepth": 16,

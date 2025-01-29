@@ -12,7 +12,7 @@
     ],
     "create":[
         {
-            "canvas":{"linewidth": 0.5,"name":["000-{{swatchType}}-{{framenumber}}.json"]},
+            "canvas":{"linewidth": 0.5,"outputs":["000-{{swatchType}}-{{framenumber}}.json"]},
             "swatch":{"font": "header" ,   "grid": { "alias" :"{{swatchType}}-box", "some":{"deeper": {"nest":"{{swatchType}}", "num":5}, "sidecar": ["5", 5 ,6]}}}
         }
     ]

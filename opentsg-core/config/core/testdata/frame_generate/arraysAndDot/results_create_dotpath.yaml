@@ -7,9 +7,9 @@ frame.canvas:
     gridColumns: 1024
     gridRows: 540
     linewidth: 0.5
-    name:
+    outputs:
         - 000-blue-0000.json
-    type: builtin.canvasoptions
+    type: builtin.canvas
 frame.pd.pyramid0:
     backgroundcolor: '#000000'
     bordercolor: '#333333'

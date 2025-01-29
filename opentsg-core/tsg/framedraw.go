@@ -230,7 +230,7 @@ func (tsg *OpenTSG) Draw(debug bool, mnt, logType string) {
 
 			// save the image
 			saveMeasure := time.Now()
-			carves := gridgen.Carve(frameContext, canvas, canvaswidget.GetFileName(*frameContext))
+			carves := gridgen.Carve(frameContext, canvas, canvaswidget.GetOutputs(*frameContext))
 			for _, carvers := range carves {
 				// save.CanvasSave(canvas, canvaswidget.GetFileName(*frameContext), canvaswidget.GetFileDepth(*frameContext), mnt, i4, debug, frameLog)
 				tsg.canvasSave(carvers.Image, carvers.Location, canvaswidget.GetFileDepth(*frameContext), mnt, i4, debug, frameLog)

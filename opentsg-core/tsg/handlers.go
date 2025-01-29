@@ -348,7 +348,7 @@ func (tsg *OpenTSG) Run(mnt string) {
 
 			// save the image
 			saveMeasure := time.Now()
-			carves := gridgen.Carve(frameContext, canvas, canvaswidget.GetFileName(*frameContext))
+			carves := gridgen.Carve(frameContext, canvas, canvaswidget.GetOutputs(*frameContext))
 			for _, carvers := range carves {
 				// save.CanvasSave(canvas, canvaswidget.GetFileName(*frameContext), canvaswidget.GetFileDepth(*frameContext), mnt, i4, debug, frameLog)
 				tsg.canvasSave2(carvers.Image, carvers.Location, canvaswidget.GetFileDepth(*frameContext), mnt, &monit)
@@ -586,7 +586,7 @@ func (tsg *OpenTSG) widgetHandle(c *context.Context, canvas draw.Image, monit *m
 			runPool.LogDrawArea(position, canvasArea)
 
 			handleStart := time.Now()
-			if widgProps.WType != "builtin.canvasoptions" {
+			if widgProps.WType != "builtin.canvas" {
 				// RUN the widget
 				Han.Handle(&resp, &req)
 			}

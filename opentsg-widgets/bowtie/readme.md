@@ -33,12 +33,18 @@ to not blend the segments. It has the following values:
   between the angle of the two segments.
 
 ```json
-{
-    "cwRotation": "π*23/47",
-    "grid": {
-        "alias": " A demo alias",
-        "location": "a1"
+{    
+    "props": {
+    "type": "builtin.bowtie",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
     },
+    "cwRotation": "π*23/47",
     "blend":"sin",
     "segmentColors": [
         "#C2A649",
@@ -47,7 +53,6 @@ to not blend the segments. It has the following values:
         "#433F87"
     ],
     "segmentCount": 32,
-    "type": "builtin.bowtie",
     "offset": {
       "x":20,
       "y" : "-20px"

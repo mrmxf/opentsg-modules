@@ -49,8 +49,10 @@ func SaveExampleJson(example widgethandler.Generator, folder, name string, saveI
 		// Add the type and location fields
 		var updater map[string]any
 		json.Unmarshal(jsonExample, &updater)
-		updater["type"] = folder
-		updater["grid"] = map[string]string{"location": "a1", "alias": " A demo alias"}
+		updater["props"] = map[string]any{"type": folder,
+			"location": map[string]any{
+				"alias": "A demo Alias",
+				"box":   map[string]any{"x": 1, "y": 1}}}
 		jsonExample, _ = json.MarshalIndent(updater, "", "    ")
 
 	}

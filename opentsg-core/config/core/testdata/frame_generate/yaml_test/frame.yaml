@@ -18,6 +18,6 @@ include:
 create:
   - canvas:
       linewidth: 0.5
-      name:
+      outputs:
         - 000-{{swatchType}}-{{framenumber}}.json
   - swatch:

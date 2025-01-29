@@ -7,9 +7,9 @@ canvas:
     gridColumns: 1024
     gridRows: 540
     linewidth: 0.5
-    name:
+    outputs:
         - x0000-test.png
-    type: builtin.canvasoptions
+    type: builtin.canvas
 dummy:
     backgroundcolor: '#000000'
     bordercolor: '#333333'

@@ -23,13 +23,18 @@ It has the following fields:
 
 ```json
 {
-    "type" :  "builtin.addimage",
+    "props": {
+    "type": "builtin.addimage",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
+    },
     "image": "./exmaple/exampleImage.png",
     "imageFill": "fill",
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
-    },
     "offset":{
       "x":20,
       "y":"20px"

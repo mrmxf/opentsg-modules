@@ -21,13 +21,13 @@ func TestHandlers(t *testing.T) {
 	// otsg.AddCustomWidgets(twosi.SIGenerate, nearblack.NBGenerate, bars.BarGen, saturation.SatGen, luma.Generate, zoneplate.ZoneGen)
 	otsg.Handle("builtin.legacy", []byte("{}"), legacy.Legacy{})
 	tsg.LogToFile(otsg, slog.HandlerOptions{Level: slog.LevelDebug}, "./testdata/", "og")
-	//otsg.HandleFunc("builtin.canvasoptions", func(r1 tsg.Response, r2 *tsg.Request) { fmt.Println("ring a ding") })
+	//otsg.HandleFunc("builtin.canvas", func(r1 tsg.Response, r2 *tsg.Request) { fmt.Println("ring a ding") })
 	otsg.Run("")
 
 	// run the current handler methods
 	otsgh, err := tsg.BuildOpenTSG("./testdata/handlerLoader.json", "", true, &tsg.RunnerConfiguration{RunnerCount: 6, ProfilerEnabled: true})
 	fmt.Println(err)
-	//	otsgh.HandleFunc("builtin.canvasoptions", func(r1 tsg.Response, r2 *tsg.Request) { fmt.Println("ring a ding") })
+	//	otsgh.HandleFunc("builtin.canvas", func(r1 tsg.Response, r2 *tsg.Request) { fmt.Println("ring a ding") })
 	otsgh.Handle(bars.WidgetType, bars.Schema, bars.BarJSON{})
 	otsgh.Handle(luma.WidgetType, luma.Schema, luma.LumaJSON{})
 	otsgh.Handle(nearblack.WidgetType, nearblack.Schema, nearblack.Config{})

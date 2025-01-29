@@ -1,6 +1,6 @@
 {
-    "type": "builtin.canvasoptions",
-    "name": [
+    "type": "builtin.canvas",
+     "outputs": [
         "./legacyLoaders/ebuLegacy{{framenumber}}.png"
     ],
     "ColorSpace": {"ColorSpace" : "rec709"},

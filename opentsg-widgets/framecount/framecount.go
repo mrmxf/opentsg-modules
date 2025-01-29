@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	WidgetType = "builtin.frameCounter"
+	WidgetType = "builtin.framecounter"
 )
 
 func CountGen(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *errhandle.Logger) {

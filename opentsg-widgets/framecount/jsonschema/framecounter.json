@@ -4,18 +4,10 @@
 	"description": "The Schmea for the test card generator",
 	"type": "object",
 	"properties": {
-		"type": {
-			"type": "string",
-			"enum": [
-				"builtin.frameCounter"
-			],
-			"description": "This to be labelled as \"builtin.frameCounter\", so that the json is correctly configured"
-		},		"colorSpace" : {
+	"colorSpace" : {
 			"type" : "object"
 		},
-		"grid": {
-            "$ref": "#/$defs/gridschema"
-        },
+		
 		"frameCounter": {
 			"type": "boolean",
 			"description": "If true a frame counter is generated in the bottom right corner of the image that sequentially increases with each json object"
@@ -84,9 +76,8 @@
 		}
 	},
 	"required": [
-		"type",
-		"frameCounter",
-		"grid"
+
+		
 	],
 	"additionalProperties": false,
 	"$defs": {
