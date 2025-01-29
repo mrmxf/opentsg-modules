@@ -1,8 +1,8 @@
 {
-    "Tile layout": [
+    "tilelayout": [
         {
-            "Name": "East",
-            "Layout": {
+            "ID": "East",
+            "layout": {
                 "Flat": {
                     "X": 0,
                     "Y": 1080
@@ -14,8 +14,8 @@
             }
         },
         {
-            "Name": "North",
-            "Layout": {
+            "ID": "North",
+            "layout": {
                 "Flat": {
                     "X": 1080,
                     "Y": 1080
@@ -27,8 +27,8 @@
             }
         },
         {
-            "Name": "West",
-            "Layout": {
+            "ID": "West",
+            "layout": {
                 "Flat": {
                     "X": 2160,
                     "Y": 1080
@@ -40,8 +40,8 @@
             }
         },
         {
-            "Name": "DoorLeft",
-            "Layout": {
+            "ID": "DoorLeft",
+            "layout": {
                 "Flat": {
                     "X": 3240,
                     "Y": 1080
@@ -53,8 +53,8 @@
             }
         },
         {
-            "Name": "DoorMid",
-            "Layout": {
+            "ID": "DoorMid",
+            "layout": {
                 "Flat": {
                     "X": 3672,
                     "Y": 1080
@@ -66,8 +66,8 @@
             }
         },
         {
-            "Name": "DoorRight",
-            "Layout": {
+            "ID": "DoorRight",
+            "layout": {
                 "Flat": {
                     "X": 3888,
                     "Y": 1080
@@ -79,8 +79,8 @@
             }
         },
         {
-            "Name": "Roof",
-            "Layout": {
+            "ID": "Roof",
+            "layout": {
                 "Flat": {
                     "X": 3240,
                     "Y": 0
@@ -92,8 +92,8 @@
             }
         },
         {
-            "Name": "Floor",
-            "Layout": {
+            "ID": "Floor",
+            "layout": {
                 "Flat": {
                     "X": 3240,
                     "Y": 2160

@@ -4,20 +4,6 @@
 	"description": "The Schmea for the test card generator configuration of the canvas",
 	"type": "object",
 	"properties": {
-		"type": {
-			"type": "string",
-			"enum": [
-				"builtin.canvas"
-			],
-			"description": "This to be labelled as \"builtin.canvas\", so that the json is correctly configured"
-		},
-		"imageType": {
-			"enum": [
-				"ACES",
-				"NRGBA64"
-			],
-			"description": "To choose a base of NRGBA64 or ACES for the image generation"
-		},
 		"imageType": {
 			"enum": [
 				"ACES",
@@ -138,7 +124,6 @@
 	},
 	"required": [
 		 "outputs",
-		"type",
 		"gridRows",
 		"gridColumns"
 	],
