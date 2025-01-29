@@ -16,6 +16,7 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-core/canvaswidget"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/core"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/config/validator"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/config/widgets"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/credentials"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/gridgen"
@@ -531,7 +532,16 @@ func (tsg *OpenTSG) widgetHandle(c *context.Context, canvas draw.Image, monit *m
 				case HandlerFunc:
 					Han = hdler
 				default:
+
+					schemErrs := validator.SchemaValidator(handlers.schema, widgProps.Contents, widgProps.FullName, lineErrs)
+
+					if len(schemErrs) > 0 {
+						Han = GenErrorsHandler(400, schemErrs)
+						return
+					}
+
 					Han, err = Unmarshal(handlers.handler)(widgProps.Contents)
+
 				}
 
 				if err != nil {
@@ -571,8 +581,9 @@ func (tsg *OpenTSG) widgetHandle(c *context.Context, canvas draw.Image, monit *m
 				req.PatchProperties = pp
 
 				// chain that middleware at the last second?
-				validatorMid := jSONValidator(lineErrs, handlers.schema, widgProps.FullName)
-				Han = chain([]func(Handler) Handler{validatorMid}, Han)
+				// removed to schema before hand
+				//	validatorMid := jSONValidator(lineErrs, handlers.schema, widgProps.FullName)
+				//	Han = chain([]func(Handler) Handler{validatorMid}, Han)
 
 			}()
 
@@ -654,6 +665,15 @@ type drawers struct {
 func GenErrorHandler(code StatusCode, errMessage string) Handler {
 	return HandlerFunc(func(r Response, _ *Request) {
 		r.Write(code, errMessage)
+	})
+}
+
+func GenErrorsHandler(code StatusCode, errMessage []error) Handler {
+	return HandlerFunc(func(r Response, _ *Request) {
+		for _, err := range errMessage {
+
+			r.Write(code, err.Error())
+		}
 	})
 }
 

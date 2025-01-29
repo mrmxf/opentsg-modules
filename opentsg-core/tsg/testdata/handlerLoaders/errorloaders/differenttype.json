@@ -3,11 +3,11 @@
         "type": "builtin.canvas"
     },
     "outputs": [
-        "./testdata/handlerLoaders/racer.png"
+        "./testdata/handlerLoaders/racer8.png"
     ],
     "frameSize": {
         "w": 1920,
-        "h": 1080
+        "h": "1080p"
     },
     "linewidth": 1,
     "filedepth": 16,
