@@ -77,20 +77,21 @@ func flatmap(c *context.Context, basePath, tpigpath string) (canvasAndMask, erro
 		fullpath := filepath.Join(basePath, tpigpath)
 		file, err = os.ReadFile(fullpath)
 		if err != nil {
-			return canvasAndMask{}, fmt.Errorf("0DEV error accessing the TPIG file %v", err)
+			return canvasAndMask{}, fmt.Errorf("0DEV error accessing the TSIG file %v", err)
 		}
 	}
 
 	var segmentLayout TSIG
 	err = json.Unmarshal(file, &segmentLayout)
 	if err != nil {
-		return canvasAndMask{}, fmt.Errorf("0DEV error extracting the TPIG file %v", err)
+		return canvasAndMask{}, fmt.Errorf("0DEV error extracting the TSIG file %v", err)
 	}
 	// remove the need for the map of art grid as this is more of a layer
 	// keep carve as a map for naming convetions
 
 	if len(segmentLayout.Tilelayout) == 0 {
-		return canvasAndMask{}, fmt.Errorf("0DEV No geometry positions have been declared")
+		return canvasAndMask{}, fmt.Errorf(`0DEV No geometry positions have been declared, 
+		ensure the fields are named correctly in your TSIG`)
 	}
 
 	carveSegements := make(map[string]carvedImageLayout)
