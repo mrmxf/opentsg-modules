@@ -17,10 +17,15 @@ It has no fields, only the location is required.
 
 ```json
 {
-    "type":"builtin.ebu3373/bars",
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
+    "props": {
+    "type": "builtin.ebu3373/bars",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
     }
 }
 ```
@@ -42,10 +47,15 @@ It has no fields, only the location is required.
 
 ```json
 {
-    "type":"builtin.ebu3373/luma",
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
+    "props": {
+    "type": "builtin.ebu3373/luma",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
     }
 }
 ```
@@ -66,10 +76,15 @@ It has no fields, only the location is required.
 
 ```json
 {
-    "type":"builtin.ebu3373/nearblack",
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
+    "props": {
+    "type": "builtin.ebu3373/nearblack",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
     }
 }
 ```
@@ -94,16 +109,21 @@ is not declared then the default order of, red,green and blue is used.
 
 ```json
 {
-    "type":"builtin.ebu3373/saturation",
+    "props": {
+    "type": "builtin.ebu3373/saturation",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
+    },
     "colors": [
         "red",
         "green",
         "blue"
-    ],
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
-    }
+    ]
 }
 ```
 
@@ -133,10 +153,15 @@ It has no fields, only the location is required.
 
 ```json
 {
+    "props": {
     "type": "builtin.ebu3373/twosi",
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
     }
 }
 ```

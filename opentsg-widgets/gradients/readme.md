@@ -69,8 +69,17 @@ All colour options in the `TextProperties` follow the [TSG colour formats](../ut
 An example json is given below.
 
 ```json
-{
-    "type" :  "builtin.gradients",
+{    
+    "props": {
+    "type": "builtin.gradients",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
+    },
     "groupsTemplates": {
         "separator": {
             "height": 0,
@@ -131,10 +140,6 @@ An example json is given below.
             "textHeight": 30,
             "textColor": "#345AB6"
         }
-    },
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
     }
 }
 ```

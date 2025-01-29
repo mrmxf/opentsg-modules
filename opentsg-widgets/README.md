@@ -41,7 +41,7 @@ so OpenTSG can identify and handle the widget.
 More information about the `TSIG` can be found [here.](../opentsg-core/gridgen/readme.md#the-tsig-property)
 
 ```json
-"props"{
+"props":{
     "type" : "builtin.example",
     "location": {
         "alias" : "A demo Alias",

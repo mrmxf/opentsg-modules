@@ -4,16 +4,7 @@
 	"description": "The Schmea for the fourcolour widget of the test signal generator",
 	"type": "object",
 	"properties": {
-		"type": {
-			"type": "string",
-			"enum": [
-				"builtin.fourcolor"
-			],
-			"description": "This to be labelled as \"builtin.fourcolor\", so that the json is correclty configured"
-		},
-		"grid": {
-			"$ref": "#/$defs/gridschema"
-		},
+		
         "colorSpace": {
             "type": "object"
         },
@@ -26,8 +17,6 @@
         }
 	},
 	"required": [
-		"type",
-		"grid",
         "colors"
 	],
 	"additionalProperties": false,

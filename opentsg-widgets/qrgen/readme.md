@@ -18,16 +18,21 @@ It has the following fields:
   -`height` - The height of the qrcode, as a percentage of its box.
 
 ```json
-{
-    "type" :  "builtin.qrcode",
+{   
+    "props": {
+    "type": "builtin.qrcode",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
+    },
     "code": "https://opentsg.studio/",
     "offset": {
         "x":0,
         "y": 0
-    },
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
     },
     "size": {
         "height": 50,

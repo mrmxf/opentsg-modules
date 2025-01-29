@@ -19,14 +19,19 @@ it follows the [angle unit rules](../utils/parameters/readme.md#clockwise-rotati
 
 ```json
 {
-    "type" :  "builtin.zoneplate",
+    "props": {
+    "type": "builtin.zoneplate",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
+    },
     "plateType": "sweep",
     "startColor": "white",
     "cwRotation": "π*1",
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
-    },
     "frequency": "π*13/100",
 }
 ```

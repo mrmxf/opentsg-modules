@@ -4,19 +4,9 @@
     "description": "The Schmea for the noise section of the test card generator",
     "type": "object",
     "properties": {
-        "grid": {
-            "$ref": "#/$defs/gridschema",
-            "description": "The coordiantes of the location to be added, a->p is the x axis, 0->9 are the allowed y axis parameters. Alternativley an alias can be used if already declared"
+        "colorSpace": {
+            "type": "object"
         },
-        "type": {
-            "type": "string",
-            "enum": [
-                "builtin.noise"
-            ],
-            "description": "This to be labelled as \"builtin.noise\", so that the json is correctly configured"
-        },		"colorSpace" : {
-			"type" : "object"
-		},
         "minimum": {
             "description": "the minimum rgb value to be used as noise",
             "type": "integer",
@@ -35,52 +25,48 @@
             "additionalProperties": false,
             "properties": {
                 "bottomLeft": {
-                    "type":"integer",
-                    "minimum":0
+                    "type": "integer",
+                    "minimum": 0
                 },
                 "bottomRight": {
-                    "type":"integer",
-                    "minimum":0
+                    "type": "integer",
+                    "minimum": 0
                 },
                 "topLeft": {
-                    "type":"integer",
-                    "minimum":0
+                    "type": "integer",
+                    "minimum": 0
                 },
                 "topRight": {
-                    "type":"integer",
-                    "minimum":0
+                    "type": "integer",
+                    "minimum": 0
                 }
             }
         },
-       "noiseType": {
-        "enum": [
-            "white noise"
-        ],
-        "description": "The type of noise to be generated"
-       }
+        "noiseType": {
+            "enum": [
+                "white noise"
+            ],
+            "description": "The type of noise to be generated"
+        }
     },
     "required": [
-        "noiseType",
-        "type"
+        "noiseType"
     ],
     "additionalProperties": false,
     "$defs": {
         "gridschema": {
             "properties": {
                 "location": {
-                    "anyOf":[
-						{
-								"type": "string",
-								"pattern": "^[a-pA-P]{1}[0-8]{1}$"
-							
-						},
-						{
-		
-								"type": "string",
-								"pattern": "^[\\w\\W]{1,30}$"
-							
-						}
-					],
+                    "anyOf": [
+                        {
+                            "type": "string",
+                            "pattern": "^[a-pA-P]{1}[0-8]{1}$"
+                        },
+                        {
+                            "type": "string",
+                            "pattern": "^[\\w\\W]{1,30}$"
+                        }
+                    ],
                     "description": "The location of the module to be added to the test card"
                 },
                 "alias": {

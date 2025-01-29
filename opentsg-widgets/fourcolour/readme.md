@@ -30,17 +30,22 @@ of four strings or more. The algorithm will use the fewest amount of colors requ
 The colours follow the [TSG colour formats](../utils/parameters/readme.md#colour)
 
 ```json
-{
-    "type" :  "builtin.fourcolour",
+{   
+    "props": {
+    "type": "builtin.fourcolor",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
+    },
     "colors": [
         "#FF0000",
         "#00FF00",
         "#0000FF",
         "#FFFF00"
-    ],
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
-    }
+    ]
 }
 ```

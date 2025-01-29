@@ -4,17 +4,7 @@
     "description": "The Schmea for the ramp section of the test card generator",
     "type": "object",
     "properties": {
-        "grid": {
-            "$ref": "#/$defs/gridschema",
-            "description": "The coordinates of the location to be added, a->p is the x axis, 0->9 are the allowed y axis parameters. Alternativley an alias can be used if already declared"
-        },
-        "type": {
-            "type": "string",
-            "enum": [
-                "builtin.gradients"
-            ],
-            "description": "This to be labelled as \"builtin.gradients\", so that the json is correctly configured for open tpg"
-        },
+   
         "colorSpace": {
             "type": "object"
         },
@@ -28,10 +18,6 @@
             "$ref": "#/$defs/groupsTemplates"
         }
     },
-    "required": [
-        "type",
-        "grid"
-    ],
     "additionalProperties": false,
     "$defs": {
         "colourReg": {

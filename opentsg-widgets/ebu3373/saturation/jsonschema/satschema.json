@@ -4,17 +4,6 @@
     "description": "The Schmea for the noise section of the test card generator",
     "type": "object",
     "properties": {
-        "grid": {
-            "$ref": "#/$defs/gridschema",
-            "description": "The coordiantes of the location to be added, a->p is the x axis, 0->9 are the allowed y axis parameters. Alternativley an alias can be used if already declared"
-        },
-        "type": {
-            "type": "string",
-            "enum": [
-                "builtin.ebu3373/saturation"
-            ],
-            "description": "This to be labelled as \"builtin.ebu3373/saturation\", so that the json is correctly configured"
-        },
         "colorSpace" : {
 			"type" : "object"
 		},
@@ -28,8 +17,6 @@
         }
     },
     "required": [
-        "grid",
-        "type"
     ],
     "additionalProperties": false,
     "$defs": {

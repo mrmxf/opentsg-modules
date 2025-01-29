@@ -4,9 +4,6 @@
     "description": "The Schmea for the add qr code section of the test card generator",
     "type": "object",
     "properties": {
-        "grid": {
-            "$ref": "#/$defs/gridschema"
-        },
         "code": {
             "type": "string",
             "minLength": 1,
@@ -15,13 +12,6 @@
         },
         "colorSpace": {
             "type": "object"
-        },
-        "type": {
-            "type": "string",
-            "enum": [
-                "builtin.qrcode"
-            ],
-            "description": "This to be labelled as \"builtin.qrcode\", so that the json is correclty configured"
         },
         "offset": {
             "type": "object",
@@ -102,8 +92,7 @@
         }
     },
     "required": [
-        "code",
-        "type"
+        "code"
     ],
     "additionalProperties": false,
     "$defs": {

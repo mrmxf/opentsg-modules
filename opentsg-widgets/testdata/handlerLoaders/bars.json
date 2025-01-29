@@ -5,17 +5,11 @@
             "box": {
                 "x": 0,
                 "y": 0,
-                "width":"100%",
-                "y2" : 116
+                "width": "100%",
+                "y2": 116
             }
         }
     },
-
-
-
-
-
-
     "type": "builtin.ebu3373/bars",
     "grid": {
         "location": "a0:nt115"

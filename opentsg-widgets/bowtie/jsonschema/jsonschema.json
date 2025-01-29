@@ -4,18 +4,9 @@
     "description": "The Schmea for the bowtie section of the test card generator",
     "type": "object",
     "properties": {
-        "grid": {
-            "$ref": "#/$defs/gridschema"
-        },
+       
         "colorSpace": {
             "type": "object"
-        },
-        "type": {
-            "type": "string",
-            "enum": [
-                "builtin.bowtie"
-            ],
-            "description": "This to be labelled as \"builtin.bowtie\", so that the json is correctly configured"
         },
         "blend": {
             "type": "string",
@@ -96,8 +87,6 @@
         } 
     },
     "required": [
-        "type",
-        "grid",
         "segmentCount"
     ],
     "additionalProperties": false,

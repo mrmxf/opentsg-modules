@@ -23,7 +23,16 @@ All colour options follow the [TSG colour formats](../utils/parameters/readme.md
 
 ```json
 {
-    "type" :  "builtin.textbox",
+    "props": {
+    "type": "builtin.textbox",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
+    },
     "text": [
         "sample",
         "text"
@@ -35,11 +44,7 @@ All colour options follow the [TSG colour formats](../utils/parameters/readme.md
     "textColor": "#C2A649",
     "fillType": "",
     "xAlignment": "",
-    "yAlignment": "middle",
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
-    }
+    "yAlignment": "middle"
 }
 ```
 

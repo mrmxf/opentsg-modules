@@ -49,11 +49,16 @@ value is `#888888`. It follows the [opentsg colour system][cgen]
 
 ```json
 {
-    "grid": {
-        "alias": " A demo alias",
-        "location": "a1"
+    "props": {
+      "type": "builtin.resize",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
     },
-    "type": "builtin.resize",
     "xDetections": [
         "3840px",
         "1920px"

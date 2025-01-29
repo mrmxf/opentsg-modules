@@ -8,14 +8,19 @@
             "WhitePoint": {}
         }
     },
-    "grid": {
-        "alias": " A demo alias",
-        "location": "a1"
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.textbox"
     },
     "text": [
         "sample",
         "text"
     ],
-    "textColor": "#C2A649",
-    "type": "builtin.textbox"
+    "textColor": "#C2A649"
 }

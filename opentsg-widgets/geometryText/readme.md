@@ -13,6 +13,7 @@ This follows the [TSG colour formats](../utils/parameters/readme.md#colour)
     "props": {
         "type": "builtin.geometrytext",
         "location": {
+            "alias":"a demo alias",
             "box": {
                 "x": 0,
                 "y": 0

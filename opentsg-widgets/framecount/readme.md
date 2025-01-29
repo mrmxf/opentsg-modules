@@ -24,17 +24,22 @@ All colour options follow the [TSG colour formats](../utils/parameters/readme.md
 
 ```json
 {
-    "type" :  "builtin.framecounter",
+    "props": {
+    "type": "builtin.framecounter",
+      "location": {
+        "alias" : "A demo Alias",
+        "box": {
+          "x": 1,
+          "y": 1
+        }
+      }
+    },
     "frameCounter": true,
     "textColor": "",
     "backgroundColor": "",
     "font": "",
     "fontSize": 22, 
-    "gridPosition": "top left",
-    "grid": {
-      "location": "a1",
-      "alias" : "A demo Alias"
-    }
+    "gridPosition": "top left"
 }
 ```
 
