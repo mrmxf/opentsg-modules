@@ -21,13 +21,13 @@ func TestGenerateAndCreateMethods(t *testing.T) {
 	predictedValuesCreate := []string{"./testdata/frame_generate/create/blue_create.yaml"}
 
 	for i, pv := range predictedValuesCreate {
-		n, _ := FrameWidgetsGeneratorHandle(cCreate, i)
-
+		n, err := FrameWidgetsGeneratorHandle(cCreate, i)
 		expec, got := genHash(n, pv)
 
 		Convey("Checking the create arrays run and update all data within those maps", t, func() {
 			Convey("using ./testdata/sequence_create.json as the input with only create updates run", func() {
 				Convey(fmt.Sprintf("The file is updated to match %v with all nested strings and arrays updated using mustache", pv), func() {
+					So(err, ShouldBeNil)
 					So(expec.Sum(nil), ShouldResemble, got.Sum(nil))
 				})
 			})
@@ -42,6 +42,24 @@ func TestGenerateAndCreateMethods(t *testing.T) {
 	for i, pv := range predictedValuesGen {
 		n, _ := FrameWidgetsGeneratorHandle(cGen, i)
 		expec, got := genHash(n, pv)
+
+		/*
+			bar := n.Value(baseKey).(map[string]WidgetContents)
+			frameJSON := make(map[string]map[string]any)
+
+			for k, v := range bar {
+				if v.Data != nil { // fill the ones with actual data
+					var m map[string]any
+					yaml.Unmarshal(v.Data, &m)
+					frameJSON[k] = m
+				}
+			}
+
+			gen, _ := yaml.Marshal(frameJSON)
+
+			f, _ := os.Create("./testdata/frame_generate/generate/blue_gen.yaml")
+
+			f.Write(gen)*/
 
 		Convey("Checking arguments are parsed in only generate", t, func() {
 			Convey("using ./testdata/sequence_generate.json as the input which only uses generate to make jsons", func() {
@@ -411,7 +429,7 @@ func TestZpos(t *testing.T) {
 }
 
 func genHash(n context.Context, pv string) (hash.Hash, hash.Hash) {
-	bar := n.Value(baseKey).(map[string]widgetContents)
+	bar := n.Value(baseKey).(map[string]WidgetContents)
 	hnormal := sha256.New()
 	htest := sha256.New()
 	read, _ := os.ReadFile(pv)

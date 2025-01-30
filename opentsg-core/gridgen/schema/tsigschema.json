@@ -6,7 +6,7 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "additionalProperties" : false,
+                "additionalProperties": false,
                 "properties": {
                     "ID": {
                         "type": "string"
@@ -31,14 +31,11 @@
                     },
                     "layout": {
                         "type": "object",
-                        "additionalProperties" : false,
+                        "additionalProperties": false,
                         "properties": {
                             "flat": {
                                 "type": "object",
                                 "properties": {
-                                    "destination": {
-                                        "type": "string"
-                                    },
                                     "X": {
                                         "type": "integer"
                                     },
@@ -50,6 +47,20 @@
                                     "X",
                                     "Y"
                                 ]
+                            },
+                            "carve": {
+                                "type": "object",
+                                "properties": {
+                                    "destination": {
+                                        "type": "string"
+                                    },
+                                    "X": {
+                                        "type": "integer"
+                                    },
+                                    "Y": {
+                                        "type": "integer"
+                                    }
+                                }
                             },
                             "XY": {
                                 "type": "object",
@@ -93,18 +104,19 @@
                 "flat"
             ],
             "additionalProperties": false
-        }
-    },
-    "carve": {
-        "type": "object",
-        "properties": {
-            "$ref": "#/$defs/flatmap"
+        },
+        "carve": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/$defs/flatmap"
+            }
         }
     },
     "required": [
         "tileLayout",
         "Dimensions"
     ],
+    "additionalProperties": false,
     "$defs": {
         "flatmap": {
             "type": "object",
@@ -122,7 +134,7 @@
                     "type": "integer"
                 }
             },
-            "additionalProperties" : false,
+            "additionalProperties": false,
             "required": [
                 "X1",
                 "Y1"

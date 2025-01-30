@@ -1,144 +1,127 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "properties": {
-        "tileLayout": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "ID": {
-                        "type": "string"
-                    },
-                    "tags": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "neighbours": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "groups": {
-                        "type": "object",
-                        "additionalProperties": {
-                            "type": "string"
-                        }
-                    },
-                    "layout": {
-                        "type": "object",
-                        "additionalProperties": false,
-                        "properties": {
-                            "flat": {
-                                "type": "object",
-                                "properties": {
-                                    "X": {
-                                        "type": "integer"
-                                    },
-                                    "Y": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "required": [
-                                    "X",
-                                    "Y"
-                                ]
-                            },
-                            "carve": {
-                                "type": "object",
-                                "properties": {
-                                    "destination": {
-                                        "type": "string"
-                                    },
-                                    "X": {
-                                        "type": "integer"
-                                    },
-                                    "Y": {
-                                        "type": "integer"
-                                    }
-                                }
-                            },
-                            "XY": {
-                                "type": "object",
-                                "properties": {
-                                    "X": {
-                                        "type": "integer"
-                                    },
-                                    "Y": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "required": [
-                                    "X",
-                                    "Y"
-                                ]
-                            }
-                        },
-                        "required": [
-                            "flat",
-                            "XY"
-                        ]
-                    }
+    "tileLayout": [
+        {
+            "ID": "A000",
+            "tags": [],
+            "layout": {
+                "carve": {
+                    "destination": "C1",
+                    "X": 0,
+                    "Y": 0
                 },
-                "required": [
-                    "ID",
-                    "layout"
-                ]
+                "flat": {
+                    "X": 0,
+                    "Y": 0
+                },
+                "XY": {
+                    "X": 10,
+                    "Y": 10
+                }
             }
         },
-        "Dimensions": {
-            "type": "object",
-            "properties": {
-                "flat": {
-                    "$ref": "#/$defs/flatmap"
-                },
+        {
+            "ID": "A001",
+            "tags": [],
+            "layout": {
                 "carve": {
-                    "$ref": "#/$defs/flatmap"
+                    "destination": "C1",
+                    "X": 0,
+                    "Y": 10
+                },
+                "flat": {
+                    "X": 0,
+                    "Y": 10
+                },
+                "XY": {
+                    "X": 10,
+                    "Y": 10
                 }
-            },
-            "required": [
-                "flat"
-            ],
-            "additionalProperties": false
+            }
         },
-        "carve": {
-            "type": "object",
-            "additionalProperties": {
-                "$ref": "#/$defs/flatmap"
+        {
+            "ID": "A002",
+            "tags": [],
+            "layout": {
+                "carve": {
+                    "destination": "C2",
+                    "X": 0,
+                    "Y": 0
+                },
+                "flat": {
+                    "X": 10,
+                    "Y": 0
+                },
+                "XY": {
+                    "X": 15,
+                    "Y": 15
+                }
+            }
+        },
+        {
+            "ID": "A003",
+            "tags": [],
+            "layout": {
+                "carve": {
+                    "destination": "C3",
+                    "X": 28,
+                    "Y": 0
+                },
+                "flat": {
+                    "X": 28,
+                    "Y": 0
+                },
+                "XY": {
+                    "X": 2,
+                    "Y": 30
+                }
+            }
+        },
+        {
+            "ID": "A004",
+            "tags": [],
+            "layout": {
+                "carve": {
+                    "destination": "C3",
+                    "X": 0,
+                    "Y": 0
+                },
+                "flat": {
+                    "X": 20,
+                    "Y": 20
+                },
+                "XY": {
+                    "X": 10,
+                    "Y": 10
+                }
             }
         }
-    },
-    "required": [
-        "tileLayout",
-        "Dimensions"
     ],
-    "additionalProperties": false,
-    "$defs": {
-        "flatmap": {
-            "type": "object",
-            "properties": {
-                "X0": {
-                    "type": "integer"
-                },
-                "Y0": {
-                    "type": "integer"
-                },
-                "X1": {
-                    "type": "integer"
-                },
-                "Y1": {
-                    "type": "integer"
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "X1",
-                "Y1"
-            ]
+    "Dimensions": {
+        "flat": {
+            "X0": 0,
+            "Y0": 0,
+            "X1": 30,
+            "Y1": 30
+        }
+    },
+    "carve": {
+        "C1": {
+            "X0": 0,
+            "Y0": 0,
+            "X1": 30,
+            "Y1": 30
+        },
+        "C2": {
+            "X0": 0,
+            "Y0": 0,
+            "X1": 30,
+            "Y1": 30
+        },
+        "C3": {
+            "X0": 0,
+            "Y0": 0,
+            "X1": 30,
+            "Y1": 30
         }
     }
 }

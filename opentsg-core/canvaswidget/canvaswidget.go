@@ -115,7 +115,7 @@ func LoopInitHandle(frameContext *context.Context) []error {
 		}
 
 	case 0:
-		return []error{fmt.Errorf("0061 no \"%s\" widget has not been loaded, can not configure openTSG", WType)}
+		return []error{fmt.Errorf("0061 \"%s\" widget has not been loaded, can not configure openTSG", WType)}
 
 	default:
 

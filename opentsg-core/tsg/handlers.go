@@ -160,7 +160,7 @@ type Response interface {
 	// Write a response to signal
 	// the end of the widget and to handle any errors.
 	// on success use the tsg.WidgetSuccess status code
-	Write(status StatusCode, message string)
+	Write(status StatusCode, message string, args ...any)
 
 	// Return the base image to be handled.
 	// Prevents overwriting the original draw.Image
@@ -173,13 +173,15 @@ type response struct {
 	baseImg draw.Image
 	status  StatusCode
 	message string
+	extra   []any
 }
 
 // write to the response struct
-func (r *response) Write(status StatusCode, message string) {
+func (r *response) Write(status StatusCode, message string, args ...any) {
 	// nothing is written at the moment
 	r.status = status
 	r.message = message
+	r.extra = args
 }
 
 // return the base image to handle
@@ -193,10 +195,11 @@ type TestResponder struct {
 	BaseImg draw.Image
 	Status  StatusCode
 	Message string
+	Extra   []any
 }
 
 // write to the response struct
-func (r *TestResponder) Write(status StatusCode, message string) {
+func (r *TestResponder) Write(status StatusCode, message string, args ...any) {
 	// nothing is written at the moment
 	r.Status = status
 	r.Message = message
@@ -221,6 +224,7 @@ const (
 
 	WidgetError   = StatusCode(500.001)
 	WidgetWarning = StatusCode(400.001)
+	FrameFail     = StatusCode(400.003)
 )
 
 // String prints the status code as 000.0000, ensuring the final 3 digits are printed
@@ -233,6 +237,21 @@ func (s StatusCode) String() string {
 func (tsg *OpenTSG) logErrors(code StatusCode, frameNumber int, jobId string, errors ...error) {
 	errHan := HandlerFunc(func(resp Response, req *Request) {
 		resp.Write(code, string(req.RawWidgetYAML))
+	})
+	errs := chain(tsg.middlewares, errHan)
+	// call all errors so they are just logged
+	for _, err := range errors {
+		errs.Handle(&response{}, &Request{RawWidgetYAML: json.RawMessage(err.Error()),
+			JobID:           jobId,
+			PatchProperties: PatchProperties{WidgetFullID: "core.tsg"},
+			FrameProperties: FrameProperties{FrameNumber: frameNumber},
+		})
+	}
+}
+
+func (tsg *OpenTSG) logErrorsWithWarning(code StatusCode, frameNumber int, jobId string, warning string, errors ...error) {
+	errHan := HandlerFunc(func(resp Response, req *Request) {
+		resp.Write(code, string(req.RawWidgetYAML), "Warning", warning)
 	})
 	errs := chain(tsg.middlewares, errHan)
 	// call all errors so they are just logged
@@ -280,10 +299,17 @@ func (tsg *OpenTSG) Run(mnt string) {
 			// defer the progress bar message to use the values at the end of the "function"
 			// the idea is for them to auto update
 			defer func() {
-				tsg.logErrors(FrameSuccess, frameNo, jobID,
-					fmt.Errorf("generating frame %v/%v, gen: %v ms, save: %sms, errors:%v", frameNo, imageNo-1,
-						microToMili(int64(time.Since(genMeasure).Microseconds())), microToMili(saveTime), monit.ErrorCount),
-				)
+
+				if saveTime != 0 {
+					tsg.logErrors(FrameSuccess, frameNo, jobID,
+						fmt.Errorf("generating frame %v/%v, gen: %v ms, save: %sms, errors:%v", frameNo, imageNo-1,
+							microToMili(int64(time.Since(genMeasure).Microseconds())), microToMili(saveTime), monit.ErrorCount),
+					)
+				} else {
+					tsg.logErrors(FrameFail, frameNo, jobID,
+						fmt.Errorf("critical errors encountered, frame %v not generated, gen: %v ms", frameNo,
+							microToMili(int64(time.Since(genMeasure).Microseconds()))))
+				}
 				// add the log to the cache channel
 
 			}()
@@ -294,10 +320,10 @@ func (tsg *OpenTSG) Run(mnt string) {
 			// this is important for showing missed widget updates
 			// log the errors
 			if len(errs) > 0 {
-				tsg.logErrors(404, frameNo, jobID, errs...)
+
+				tsg.logErrorsWithWarning(404, frameNo, jobID, "OpenTSG still running", errs...)
 				monit.incrementError(len(errs))
 			}
-
 			frameContext := &frameConfigCont
 			errs = canvaswidget.LoopInitHandle(frameContext)
 

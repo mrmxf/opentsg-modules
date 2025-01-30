@@ -108,7 +108,7 @@
             }
         }
     ],
-    "dimensions": {
+    "Dimensions": {
         "flat": {
             "X0": 0,
             "Y0": 0,

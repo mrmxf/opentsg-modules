@@ -448,7 +448,7 @@ func TestErrors(t *testing.T) {
 	errPathDiff := filepath.Join(path, "/testdata/handlerLoaders/errorloaders/differenttype.json")
 
 	canvasErrors := []string{"corruptcanvas.json", "invalidsize.json", "differenttype.json"}
-	canvasExpecErr := [][]string{{"0061 no \"builtin.canvas\" widget has not been loaded, can not configure openTSG"},
+	canvasExpecErr := [][]string{{"0061 \"builtin.canvas\" widget has not been loaded, can not configure openTSG"},
 		{"0026 Additional property type is not allowed at line 4 in " + errPath + ", for canvas",
 			"0026 Must be greater than or equal to 24 at line 10 in " + errPath + ", for canvas"}, {
 			"0026 Invalid type. Expected: integer, given: string at line 10 in " + errPathDiff + ", for canvas"}}
