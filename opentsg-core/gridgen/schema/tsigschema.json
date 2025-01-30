@@ -36,16 +36,16 @@
                             "flat": {
                                 "type": "object",
                                 "properties": {
-                                    "X": {
+                                    "x": {
                                         "type": "integer"
                                     },
-                                    "Y": {
+                                    "y": {
                                         "type": "integer"
                                     }
                                 },
                                 "required": [
-                                    "X",
-                                    "Y"
+                                    "x",
+                                    "y"
                                 ]
                             },
                             "carve": {
@@ -54,27 +54,31 @@
                                     "destination": {
                                         "type": "string"
                                     },
-                                    "X": {
+                                    "x": {
                                         "type": "integer"
                                     },
-                                    "Y": {
-                                        "type": "integer"
-                                    }
-                                }
-                            },
-                            "XY": {
-                                "type": "object",
-                                "properties": {
-                                    "X": {
-                                        "type": "integer"
-                                    },
-                                    "Y": {
+                                    "y": {
                                         "type": "integer"
                                     }
                                 },
                                 "required": [
-                                    "X",
-                                    "Y"
+                                    "x",
+                                    "y"
+                                ]
+                            },
+                            "XY": {
+                                "type": "object",
+                                "properties": {
+                                    "x": {
+                                        "type": "integer"
+                                    },
+                                    "y": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "x",
+                                    "y"
                                 ]
                             }
                         },
@@ -90,7 +94,7 @@
                 ]
             }
         },
-        "Dimensions": {
+        "dimensions": {
             "type": "object",
             "properties": {
                 "flat": {
@@ -114,7 +118,7 @@
     },
     "required": [
         "tileLayout",
-        "Dimensions"
+        "dimensions"
     ],
     "additionalProperties": false,
     "$defs": {
