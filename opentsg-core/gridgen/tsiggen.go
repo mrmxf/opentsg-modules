@@ -72,7 +72,7 @@ type XY2D struct {
 }
 
 //go:embed schema/tsigschema.json
-var tsig []byte
+var tsigSchema []byte
 
 func flatmap(c *context.Context, basePath, tpigpath string) (canvasAndMask, error) {
 
@@ -88,13 +88,13 @@ func flatmap(c *context.Context, basePath, tpigpath string) (canvasAndMask, erro
 	}
 
 	jline := make(validator.JSONLines)
-	err = validator.Liner(tsig, tpigpath, "schema", jline)
+	err = validator.Liner(file, tpigpath, "schema", jline)
 
 	if err != nil {
 		return canvasAndMask{}, fmt.Errorf("0DEV error extracting json lines %v", err)
 	}
 
-	errs := validator.SchemaValidator(tsig, file, tpigpath, jline)
+	errs := validator.SchemaValidator(tsigSchema, file, tpigpath, jline)
 	if len(errs) > 0 {
 		mess := ""
 		for _, err = range errs {

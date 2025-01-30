@@ -289,7 +289,9 @@ func FrameWidgetsGeneratorHandle(c context.Context, framePos int) (context.Conte
 		}
 	}
 
+	// strip the widgets of their properties here
 	cleanWidgets := make(map[string]WidgetContents)
+	var schemaErrs []error
 	for k, wc := range bases.generatedFrameWidgets {
 
 		if wc.Widget {
@@ -302,9 +304,14 @@ func FrameWidgetsGeneratorHandle(c context.Context, framePos int) (context.Conte
 			if !ok {
 				properties = WidgetEssentials{}
 			}
-			props, _ := json.Marshal(properties)
+			// marshall including the props field, to keep the file path correct
+			props, _ := json.Marshal(map[string]any{"props": properties})
 			// get the props
-			validator.SchemaValidator(propsSchema, props, k, mainBase.jsonFileLines)
+			propErrs := validator.SchemaValidator(propsSchema, props, k, mainBase.jsonFileLines)
+
+			if len(propErrs) > 0 {
+				schemaErrs = append(schemaErrs, propErrs...)
+			}
 
 			// then parse it
 			var essential WidgetEssentials
@@ -321,6 +328,11 @@ func FrameWidgetsGeneratorHandle(c context.Context, framePos int) (context.Conte
 
 		}
 	}
+
+	if len(schemaErrs) > 0 {
+		return nil, schemaErrs
+	}
+
 	// after getting all the updates apply the metadata to the base widgets.
 	/*
 

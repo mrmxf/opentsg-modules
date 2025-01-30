@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"hash"
 	"os"
+	"path/filepath"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -244,6 +245,31 @@ func TestErrors(t *testing.T) {
 		})
 	}
 
+	propFile := "./testdata/frame_generate2/errors/loader.json"
+
+	testCanvas, _ := filepath.Abs("./testdata/frame_generate2/errors/canvas.json")
+	testWidget, _ := filepath.Abs("./testdata/frame_generate2/errors/widget.json")
+	testWidgetX, _ := filepath.Abs("./testdata/frame_generate2/errors/widget_bad_x.json")
+	reg := "'^-{0,1}\\d{0,2}\\.{1}\\d{0,}%$|^-{0,1}\\d{0,2}%$|^-{0,1}(100)%$'"
+
+	propExpec := [][]error{{fmt.Errorf("0026 Invalid type. Expected: string, given: integer at line 3 in %s, for canvas", testCanvas)},
+		{fmt.Errorf("0026 Additional property grid is not allowed at line 4 in %s, for widget", testWidget)},
+		{fmt.Errorf("0026 Must validate at least one schema (anyOf) at line 6 in %s, for widget_bad_x", testWidgetX),
+			fmt.Errorf("0026 Does not match pattern %s at line 6 in %s, for widget_bad_x", reg, testWidgetX)}}
+
+	for i, expec := range propExpec {
+		c, _, e := FileImport(propFile, "", false)
+		fmt.Println(e)
+		_, errs := FrameWidgetsGeneratorHandle(c, i)
+
+		Convey("Checking the props schema catches errors of malformed properties", t, func() {
+			Convey("using ./testdata/frame_generate2/errors/loader.json as the input a sequence of malformed properties", func() {
+				Convey(fmt.Sprintf("An error of %v is returned", expec), func() {
+					So(errs, ShouldResemble, expec)
+				})
+			})
+		})
+	}
 }
 
 func TestCreateErrors(t *testing.T) {

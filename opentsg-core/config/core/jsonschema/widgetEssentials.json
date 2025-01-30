@@ -4,71 +4,82 @@
     "description": "The schema for the widget essentials",
     "type": "object",
     "properties": {
-        "type": {
-            "type": "string"
-        },
-        "location": {
+        "props": {
             "type": "object",
             "properties": {
-                "alias": {
+                "type": {
                     "type": "string"
                 },
-                "box": {
+                "extra": {
+                    "type": "object"
+                },
+                "location": {
                     "type": "object",
                     "properties": {
-                        "useAlias": {
+                        "alias": {
                             "type": "string"
                         },
-                        "useGridKeys": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "x": {
-                            "$ref": "#/$defs/coordinate"
-                        },
-                        "y": {
-                            "$ref": "#/$defs/coordinate"
-                        },
-                        "x2": {
-                            "$ref": "#/$defs/coordinate"
-                        },
-                        "y2": {
-                            "$ref": "#/$defs/coordinate"
-                        },
-                        "width": {
-                            "$ref": "#/$defs/coordinate"
-                        },
-                        "height": {
-                            "$ref": "#/$defs/coordinate"
-                        },
-                        "border-radius": {
-                            "$ref": "#/$defs/coordinate"
+                        "box": {
+                            "type": "object",
+                            "properties": {
+                                "useAlias": {
+                                    "type": "string"
+                                },
+                                "useGridKeys": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "x": {
+                                    "$ref": "#/$defs/coordinate"
+                                },
+                                "y": {
+                                    "$ref": "#/$defs/coordinate"
+                                },
+                                "x2": {
+                                    "$ref": "#/$defs/coordinate"
+                                },
+                                "y2": {
+                                    "$ref": "#/$defs/coordinate"
+                                },
+                                "width": {
+                                    "$ref": "#/$defs/coordinate"
+                                },
+                                "height": {
+                                    "$ref": "#/$defs/coordinate"
+                                },
+                                "border-radius": {
+                                    "$ref": "#/$defs/coordinate"
+                                }
+                            },
+                            "additionalProperties": false
                         }
                     },
                     "additionalProperties": false
+                },
+                "TSIG": {
+                    "type": "object",
+                    "properties": {
+                        "grouping": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "colorSpace": {
+                    "type": "object",
+                    "colorSpace": {
+                        "type": "string"
+                    }
                 }
             },
+            "required": [
+                "type"
+            ],
             "additionalProperties": false
-        },
-        "TSIG": {
-            "type": "object",
-            "properties": {
-                "grouping": {
-                    "type": "string"
-                }
-            },
-            "additionalProperties": false
-        },
-        "colorSpace" :{
-            "type":"object", 
-            "colorSpace" : {
-                "type" : "string"
-            }
         }
     },
-    "additionalProperties": false,
     "$defs": {
         "pixel": {
             "type": "string",

@@ -176,9 +176,10 @@ func TestError(t *testing.T) {
 
 	files := []string{"./testdata/tpig/fail/nolayout.json",
 		"./testdata/tpig/fail/badfield.json"}
+
 	expected := []string{
 		"0DEV 0027 tileLayout is required in unknown files please check your files for the tileLayout property in the name ./testdata/tpig/fail/nolayout.json, ",
-		"0DEV 0027 Invalid type. Expected: integer, given: string in unknown files please check your files for the tileLayout.0.layout.XY.X property in the name ./testdata/tpig/fail/badfield.json, ",
+		"0DEV 0026 Invalid type. Expected: integer, given: string at line 11 in ./testdata/tpig/fail/badfield.json, for ./testdata/tpig/fail/badfield.json, ",
 	}
 
 	for i, file := range files {
