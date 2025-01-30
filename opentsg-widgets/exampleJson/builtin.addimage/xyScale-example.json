@@ -1,5 +1,15 @@
 {
     "image": "./testdata/test16bit.png",
     "imageFill": "xy scale",
-    "offset": {}
+    "offset": {},
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.addimage"
+    }
 }

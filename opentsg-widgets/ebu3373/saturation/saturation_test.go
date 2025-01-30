@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -35,7 +36,8 @@ func TestBars(t *testing.T) {
 
 	for i, c := range colours {
 		s.Colours = c
-		genErr := s.Generate(myImage)
+		out := tsg.TestResponder{BaseImg: myImage}
+		s.Handle(&out, &tsg.Request{})
 		examplejson.SaveExampleJson(s, WidgetType, explanation[i], false)
 
 		f, _ := os.Open(fmt.Sprintf("./testdata/ordertest%v.png", i))
@@ -56,7 +58,7 @@ func TestBars(t *testing.T) {
 		Convey("Checking saturations ramps can be generated for differenent colours", t, func() {
 			Convey("Comparing the generated ramp to the base test", func() {
 				Convey("No error is returned and the file matches", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})

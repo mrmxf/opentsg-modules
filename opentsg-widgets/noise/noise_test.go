@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -36,7 +37,8 @@ func TestWhiteNoise(t *testing.T) {
 		mockNoise.Maximum = 4095
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{1000, 1000}})
 		// Generate the noise image
-		genErr := mockNoise.Generate(myImage)
+		out := tsg.TestResponder{BaseImg: myImage}
+		mockNoise.Handle(&out, &tsg.Request{})
 		examplejson.SaveExampleJson(mockNoise, WidgetType, explanation[i], false)
 		// Open the image to compare to
 		file, _ := os.Open(compare)
@@ -56,7 +58,7 @@ func TestWhiteNoise(t *testing.T) {
 		Convey("Checking that the noise is generated", t, func() {
 			Convey(fmt.Sprintf("Comparing the generated image to %v ", compare), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -71,7 +73,8 @@ func TestWhiteNoise(t *testing.T) {
 		mockNoise.YOffsets = off
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{1000, 200}})
 		// Generate the noise image
-		genErr := mockNoise.Generate(myImage)
+		out := tsg.TestResponder{BaseImg: myImage}
+		mockNoise.Handle(&out, &tsg.Request{})
 		examplejson.SaveExampleJson(mockNoise, WidgetType, explanationG[i], true)
 		// Open the image to compare to
 		file, _ := os.Open(fmt.Sprintf("./testdata/%s.png", explanationG[i]))
@@ -94,7 +97,7 @@ func TestWhiteNoise(t *testing.T) {
 		Convey("Checking that the noise is generated", t, func() {
 			Convey(fmt.Sprintf("Comparing the generated image to %v ", explanationG[i]), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -109,7 +112,8 @@ func TestWhiteNoise(t *testing.T) {
 		mockNoise.YOffsets = off
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{1000, 200}})
 		// Generate the noise image
-		genErr := mockNoise.Generate(myImage)
+		out := tsg.TestResponder{BaseImg: myImage}
+		mockNoise.Handle(&out, &tsg.Request{})
 
 		// Open the image to compare to
 
@@ -134,7 +138,7 @@ func TestWhiteNoise(t *testing.T) {
 		Convey("Checking that the noise is generated", t, func() {
 			Convey(fmt.Sprintf("Comparing the generated image to %v ", explanationBoth[i]), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})

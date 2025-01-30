@@ -1,13 +1,15 @@
 {
-    "waveType": "cos",
-    "colorSpace": {
-        "primaries": {
-            "Red": {},
-            "Green": {},
-            "Blue": {},
-            "WhitePoint": {}
-        }
-    },
     "frequency": "π*13/100",
-    "offset": {}
+    "offset": {},
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.zoneplate"
+    },
+    "waveType": "cos"
 }

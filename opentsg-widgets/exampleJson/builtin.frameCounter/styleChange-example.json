@@ -1,13 +1,5 @@
 {
     "backgroundColor": "rgb12(816,816,816)",
-    "colorSpace": {
-        "primaries": {
-            "Blue": {},
-            "Green": {},
-            "Red": {},
-            "WhitePoint": {}
-        }
-    },
     "font": "body",
     "frameCounter": true,
     "props": {

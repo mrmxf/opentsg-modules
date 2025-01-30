@@ -4,13 +4,11 @@ import (
 	_ "embed"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
 )
 
 type BarJSON struct {
 	//	Type    string      `json:"type" yaml:"type"`
-	ColourSpace       *colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	config.WidgetGrid `yaml:",inline"`
+	ColourSpace *colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
 }
 
 //go:embed jsonschema/barschema.json

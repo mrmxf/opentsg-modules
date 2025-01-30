@@ -59,12 +59,13 @@ func TestStructExtraction(t *testing.T) {
 }
 
 func TestInitStage(t *testing.T) {
-	cIn, _, _ := core.FileImport("testdata/baseloader.json", "", false)
-	cFrame, _ := core.FrameWidgetsGenerator(cIn, 0)
-	LoopInit(&cFrame)
+	cIn, _, e := core.FileImport("testdata/baseloader.json", "", false)
+	cFrame, errs2 := core.FrameWidgetsGeneratorHandle(cIn, 0)
+	errs := LoopInitHandle(&cFrame)
+	fmt.Println(errs, e, errs2)
 	f := config.Framesize{W: 4096, H: 2160}
 	expected := ConfigVals{Outputs: []string{"testname.png"}, FileDepth: 16, Framesize: f, GridRows: 16,
-		ImageType: "NRGBA64", BaseImage: "test.png", LineColor: "#CCDDAA", Background: "#247AE0", Type: WType,
+		ImageType: "NRGBA64", BaseImage: "test.png", LineColor: "#CCDDAA", Background: "#247AE0",
 		LineWidth: 23.4}
 	got := cFrame.Value(generatedConfig).(ConfigVals)
 
@@ -77,8 +78,8 @@ func TestInitStage(t *testing.T) {
 	})
 
 	cIn, _, _ = core.FileImport("testdata/doubleloader.json", "", false)
-	cDouble, _ := core.FrameWidgetsGenerator(cIn, 0)
-	err := LoopInit(&cDouble)
+	cDouble, _ := core.FrameWidgetsGeneratorHandle(cIn, 0)
+	err := LoopInitHandle(&cDouble)
 	expectedDoubleErr := []error{fmt.Errorf("0061 too many \"builtin.canvas\" widgets have been loaded (Got 2 wanted 1), can not configure openTSG")}
 
 	Convey("Checking loopinit registers errors", t, func() {

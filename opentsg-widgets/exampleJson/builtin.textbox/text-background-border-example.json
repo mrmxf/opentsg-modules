@@ -1,20 +1,22 @@
 {
+    "backgroundColor": "#99AD49",
+    "borderColor": "#000000",
+    "borderSize": 5,
+    "font": "title",
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.textbox"
+    },
     "text": [
         "sample",
         "text"
     ],
-    "colorSpace": {
-        "primaries": {
-            "Red": {},
-            "Green": {},
-            "Blue": {},
-            "WhitePoint": {}
-        }
-    },
-    "borderColor": "#000000",
-    "borderSize": 5,
-    "font": "title",
-    "backgroundColor": "#99AD49",
     "textColor": "rgb12(3000,1401,1116)",
     "xAlignment": "right",
     "yAlignment": "bottom"

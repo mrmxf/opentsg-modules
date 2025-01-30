@@ -2,14 +2,6 @@
     "backgroundColor": "#eeeeee",
     "borderColor": "#91B645",
     "borderSize": 5,
-    "colorSpace": {
-        "primaries": {
-            "Blue": {},
-            "Green": {},
-            "Red": {},
-            "WhitePoint": {}
-        }
-    },
     "fillType": "relaxed",
     "font": "pixel",
     "props": {

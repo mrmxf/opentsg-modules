@@ -1,12 +1,4 @@
 {
-    "colorSpace": {
-        "primaries": {
-            "Blue": {},
-            "Green": {},
-            "Red": {},
-            "WhitePoint": {}
-        }
-    },
     "maximum": 4095,
     "noiseType": "white noise",
     "props": {

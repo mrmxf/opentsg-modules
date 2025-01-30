@@ -1,4 +1,14 @@
 {
     "image": "../zoneplate/testdata/normalzpm.png",
-    "offset": {}
+    "offset": {},
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.addimage"
+    }
 }

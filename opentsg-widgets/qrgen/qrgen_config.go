@@ -3,8 +3,6 @@ package qrgen
 import (
 	_ "embed"
 
-	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
 )
 
@@ -14,8 +12,6 @@ type Config struct {
 	parameters.Offset `yaml:",inline"`
 	Size              *sizeJSON          `json:"size,omitempty" yaml:"size,omitempty"`
 	Query             *[]objectQueryJSON `json:"objectQuery,omitempty" yaml:"objectQuery,omitempty"`
-	config.WidgetGrid `yaml:",inline"`
-	ColourSpace       colour.ColorSpace `json:"colorSpace" yaml:"colorSpace"`
 }
 
 type sizeJSON struct {
@@ -30,12 +26,3 @@ type objectQueryJSON struct {
 
 //go:embed jsonschema/qrgenschema.json
 var Schema []byte
-
-/*
-func (q qrcodeJSON) Alias() string {
-	return q.GridLoc.Alias
-}
-
-func (q qrcodeJSON) Location() string {
-	return q.GridLoc.Location
-}*/

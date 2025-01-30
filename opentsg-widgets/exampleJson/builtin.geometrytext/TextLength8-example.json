@@ -1,15 +1,4 @@
 {
-    "colorSpace": {
-        "primaries": {
-            "Blue": {},
-            "Green": {},
-            "Red": {},
-            "WhitePoint": {}
-        }
-    },
-    "grid": {
-        "location": "Nothing"
-    },
     "props": {
         "location": {
             "alias": "A demo Alias",

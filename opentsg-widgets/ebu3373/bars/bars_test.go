@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -29,12 +29,12 @@ func TestBars(t *testing.T) {
 
 	for i, size := range sizes {
 		mock := BarJSON{}
-		mock.GridLoc = &config.Grid{Alias: "testlocation"}
 		myImage := image.NewNRGBA64(image.Rect(0, 0, size[0], size[1]))
 
 		examplejson.SaveExampleJson(mock, WidgetType, explanation[i], false)
 		// Generate the ramp image
-		genErr := mock.Generate(myImage)
+		out := tsg.TestResponder{BaseImg: myImage}
+		mock.Handle(&out, &tsg.Request{})
 		// Open the image to compare to
 		file, _ := os.Open(testBase[i])
 		// Decode to get the colour values
@@ -52,7 +52,7 @@ func TestBars(t *testing.T) {
 		Convey("Checking the bar functions are generated correctly", t, func() {
 			Convey(fmt.Sprintf("Comparing the generated ramp to %v", testBase[i]), func() {
 				Convey("No error is returned and the file matches", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})

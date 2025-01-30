@@ -83,10 +83,7 @@ type widgetContents struct {
 	Data        json.RawMessage
 	Pos         int
 	arrayPos    []int
-	Tag         string
 	Widget      bool
-	Location    string
-	Alias       string
 	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
 }
 

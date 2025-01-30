@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/mask"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
@@ -48,7 +49,8 @@ func TestZoneGenAngle(t *testing.T) {
 
 		examplejson.SaveExampleJson(mockZone, WidgetType, explanation[i], false)
 		// Generate the ramp image
-		genErr := mockZone.Generate(myImage)
+		out := tsg.TestResponder{BaseImg: myImage}
+		mockZone.Handle(&out, &tsg.Request{})
 
 		// Open the image to compare to
 		file, _ := os.Open(testF[i])
@@ -69,7 +71,7 @@ func TestZoneGenAngle(t *testing.T) {
 		Convey("Checking the angles of the zoneplate", t, func() {
 			Convey(fmt.Sprintf("Comparing the ramp at an angle of %v ", angleDummies[i]), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -84,7 +86,8 @@ func TestPlateType(t *testing.T) {
 
 		mockZone := ZConfig{PlateType: pt}
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{1000, 1000}})
-		genErr := mockZone.Generate(myImage)
+		out := tsg.TestResponder{BaseImg: myImage}
+		mockZone.Handle(&out, &tsg.Request{})
 
 		file, _ := os.Open(fmt.Sprintf("./testdata/%v.png", pt))
 		// Decode to get the colour values
@@ -104,7 +107,7 @@ func TestPlateType(t *testing.T) {
 		Convey("Checking the plate types of the zone plate", t, func() {
 			Convey(fmt.Sprintf("Comparing the plate type of %v ", pt), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -125,7 +128,8 @@ func TestZoneGenWaveType(t *testing.T) {
 
 		examplejson.SaveExampleJson(mockZone, WidgetType, w, false)
 		// Generate the ramp image
-		genErr := mockZone.Generate(myImage)
+		out := tsg.TestResponder{BaseImg: myImage}
+		mockZone.Handle(&out, &tsg.Request{})
 		f, _ := os.Create(testF[i])
 		png.Encode(f, myImage)
 		// Open the image to compare to
@@ -147,7 +151,7 @@ func TestZoneGenWaveType(t *testing.T) {
 		Convey("Checking the wave types of the zoneplate", t, func() {
 			Convey(fmt.Sprintf("Comparing the wavetype of %v ", w), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -168,7 +172,8 @@ func TestZoneGenMask(t *testing.T) {
 
 		examplejson.SaveExampleJson(mockZone, WidgetType, explanation[i], false)
 		// Generate the ramp image
-		genErr := mockZone.Generate(myImage)
+		out := tsg.TestResponder{BaseImg: myImage}
+		mockZone.Handle(&out, &tsg.Request{})
 		// Reapply the mask because for somereason it is not transferred across the test suiteS?
 		myImage = mask.Mask(mask.Circle, 1000, 1000, 0, 0, myImage)
 		// Open the image to compare to
@@ -189,7 +194,7 @@ func TestZoneGenMask(t *testing.T) {
 		Convey("Checking the mask of the zoneplate", t, func() {
 			Convey(fmt.Sprintf("Comparing the mask of the zoneplate of %v ", "VOID" /*mockZone.Mask*/), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})

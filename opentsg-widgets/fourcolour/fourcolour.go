@@ -1,32 +1,18 @@
 package fourcolour
 
 import (
-	"context"
 	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
-	"sync"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/gridgen"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/widgethandler"
 )
 
 const (
 	WidgetType = "builtin.fourcolor"
 )
-
-func FourColourGenerator(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *errhandle.Logger) {
-	defer wg.Done()
-	opts := []any{c}
-	conf := widgethandler.GenConf[Config]{Debug: debug, Schema: Schema, WidgetType: WidgetType, ExtraOpt: opts}
-	widgethandler.WidgetRunner(canvasChan, conf, c, logs, wgc) // Update this to pass an error which is then formatted afterwards
-}
-
-var getGeometry = gridgen.GetGridGeometry
 
 func (f Config) Handle(resp tsg.Response, req *tsg.Request) {
 	if len(f.Colourpallette) < 4 {
@@ -36,7 +22,7 @@ func (f Config) Handle(resp tsg.Response, req *tsg.Request) {
 	pallette := make([]color.Color, len(f.Colourpallette))
 
 	for i, c := range f.Colourpallette {
-		pallette[i] = c.ToColour(f.ColourSpace)
+		pallette[i] = c.ToColour(req.PatchProperties.ColourSpace)
 	}
 
 	flats := req.PatchProperties.Geometry
@@ -84,78 +70,6 @@ func (f Config) Handle(resp tsg.Response, req *tsg.Request) {
 	}
 
 	resp.Write(tsg.WidgetSuccess, "success")
-}
-
-// amend so that the number of colours is based off of the input, can be upgraded to 5 or 6 for performance
-func (f Config) Generate(canvas draw.Image, opt ...any) error {
-
-	if len(f.Colourpallette) < 4 {
-		return fmt.Errorf("invalid number of colours chosen for the fourcolour pallette")
-	}
-	pallette := make([]color.Color, len(f.Colourpallette))
-
-	for i, c := range f.Colourpallette {
-		pallette[i] = c.ToColour(f.ColourSpace)
-	}
-
-	var c *context.Context
-	if len(opt) != 0 {
-		var ok bool
-		c, ok = opt[0].(*context.Context)
-		if !ok {
-			return fmt.Errorf("0DEV configuration error when assiging fourcolour context")
-		}
-	} else {
-		return fmt.Errorf("0DEV configuration error when assiging fourcolour context")
-	}
-
-	flats, err := getGeometry(c, f.GridLoc.Location)
-	if err != nil {
-		return err
-	}
-
-	namelocations := make(map[string]int)
-	nodes := make([]nodal, len(flats))
-
-	// TODO Manual neighbour finding or ensure they must always suggest having a neighbour
-	//	fmt.Println(len(nodes))
-	for i, flat := range flats {
-		neighs := []int{}
-
-		for _, neigh := range flat.Neighbours {
-
-			// do some maths about incrementing the start point as more neighbours are found
-			neighpos, ok := namelocations[neigh]
-			if !ok {
-				for j, f := range flats {
-					if f.ID == neigh {
-						neighpos = j
-						namelocations[neigh] = j
-						ok = true
-					}
-				}
-			}
-			if ok {
-				neighs = append(neighs, neighpos)
-			}
-
-		}
-		nodes[i] = nodal{neighbours: neighs, area: flat.Shape}
-		//	fmt.Println(len(neighs), neighs)
-	}
-
-	// extract the colour here
-	_, filled := bruteColourArea(nodes, len(pallette)+1)
-	// Break if there's an error etc
-	for _, node := range filled {
-		setcolour := node.color
-		// fmt.Println(node.area, canvas.Bounds(), setcolour)
-		colour.Draw(canvas, node.area, &image.Uniform{pallette[setcolour-1]}, image.Point{}, draw.Src)
-
-	}
-	// TODO add timeout feature with user and other input
-
-	return nil
 }
 
 type nodal struct {

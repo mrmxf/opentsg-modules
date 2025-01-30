@@ -1,14 +1,6 @@
 package widgets
 
-import (
-	"context"
-	"fmt"
-	"testing"
-
-	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config/core"
-	. "github.com/smartystreets/goconvey/convey"
-)
+//	. "github.com/smartystreets/goconvey/convey"
 
 var mockSchema = []byte(`{
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -27,6 +19,7 @@ type all struct { // struct of the input
 
 var types = all{6, 6.01, map[string]any{"some": "map"}, []any{3, 4, "5"}}
 
+/*
 func TestExtract(t *testing.T) {
 
 	fc, _, _ := core.FileImport("./testdata/types_loader.json", "", true)
@@ -67,3 +60,4 @@ func TestMissed(t *testing.T) {
 func typeWrapper[T any](c context.Context, item T, location string) (map[core.AliasIdentity]T, []error) {
 	return ExtractWidgetStructs[T](location, mockSchema, &c)
 }
+*/

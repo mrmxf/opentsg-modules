@@ -2,14 +2,6 @@
     "backgroundColor": "rgb12(3566,2312,34)",
     "borderColor": "#EEE",
     "borderSize": 25,
-    "colorSpace": {
-        "primaries": {
-            "Blue": {},
-            "Green": {},
-            "Red": {},
-            "WhitePoint": {}
-        }
-    },
     "props": {
         "location": {
             "alias": "A demo Alias",

@@ -1,5 +1,12 @@
 {
-    "grid": {
-        "alias": "testlocation"
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.ebu3373/bars"
     }
 }

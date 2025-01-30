@@ -7,13 +7,10 @@ import (
 	"image/draw"
 	"io"
 	"os"
-	"path/filepath"
 	"reflect"
 	"strings"
 
-	"github.com/cbroglie/mustache"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 
 	ascmhl "github.com/mrmxf/opentsg-mhl"
 	"github.com/mrmxf/opentsg-modules/opentsg-io/csvsave"
@@ -46,102 +43,6 @@ func (o OpenTSG) EncoderFunc(extension string, encoder Encoder) {
 	// are any
 
 	o.encoders[extension] = encoder
-
-}
-
-// CanvasSave saves the file according to the extensions provided
-// the name add is for debug to allow to identify images
-func (tpg *OpenTSG) canvasSave(canvas draw.Image, filename []string, bitdeph int, mnt, framenumber string, debug bool, logs *errhandle.Logger) {
-	for _, name := range filename {
-		truepath, err := filepath.Abs(filepath.Join(mnt, name))
-		if err != nil {
-			logs.PrintErrorMessage("E_opentsg_SAVE_", err, debug)
-
-			continue
-		}
-		err = tpg.savefile(truepath, framenumber, canvas, bitdeph)
-		if err != nil {
-			logs.PrintErrorMessage("E_opentsg_SAVE_", err, debug)
-		}
-	}
-}
-
-// saveType Extensions, regex and error
-
-func baseSaves() map[string]func(io.Writer, draw.Image, int) error {
-
-	return map[string]func(io.Writer, draw.Image, int) error{
-		"DPX": WriteDPXFile,
-		"TIF": WriteTiffFile, "TIFF": WriteTiffFile,
-		"PNG": WritePngFile,
-		"EXR": WriteExrFile,
-		"CSV": WriteCSVFile,
-	}
-}
-
-/*var saveTypes = map[string]func(*os.File, draw.Image, int) error{
-	"DPX": WriteDPXFile,
-	"TIF": WriteTiffFile, "TIFF": WriteTiffFile,
-	"PNG": WritePngFile,
-	"EXR": WriteExrFile,
-	"CSV": WriteCSVFile,
-} */
-
-func (tpg *OpenTSG) savefile(filename, framenumber string, base draw.Image, bitdepth int) error {
-	// regTIFF := regexp.MustCompile(`^[\w\W]{1,255}\.[tT][iI][fF]{1,2}$`)
-	// regPNG := regexp.MustCompile(`^[\w\W]{1,255}\.[pP][nN][gG]$`)
-	// regCSV := regexp.MustCompile(`^[\w\W]{1,255}\.[cC][sS][Vv]$`)
-	// regDPX := regexp.MustCompile(`^[\w\W]{1,255}\.[dD][pP][xX]$`)
-	// regEXR := regexp.MustCompile(`^[\w\W]{1,255}\.[eE][xX][rR]$`)
-
-	filename, _ = mustache.Render(filename, map[string]string{"framenumber": framenumber})
-
-	extensions := strings.Split(filename, ".")
-	ext := extensions[len(extensions)-1]
-
-	// extract the extension type
-	saveFunc, ok := tpg.customSaves[strings.ToUpper(ext)]
-
-	if !ok {
-		return fmt.Errorf("%s is not a valid file format, please choose one of the following: tiff, png, dpx,exr or csv", filename)
-	}
-
-	// open the file if not sth or the other
-
-	saveTarget, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0777)
-	defer saveTarget.Close()
-	if err != nil {
-		return fmt.Errorf("0051 %v", err)
-	}
-
-	fwErr := saveFunc(saveTarget, base, bitdepth)
-	if fwErr != nil {
-		return fmt.Errorf("0051 %v", fwErr)
-	}
-
-	// Amend the case statement for the different types of files here.
-	// This means only the open tpg code can be changed
-	// and custom save functions can be plugged in.
-
-	// get the 16 bit pixels and put it through
-	canvas, ok := base.(*image.NRGBA64)
-	if !ok { // set to nrgba64 if not ok
-		canvas = image.NewNRGBA64(base.Bounds())
-		colour.Draw(canvas, canvas.Bounds(), base, image.Point{}, draw.Src)
-	}
-	pixB := canvas.Pix
-	// reset the file to the start for the hashreader
-	_, err = saveTarget.Seek(0, io.SeekStart)
-	if err != nil {
-		return fmt.Errorf("0052 %v", err)
-	}
-	err = ascmhl.MhlGenFile(saveTarget, ascmhl.ToHash{Md5: true, C4: true, Xxh128: true, Crc32RGB: true, Crc16RGB: true}, pixB, 16)
-
-	if err != nil {
-		return fmt.Errorf("0053 %v", err)
-	}
-	return err
-	// return saveCRC(saveTarget, pixB)
 
 }
 
