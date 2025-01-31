@@ -13,22 +13,6 @@ is the same as the `"type"` field that would be declared for that widget. exampl
 folders such as builtin.ebu3373/bars, have their widget names including the `/`, so
 `builtin.ebu3373/bars` would be the widget type.
 
-### Legacy version
-
-The positional fields of `"grid"` are expected to be in **every** widget input file. And have the
-layout as shown below. They may not be found in every/any example json.
-The widget type is also required. Each widget has a unique `"type"`,
-so OpenTSG can identify and use the widget.
-
-```json
-"type" : "builtin.example",
-"grid": {
-    "location": "a1:b2",
-    "alias" : "A demo Alias"
-}
-
-```
-
 ### Handler version
 
 All openTSG widgets properties are stored in the `"props"` field. This props field

@@ -35,7 +35,7 @@ in several formats, but they all use the same fields.
 The (0,0) coordinate is located in the top left of the testcard,
 and the widget positions are generated with the following json layout.
 
-```json
+```javascript
 "location": {
         "box": {
             "x": 0,
@@ -55,7 +55,7 @@ These fields can be mixed and matched.
 The x2 and y2 fields denote the bottom right coordinate of the widget
 and can be created with the following json.
 
-```json
+```javascript
 "location": {
         "box": {
             "x": 1,
@@ -71,7 +71,7 @@ the bottom of the widget, and the width is the distance to the right of the widg
 They can be created with the following json, which creates the same result as the previous demo
 for x2 and y2.
 
-```json
+```javascript
 "location": {
         "box": {
             "x": 1,
@@ -107,7 +107,7 @@ and are called like so.
 A widget with rounded corners can be created with the
 `"border-radius"` field which is implemented like so.
 
-```json
+```javascript
 "location": {
         "box": {
             "x": 1,
@@ -152,7 +152,7 @@ instead of the default base units of the TSIG. e.g. 3 tiles that have the groups
 Will produce 2 TSIgs of A1 and A2.
 If every TSIG tile does not have the unit searched for than an error has returned.
 
-```json
+```javascript
  "TSIG": {
         "grouping":"example"
     }
@@ -223,7 +223,7 @@ TSIGs are used for generating test patterns to fit 3d shapes.
 They can be included within the canvas options json, with
 the following code.
 
-```json
+```javascript
 {
     "type": "builtin.canvas",
     ...
@@ -264,7 +264,7 @@ It has the following layout:
             "ID": "A000",
             "tags": [],
             "neighbours":[],
-            "units": {
+            "groups": {
                 "cube": "A11",
                 "grid": "A1"
             },
@@ -326,11 +326,11 @@ An example `"Tile layout"` is given below.
             "Tags": [],
             "Layout": {
                 "Carve": {
-                    "Destination": "C1",
+                    "destination": "C1",
                     "X": 0,
                     "Y": 0
                 },
-                "Flat": {
+                "flat": {
                     "X": 0,
                     "Y": 0
                 },

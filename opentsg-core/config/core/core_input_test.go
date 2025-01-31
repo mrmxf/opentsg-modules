@@ -54,10 +54,10 @@ func TestFileRead(t *testing.T) {
 }
 
 func TestBadJson(t *testing.T) {
-	testFolderLocation := fmt.Sprintf("%stestdata%swrong%s", sep, sep, sep)
+	testFolderLocation := fmt.Sprintf("%stestdata%serrors%s", sep, sep, sep)
 
-	badFiles := []string{"./testdata/wrong/apiinval.json", "./testdata/wrong/empty.json",
-		"./testdata/wrong/badinclude.json", "./testdata/wrong/badincludebase.json"}
+	badFiles := []string{"./testdata/errors/apiinval.json", "./testdata/errors/empty.json",
+		"./testdata/errors/badinclude.json", "./testdata/errors/badincludebase.json"}
 	results := []string{fmt.Sprintf("0003 No frames declared in %s%sapiinval.json", location, testFolderLocation),
 		fmt.Sprintf("0002 yaml: unmarshal errors:\n  line 1: cannot unmarshal !!seq into core.factory when opening %s%sempty.json", location, testFolderLocation),
 		fmt.Sprintf("0003 No frames declared in %s%sbadinclude.json", location, testFolderLocation),

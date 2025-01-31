@@ -20,7 +20,7 @@ it follows the [angle unit rules](../utils/parameters/readme.md#clockwise-rotati
 ```json
 {
     "props": {
-    "type": "builtin.zoneplate",
+      "type": "builtin.zoneplate",
       "location": {
         "alias" : "A demo Alias",
         "box": {
