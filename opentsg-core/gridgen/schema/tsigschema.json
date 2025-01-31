@@ -1,0 +1,148 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "tileLayout": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "ID": {
+                        "type": "string"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "neighbours": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "groups": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "layout": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "flat": {
+                                "type": "object",
+                                "properties": {
+                                    "x": {
+                                        "type": "integer"
+                                    },
+                                    "y": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "x",
+                                    "y"
+                                ]
+                            },
+                            "carve": {
+                                "type": "object",
+                                "properties": {
+                                    "destination": {
+                                        "type": "string"
+                                    },
+                                    "x": {
+                                        "type": "integer"
+                                    },
+                                    "y": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "x",
+                                    "y"
+                                ]
+                            },
+                            "XY": {
+                                "type": "object",
+                                "properties": {
+                                    "x": {
+                                        "type": "integer"
+                                    },
+                                    "y": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "x",
+                                    "y"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "flat",
+                            "XY"
+                        ]
+                    }
+                },
+                "required": [
+                    "ID",
+                    "layout"
+                ]
+            }
+        },
+        "dimensions": {
+            "type": "object",
+            "properties": {
+                "flat": {
+                    "$ref": "#/$defs/flatmap"
+                },
+                "carve": {
+                    "$ref": "#/$defs/flatmap"
+                }
+            },
+            "required": [
+                "flat"
+            ],
+            "additionalProperties": false
+        },
+        "carve": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/$defs/flatmap"
+            }
+        }
+    },
+    "required": [
+        "tileLayout",
+        "dimensions"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+        "flatmap": {
+            "type": "object",
+            "properties": {
+                "X0": {
+                    "type": "integer"
+                },
+                "Y0": {
+                    "type": "integer"
+                },
+                "X1": {
+                    "type": "integer"
+                },
+                "Y1": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "X1",
+                "Y1"
+            ]
+        }
+    }
+}

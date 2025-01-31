@@ -76,14 +76,14 @@ func TestBadJson(t *testing.T) {
 	}
 }
 
-func TestJsonRread(t *testing.T) {
+func TestJsonRead(t *testing.T) {
 	inputFile := "./testdata/frame_generate/sequence.json"
 	c, _, _ := FileImport(inputFile, "", false)
 
 	predictedValues := []string{"./testdata/frame_generate/results/blue.yaml", "./testdata/frame_generate/results/green.yaml"}
 
 	for i, pv := range predictedValues {
-		n, _ := FrameWidgetsGenerator(c, i)
+		n, _ := FrameWidgetsGeneratorHandle(c, i)
 
 		expec, got := genHash(n, pv)
 
@@ -106,7 +106,7 @@ func TestYamlRead(t *testing.T) {
 		cYaml, _, _ := FileImport(inputYaml, "", false)
 
 		for i, pv := range predictedValuesYaml {
-			n, _ := FrameWidgetsGenerator(cYaml, i)
+			n, _ := FrameWidgetsGeneratorHandle(cYaml, i)
 
 			expec, got := genHash(n, pv)
 
@@ -126,11 +126,11 @@ func TestYamlRead(t *testing.T) {
 	predictedValues := []string{"./testdata/frame_generate/results/blue.yaml", "./testdata/frame_generate/results/green.yaml"}
 
 	for i, pv := range predictedValues {
-		n, es := FrameWidgetsGenerator(cYaml, i)
+		n, es := FrameWidgetsGeneratorHandle(cYaml, i)
 		fmt.Println(es, "second erro")
 		expec, got := genHash(n, pv)
-		bar := n.Value(baseKey).(map[string]widgetContents)
 
+		bar := n.Value(baseKey).(map[string]WidgetContents)
 		frameJSON := make(map[string]map[string]any)
 
 		for k, v := range bar {
@@ -163,10 +163,10 @@ func TestYamlRead(t *testing.T) {
 	predictedValuesRoot := []string{"./testdata/frame_generate2/results/resRoot.yaml", "./testdata/frame_generate2/results/resRootNoMustache.yaml"}
 
 	for i, pv := range predictedValuesRoot {
-		n, es := FrameWidgetsGenerator(cYamlRoot, i)
+		n, es := FrameWidgetsGeneratorHandle(cYamlRoot, i)
 
 		expec, got := genHash(n, pv)
-		bar := n.Value(baseKey).(map[string]widgetContents)
+		bar := n.Value(baseKey).(map[string]WidgetContents)
 
 		frameJSON := make(map[string]map[string]any)
 
@@ -258,10 +258,10 @@ func TestMetadataUpdate(t *testing.T) {
 	predictedValuesRoot := []string{"./testdata/frame_generate2/metadataUpdates/resRoot.yaml"}
 
 	for i, pv := range predictedValuesRoot {
-		n, _ := FrameWidgetsGenerator(cYamlRoot, i)
+		n, _ := FrameWidgetsGeneratorHandle(cYamlRoot, i)
 
 		expec, got := genHash(n, pv)
-		bar := n.Value(baseKey).(map[string]widgetContents)
+		bar := n.Value(baseKey).(map[string]WidgetContents)
 
 		frameJSON := make(map[string]map[string]any)
 
@@ -295,7 +295,7 @@ func TestMetadataUpdate(t *testing.T) {
 		"0007 missing variable \"update\" in {{update}}-{{title}} at frame.canvas"}
 
 	for i, pv := range predictedValuesRoot {
-		_, es := FrameWidgetsGenerator(cYamlRootErr, i)
+		_, es := FrameWidgetsGeneratorHandle(cYamlRootErr, i)
 
 		Convey("Checking arguments are mustached with previous, so arguments can be built upon", t, func() {
 			Convey(fmt.Sprintf("Using frame %v ./testdata/frame_generate2/metadataUpdates/sequence.json as the input ", i), func() {

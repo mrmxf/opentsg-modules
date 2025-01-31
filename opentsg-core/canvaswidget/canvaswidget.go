@@ -30,7 +30,6 @@ var (
 
 // ConfigVals is the go struct of all the configuration values that may be called by an input.
 type ConfigVals struct {
-	Type        string               `json:"type" yaml:"type"`
 	Outputs     []string             `json:"outputs,omitempty" yaml:"outputs,omitempty"`
 	ColourSpace colour.ColorSpace    `json:"ColorSpace,omitempty" yaml:"ColorSpace,omitempty"`
 	Framesize   config.Framesize     `json:"frameSize,omitempty" yaml:"frameSize,omitempty"`
@@ -116,40 +115,11 @@ func LoopInitHandle(frameContext *context.Context) []error {
 		}
 
 	case 0:
-		return []error{fmt.Errorf("0061 no \"%s\" widget has not been loaded, can not configure openTSG", WType)}
+		return []error{fmt.Errorf("0061 \"%s\" widget has not been loaded, can not configure openTSG", WType)}
 
 	default:
 
 		return []error{fmt.Errorf("0061 too many \"%s\" widgets have been loaded (Got %v wanted 1), can not configure openTSG", WType, len(canvas))}
-	}
-
-	midC := context.WithValue(*frameContext, generatedConfig, globParams)
-	*frameContext = midC // update the context pointer
-
-	return []error{}
-}
-
-// Loop init extracts and applies the canvas properties for each frame.
-// This is to be run as the first step after generating the frame widgets,
-// because other modules rely on this information for generating their own structs.
-func LoopInit(frameContext *context.Context) []error {
-	conf, errs := widgets.ExtractWidgetStructs[ConfigVals](WType, baseschema, frameContext)
-
-	if errs != nil {
-		return errs
-	}
-	globParams := ConfigVals{}
-	switch len(conf) {
-	case 1:
-		for _, v := range conf {
-			globParams = v
-		}
-	case 0:
-		return []error{fmt.Errorf("0061 no \"%s\" widget has been loaded, can not configure openTSG", WType)}
-
-	default:
-
-		return []error{fmt.Errorf("0061 too many \"%s\" widgets have been loaded (Got %v wanted 1), can not configure openTSG", WType, len(conf))}
 	}
 
 	midC := context.WithValue(*frameContext, generatedConfig, globParams)

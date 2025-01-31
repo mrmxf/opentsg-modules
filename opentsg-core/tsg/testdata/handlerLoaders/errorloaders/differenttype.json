@@ -1,0 +1,18 @@
+{
+    "props": {
+        "type": "builtin.canvas"
+    },
+    "outputs": [
+        "./testdata/handlerLoaders/racer8.png"
+    ],
+    "frameSize": {
+        "w": 1920,
+        "h": "1080p"
+    },
+    "linewidth": 1,
+    "filedepth": 16,
+    "gridColumns": 16,
+    "gridRows": 9,
+    "backgroundFillColor": "rgb12(1656,1656,1656)",
+    "lineColor": "#000000"
+}

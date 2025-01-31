@@ -11,18 +11,9 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/ebu3373/nearblack"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/ebu3373/saturation"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/ebu3373/twosi"
-	"github.com/mrmxf/opentsg-modules/opentsg-widgets/legacy"
 )
 
 func TestHandlers(t *testing.T) {
-
-	// Run the legacy handler
-	otsg, _ := tsg.BuildOpenTSG("./testdata/legacyloader.json", "", true, &tsg.RunnerConfiguration{RunnerCount: 6, ProfilerEnabled: true})
-	// otsg.AddCustomWidgets(twosi.SIGenerate, nearblack.NBGenerate, bars.BarGen, saturation.SatGen, luma.Generate, zoneplate.ZoneGen)
-	otsg.Handle("builtin.legacy", []byte("{}"), legacy.Legacy{})
-	tsg.LogToFile(otsg, slog.HandlerOptions{Level: slog.LevelDebug}, "./testdata/", "og")
-	//otsg.HandleFunc("builtin.canvas", func(r1 tsg.Response, r2 *tsg.Request) { fmt.Println("ring a ding") })
-	otsg.Run("")
 
 	// run the current handler methods
 	otsgh, err := tsg.BuildOpenTSG("./testdata/handlerLoader.json", "", true, &tsg.RunnerConfiguration{RunnerCount: 6, ProfilerEnabled: true})

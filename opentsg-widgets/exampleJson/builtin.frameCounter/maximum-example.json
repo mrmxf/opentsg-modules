@@ -1,13 +1,5 @@
 {
     "backgroundColor": "#91B645",
-    "colorSpace": {
-        "primaries": {
-            "Blue": {},
-            "Green": {},
-            "Red": {},
-            "WhitePoint": {}
-        }
-    },
     "font": "title",
     "fontSize": 25,
     "frameCounter": true,

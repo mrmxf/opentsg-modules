@@ -1,20 +1,14 @@
 package resize
 
 import (
-	"context"
 	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
 	"math"
-	"sync"
 
-	"github.com/mrmxf/opentsg-modules/opentsg-core/canvaswidget"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
-	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/widgethandler"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/text"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
 	"gonum.org/v1/gonum/mat"
@@ -29,13 +23,6 @@ const (
 //go:embed jsonschema/resize.json
 var Schema []byte
 
-// zoneGen takes a canvas and then returns an image of the zone plate layered ontop of the image
-func Gen(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *errhandle.Logger) {
-	defer wg.Done()
-	conf := widgethandler.GenConf[Config]{Debug: debug, Schema: []byte("{}"), WidgetType: WidgetType, ExtraOpt: []any{c}}
-	widgethandler.WidgetRunner(canvasChan, conf, c, logs, wgc) // Update this to pass an error which is then formatted afterwards
-}
-
 type Config struct {
 	XDetections []*parameters.DistanceField `json:"xDetections,omitempty" yaml:"xDetections,omitempty"`
 	YDetections []*parameters.DistanceField `json:"yDetections,omitempty" yaml:"yDetections,omitempty"`
@@ -45,9 +32,6 @@ type Config struct {
 	YStepEnd    *parameters.DistanceField   `json:"yStepEnd,omitempty" yaml:"yStepEnd,omitempty"`
 	//
 	Graticule graticule `json:"graticule,omitempty"`
-	// insert generic location ones
-	ColourSpace       colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	config.WidgetGrid `yaml:",inline"`
 }
 
 type graticule struct {
@@ -63,9 +47,6 @@ type detection struct {
 	direction string
 	size      int
 }
-
-// update getPicture size with tests for functions
-var getPictureSize = canvaswidget.GetPictureSize
 
 func (c Config) Handle(resp tsg.Response, req *tsg.Request) {
 
@@ -192,7 +173,7 @@ func (c Config) Handle(resp tsg.Response, req *tsg.Request) {
 		}
 
 		// generate the text and the graticule
-		err := c.generateText(box, xSize, ySize, fmt.Sprintf("%s to %v", dir.direction, dir.size))
+		err := c.generateText(box, req.PatchProperties.ColourSpace, xSize, ySize, fmt.Sprintf("%s to %v", dir.direction, dir.size))
 		if err != nil {
 			resp.Write(tsg.WidgetError, err.Error())
 			return
@@ -205,152 +186,7 @@ func (c Config) Handle(resp tsg.Response, req *tsg.Request) {
 	resp.Write(tsg.WidgetSuccess, "success")
 }
 
-func (r Config) Generate(canvas draw.Image, extras ...any) error {
-
-	if len(extras) != 1 {
-		return fmt.Errorf("configuration error, need an context input")
-	}
-
-	c, ok := extras[0].(*context.Context)
-
-	if !ok {
-		return fmt.Errorf("invalid context used as additional input")
-	}
-
-	dest := getPictureSize(*c)
-
-	// get the resizes
-	detections, err := r.ExtractResizes(dest)
-
-	if err != nil {
-		return err
-	}
-
-	// set up the sub widget boxes that we draw in
-	b := canvas.Bounds().Max
-	totalBoxes := len(detections)
-	xBoxCount, yBoxCount := boxSetUp(totalBoxes, b)
-
-	xSize := float64(b.X) / float64(xBoxCount)
-	ySize := float64(b.Y) / float64(yBoxCount)
-
-	for i, dir := range detections {
-
-		// calculate the size of the box to draw the resize in
-		// including scales to avoid any gaps
-		x := i % (xBoxCount)
-		y := i / (xBoxCount)
-
-		// fmt.Println(x, y, xBoxCount, yBoxCount, i)
-		// rearrange the order for narrow images
-		if float64(b.X)/float64(b.Y) < 1 {
-			x = i / (yBoxCount)
-			y = i % (yBoxCount)
-		}
-
-		boxX := int(xSize*float64(x+1)) - int((xSize)*float64(x))
-		boxY := int(ySize*float64(y+1)) - int((ySize)*float64(y))
-		box := image.NewNRGBA64(image.Rect(0, 0, boxX, boxY))
-
-		baseX := 0.0
-		boxDirSize := 0.0
-		switch dir.direction {
-		case "y":
-			boxDirSize = float64(boxY)
-			baseX = float64(dest.Y)
-		case "x":
-			boxDirSize = float64(boxX)
-			baseX = float64(dest.X)
-
-		}
-		// get the scale of the final box
-
-		boxSize := int(math.Round((float64(dir.size) / baseX) * boxDirSize))
-
-		if boxSize < 1 {
-			boxSize = 1
-		}
-
-		// get the ratio of the resize
-		ratio := baseX / float64(dir.size)
-
-		var colIntesity []uint16
-
-		// for small changes it starts at grey
-		// so we use alternating lines that will induce
-		// banding or a third colour.
-		if ratio < 1.35 {
-			// get it so it scales to 1
-			// higher ratios scale to 1 for more contrast
-			contrast := (0.35 - (1.35 - ratio)) / 0.35
-			intense := 0x2000 * contrast
-			colIntesity = make([]uint16, int(baseX))
-
-			for i := range colIntesity {
-				if i%2 == 0 {
-					colIntesity[i] = uint16(0x9000 - intense)
-				} else {
-					colIntesity[i] = uint16(0xC000 + intense)
-				}
-			}
-
-		} else {
-
-			// if the size is a multiple of a quarter of the
-			// width, then it starts as grey so we need to intervene
-			quarter := int(baseX / 4)
-			if dir.size%quarter == 0 {
-				ratio -= 0.05
-				// resize the box size to avoid crashing the simultaneous equations later
-				boxSize = int(math.Round((float64(1/ratio) * boxDirSize)))
-				if boxSize < 1 {
-					boxSize = 1
-				}
-			}
-
-			// calculate and solve the coefficients
-			coeffs := createCoefficients(boxSize, 6, ratio, lan)
-			var err error
-			colIntesity, err = coeffSolver(coeffs, int(boxDirSize))
-			if err != nil {
-				return err
-			}
-		}
-
-		cols := make([]color.NRGBA64, len(colIntesity))
-		for i, c := range colIntesity {
-			cols[i] = color.NRGBA64{R: c, G: c, B: c, A: 0xffff}
-		}
-
-		// draw the lines
-		for x := 0; x < boxX; x++ {
-			for y := 0; y < boxY; y++ {
-				r := 0
-				switch dir.direction {
-				case "y":
-					r = y
-				case "x":
-					r = x
-				}
-				//	fmt.Println(cycle)
-				box.Set(x, y, cols[r])
-			}
-		}
-
-		// generate the text and the graticule
-		err := r.generateText(box, xSize, ySize, fmt.Sprintf("%s to %v", dir.direction, dir.size))
-		if err != nil {
-			return err
-		}
-		// draw the box on the whole canvas
-		draw.Draw(canvas, image.Rect(int((xSize)*float64(x)), int((ySize)*float64(y)), int(xSize*float64(x+1)), int(ySize*float64(y+1))), box, image.Point{}, draw.Over)
-
-	}
-
-	return nil
-}
-
-func (r Config) generateText(box draw.Image, xSize, ySize float64, label string) error {
+func (r Config) generateText(box draw.Image, cSpace colour.ColorSpace, xSize, ySize float64, label string) error {
 
 	// calculate a basic graticule
 	graticuleWidth := int(math.Min(math.Ceil(xSize/100), math.Ceil(ySize/100)))
@@ -363,11 +199,11 @@ func (r Config) generateText(box draw.Image, xSize, ySize float64, label string)
 		r.Graticule.GraticuleColour = "#f0f0f0"
 	}
 
-	gratColour := r.Graticule.GraticuleColour.ToColour(r.ColourSpace)
+	gratColour := r.Graticule.GraticuleColour.ToColour(cSpace)
 
 	// draw text here
 	var textBox *image.NRGBA64
-	textBoxer := text.NewTextboxer(r.ColourSpace,
+	textBoxer := text.NewTextboxer(cSpace,
 		text.WithTextColourString(r.Graticule.TextColor))
 
 	var tbOffset image.Point

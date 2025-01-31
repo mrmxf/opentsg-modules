@@ -1,0 +1,19 @@
+{
+    "props": {
+      "type": "builtin.textbox",
+      "grid": {
+        "location": {
+          "box": {
+            "x": 1,
+            "y": 1
+          }
+        }
+      }
+    },
+    "name": "tb-test",
+    "font": "body",
+    "textColor": "#C2A649",
+    "borderColor": "#C2A649",
+    "backgroundColor": "#000000",
+    "borderSize": 1.0
+  }

@@ -1,5 +1,6 @@
 ---
-type: "builtin.canvas"
+props:
+  type: "builtin.canvas"
 outputs:
   - "x{{framenumber}}.png"
 frameSize:

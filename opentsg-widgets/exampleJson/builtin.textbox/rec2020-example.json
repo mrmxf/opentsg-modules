@@ -1,21 +1,22 @@
 {
+    "backgroundColor": "rgb(255,255,0)",
+    "borderColor": "rgb(134,24,180)",
+    "borderSize": 5,
+    "font": "pixel",
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.textbox"
+    },
     "text": [
         "example space",
         "rec2020"
     ],
-    "colorSpace": {
-        "colorSpace": "rec2020",
-        "primaries": {
-            "Red": {},
-            "Green": {},
-            "Blue": {},
-            "WhitePoint": {}
-        }
-    },
-    "borderColor": "rgb(134,24,180)",
-    "borderSize": 5,
-    "font": "pixel",
-    "backgroundColor": "rgb(255,255,0)",
     "textColor": "rgb(134,24,180)",
     "xAlignment": "middle",
     "yAlignment": "middle"

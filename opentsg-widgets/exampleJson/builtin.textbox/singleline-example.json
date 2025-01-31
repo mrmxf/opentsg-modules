@@ -1,18 +1,20 @@
 {
+    "backgroundColor": "#ffffff",
+    "borderColor": "#f0f0f0",
+    "borderSize": 20,
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.textbox"
+    },
     "text": [
         "sample text"
     ],
-    "colorSpace": {
-        "primaries": {
-            "Red": {},
-            "Green": {},
-            "Blue": {},
-            "WhitePoint": {}
-        }
-    },
-    "borderColor": "#f0f0f0",
-    "borderSize": 20,
-    "backgroundColor": "#ffffff",
     "textColor": "#C2A649",
     "yAlignment": "middle"
 }

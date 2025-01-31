@@ -1,8 +1,6 @@
 package gradients
 
 import (
-	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
 
 	_ "embed"
@@ -10,11 +8,9 @@ import (
 
 // Ramp is the gradient configuration object
 type Ramp struct {
-	Gradients         groupContents     `json:"groupsTemplates,omitempty" yaml:"groupsTemplates,omitempty"`
-	Groups            []RampProperties  `json:"groups,omitempty" yaml:"groups,omitempty"`
-	WidgetProperties  control           `json:"widgetProperties,omitempty" yaml:"widgetProperties,omitempty"`
-	ColourSpace       colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	config.WidgetGrid `yaml:",inline"`
+	Gradients        groupContents    `json:"groupsTemplates,omitempty" yaml:"groupsTemplates,omitempty"`
+	Groups           []RampProperties `json:"groups,omitempty" yaml:"groups,omitempty"`
+	WidgetProperties control          `json:"widgetProperties,omitempty" yaml:"widgetProperties,omitempty"`
 }
 
 type groupContents struct {

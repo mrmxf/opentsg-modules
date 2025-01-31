@@ -1,0 +1,27 @@
+{
+    "include": [
+        {
+            "uri": "canvas.json",
+            "name": "canvas"
+        },
+        {
+            "uri": "widget.json",
+            "name": "widget"
+        },
+        {
+            "uri": "widget_bad_x.json",
+            "name": "widget_bad_x"
+        }
+    ],
+    "create": [
+        {
+            "canvas": {}
+        },
+        {
+            "widget": {}
+        },
+        {
+            "widget_bad_x": {}
+        }
+    ]
+}

@@ -1,5 +1,7 @@
 {
-    "type":"builtin.canvas",
+    "props": {
+        "type": "builtin.canvas"
+    },
     "outputs": [
         "testname.png"
     ],

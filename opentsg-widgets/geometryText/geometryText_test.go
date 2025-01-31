@@ -1,7 +1,6 @@
 package geometrytext
 
 import (
-	"context"
 	"crypto/sha256"
 	"fmt"
 	"image"
@@ -13,21 +12,15 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/gridgen"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	geometrymock "github.com/mrmxf/opentsg-modules/opentsg-widgets/geometryMock"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestFillMethod(t *testing.T) {
-	mg := geometrymock.Mockgeom(1000, 1000, 8)
-	getGeometry = func(c *context.Context, coordinate string) ([]gridgen.Segmenter, error) {
-		return mg, nil
-	}
 
-	mockG := config.Grid{Location: "Nothing"}
-	mockJson4 := Config{GridLoc: &mockG, TextColour: "#C2A649"}
+	mockJson4 := Config{TextColour: "#C2A649"}
 	examplejson.SaveExampleJson(mockJson4, WidgetType, fmt.Sprintf("TextLength%v", 8), true)
 	nameLength := []int{8, 12, 16, 18}
 	rand.Seed(1320)
@@ -35,15 +28,12 @@ func TestFillMethod(t *testing.T) {
 	for _, n := range nameLength {
 
 		mg := geometrymock.Mockgeom(1000, 1000, n)
-		getGeometry = func(c *context.Context, coordinate string) ([]gridgen.Segmenter, error) {
-			return mg, nil
-		}
 
 		canvas := image.NewNRGBA64(image.Rect(0, 0, 1000, 1000))
 		colour.Draw(canvas, canvas.Bounds(), &image.Uniform{color.NRGBA64{R: 0xffff, G: 0xffff, B: 0xffff, A: 0xffff}}, image.Point{0, 0}, draw.Over)
 
-		c := context.Background()
-		genErr := mockJson4.Generate(canvas, &c)
+		out := tsg.TestResponder{BaseImg: canvas}
+		mockJson4.Handle(&out, &tsg.Request{PatchProperties: tsg.PatchProperties{Geometry: mg}})
 		//f, _ := os.Create(fmt.Sprintf("./testdata/generatecheck%v.png", n))
 		// png.Encode(f, canvas)
 
@@ -74,7 +64,7 @@ func TestFillMethod(t *testing.T) {
 		Convey("Checking the ramps are generated at 90 degree angles", t, func() {
 			Convey(fmt.Sprintf("Comparing the generated ramp to %v with an angle of %v", "testFRight[i]", "angle"), func() {
 				Convey("No error is returned and the file matches", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})

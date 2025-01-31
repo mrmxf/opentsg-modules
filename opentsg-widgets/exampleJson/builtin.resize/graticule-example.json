@@ -1,12 +1,4 @@
 {
-    "colorSpace": {
-        "primaries": {
-            "Blue": {},
-            "Green": {},
-            "Red": {},
-            "WhitePoint": {}
-        }
-    },
     "graticule": {
         "graticuleColor": "#9A3A73",
         "position": "left",

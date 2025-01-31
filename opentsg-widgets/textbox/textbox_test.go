@@ -1,7 +1,6 @@
 package textbox
 
 import (
-	"context"
 	"crypto/sha256"
 	"fmt"
 	"image"
@@ -11,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/text"
 
@@ -38,7 +38,6 @@ func TestDemo(t *testing.T) {
 }
 
 func TestLines(t *testing.T) {
-	mockContext := context.Background()
 
 	mockTB := TextboxJSON{
 		Textc: "#C2A649", Border: "#f0f0f0", Back: "#ffffff", BorderSize: 20,
@@ -51,7 +50,8 @@ func TestLines(t *testing.T) {
 
 		myImage := colour.NewNRGBA64(colour.ColorSpace{}, image.Rectangle{image.Point{0, 0}, image.Point{1024, 240}})
 		mockTB.Text = str
-		genErr := mockTB.Generate(myImage, &mockContext)
+		out := tsg.TestResponder{BaseImg: myImage}
+		mockTB.Handle(&out, &tsg.Request{})
 		examplejson.SaveExampleJson(mockTB, WidgetType, explanation[i], false)
 
 		// f, _ := os.Create(original[i])
@@ -77,7 +77,7 @@ func TestLines(t *testing.T) {
 		Convey("Checking that strings are generated", t, func() {
 			Convey(fmt.Sprintf("Generating an image with the following strings: %v ", str), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -103,7 +103,7 @@ func TestFontImport(t *testing.T) {
 		{Back: "rgb(255,255,0)", Font: text.FontHeader, Text: []string{"sample", "text"}},
 		{Border: "rgb(134,24,180)", Text: []string{"sample", "text"}, BorderSize: 10},
 		{Border: "rgb(134,24,180)", Font: text.FontHeader, Text: []string{"sample", "text"}, BorderSize: 0},
-		{Textc: "rgb(134,24,180)", Back: "rgb(255,255,0)", Border: "rgb(134,24,180)", Font: text.FontPixel, Text: []string{"example space", "rec2020"}, BorderSize: 5, ColourSpace: colour.ColorSpace{ColorSpace: "rec2020"}, XAlignment: text.AlignmentMiddle, YAlignment: text.AlignmentMiddle},
+		{Textc: "rgb(134,24,180)", Back: "rgb(255,255,0)", Border: "rgb(134,24,180)", Font: text.FontPixel, Text: []string{"example space", "rec2020"}, BorderSize: 5, XAlignment: text.AlignmentMiddle, YAlignment: text.AlignmentMiddle},
 	}
 
 	explanation := []string{"text-only", "text-background", "text-background-border", "background", "border", "nothing", "rec2020"}
@@ -114,15 +114,17 @@ func TestFontImport(t *testing.T) {
 		//	vase := image.NewNRGBA64(image.Rect(0, 0, 1000, 100))
 		//	tests[i].Generate(vase, bc)
 		examplejson.SaveExampleJson(tests[i], WidgetType, e, false)
-		// f, _ := os.Create(e + ".png")
-		// colour.PngEncode(f, vase)
+
 	}
 	//	mockContext := context.Background()
 
 	base := image.NewNRGBA64(image.Rect(0, 0, 1000, 1000))
 	//	text := texter.TextboxJSON{Textc: "#260498", Back: "#980609"}
-	genErr := TextboxJSON{Border: "#800080", BorderSize: 5, Textc: "#260498", Back: "#980609", Text: []string{"The quick",
-		"brown dog jumped", "over the lazy gray fox"}, Font: `https://get.fontspace.co/webfont/XqrG/OGU3MmU3NmQzZGM2NGExZmFhNDY2YTk5MzhlNWMzMjYudHRm/helloween-2.ttf`}.Generate(base)
+	out := tsg.TestResponder{BaseImg: base}
+
+	TextboxJSON{Border: "#800080", BorderSize: 5, Textc: "#260498", Back: "#980609", Text: []string{"The quick",
+		"brown dog jumped", "over the lazy gray fox"},
+		Font: `https://get.fontspace.co/webfont/XqrG/OGU3MmU3NmQzZGM2NGExZmFhNDY2YTk5MzhlNWMzMjYudHRm/helloween-2.ttf`}.Handle(&out, &tsg.Request{})
 
 	// f, _ := os.Create("testdata/multiLongLines.png")
 	// png.Encode(f, base)
@@ -146,7 +148,7 @@ func TestFontImport(t *testing.T) {
 	Convey("Checking that multiple lines of small text are included", t, func() {
 		Convey("Generating an image with an imported string", func() {
 			Convey("No error is returned and the file matches exactly", func() {
-				So(genErr, ShouldBeNil)
+				So(out.Message, ShouldResemble, "success")
 				So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 			})
 		})

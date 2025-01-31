@@ -1,13 +1,15 @@
 {
-    "frameCounter": true,
     "font": "./testdata/Timmy-Regular.ttf",
     "fontSize": 40,
-    "colorSpace": {
-        "primaries": {
-            "Red": {},
-            "Green": {},
-            "Blue": {},
-            "WhitePoint": {}
-        }
+    "frameCounter": true,
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.framecounter"
     }
 }

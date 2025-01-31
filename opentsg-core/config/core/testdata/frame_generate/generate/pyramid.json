@@ -1,10 +1,20 @@
 {
-  "type": "builtin.textbox",
-  "text": [""],
+  "props": {
+    "type": "builtin.textbox",
+    "location": {
+      "alias": "A demo Alias",
+      "box": {
+        "x": 1,
+        "y": 1
+      }
+    }
+  },
+  "text": [
+    ""
+  ],
   "font": "body",
   "textcolor": "#f2e2eb",
   "bordercolor": "#333333",
   "backgroundcolor": "#000000",
-  "bordersize": 0,
-  "grid": { "location": "a0" }
+  "bordersize": 0
 }

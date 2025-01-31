@@ -79,19 +79,32 @@ type slogger struct {
 	alias   string
 }
 
-func (s *slogger) Write(status StatusCode, message string) {
+// slogger writes the status code and message to the logger
+// before forwarding the request to the wrapped wrtiers
+func (s *slogger) Write(status StatusCode, message string, args ...any) {
 
 	// search code here to find an appropriate error level
 	level := getLogLevel(status)
 
+	logFields := make([]any, len(args)+8)
+	logFields[0] = "StatusCode"
+	logFields[1] = status.String()
+	logFields[2] = "RunID"
+	logFields[3] = s.runID
+	logFields[4] = "WidgetID"
+	logFields[5] = s.alias
+	logFields[6] = "FrameNumber"
+	logFields[7] = s.frameNo
+
+	for i := 8; i < 8+len(args); i++ {
+		logFields[i] = args[i-8]
+	}
+
 	s.log.Log(s.c, level, message,
-		"StatusCode", status.String(),
-		"RunID", s.runID,
-		"WidgetID", s.alias,
-		"FrameNumber", s.frameNo,
+		logFields...,
 	)
 
-	s.r.Write(status, message)
+	s.r.Write(status, message, args...)
 }
 
 // getLogLevel converts the status code into and error level for slog.

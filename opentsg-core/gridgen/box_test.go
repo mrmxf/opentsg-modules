@@ -207,6 +207,7 @@ func TestBoxTSIG(t *testing.T) {
 	c = context.WithValue(c, frameKey, f)
 	cp := &c
 	dest, _ := flatmap(cp, "./", tsigs)
+
 	baseGen(cp, dest.canvas, f)
 
 	splice(cp, 3, 3, 10, 10)

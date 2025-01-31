@@ -3,7 +3,6 @@ package addimage
 
 import (
 	"bytes"
-	"context"
 	"encoding/binary"
 	"fmt"
 	"image"
@@ -16,13 +15,9 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
-	"sync"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config/core"
-	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/widgethandler"
 
 	"github.com/nfnt/resize"
 	"golang.org/x/image/tiff"
@@ -31,15 +26,6 @@ import (
 const (
 	WidgetType = "builtin.addimage"
 )
-
-// ImageGen opens an image and places it at the user specife grid location,
-// the image may be resized if the sizes do not match up.
-// Only 8/16 bit PNG and TIFF files are valid file to be uploaded.
-func ImageGen(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *errhandle.Logger) {
-	defer wg.Done()
-	conf := widgethandler.GenConf[Config]{Debug: debug, Schema: Schema, WidgetType: WidgetType, ExtraOpt: []any{c}}
-	widgethandler.WidgetRunner(canvasChan, conf, c, logs, wgc)
-}
 
 func (c Config) Handle(resp tsg.Response, req *tsg.Request) {
 	filename := c.Image
@@ -97,10 +83,6 @@ func (c Config) Handle(resp tsg.Response, req *tsg.Request) {
 		extraX = (resp.BaseImage().Bounds().Dx() - newImage.Bounds().Dx()) / 2
 		extraY = (resp.BaseImage().Bounds().Dy() - newImage.Bounds().Dy()) / 2
 	}
-	// newImg64 := gridgen.ImageGenerator(*c, image.Rect(0, 0, newImage.Bounds().Max.X, newImage.Bounds().Max.Y))
-	if c.ColourSpace == nil {
-		c.ColourSpace = &colour.ColorSpace{}
-	}
 
 	newImg64 := colour.NewNRGBA64(req.PatchProperties.ColourSpace, newImage.Bounds())
 
@@ -133,105 +115,6 @@ func (c Config) Handle(resp tsg.Response, req *tsg.Request) {
 	colour.Draw(resp.BaseImage(), image.Rectangle{Min: resp.BaseImage().Bounds().Min.Add(imgOffset), Max: resp.BaseImage().Bounds().Max}, newImg64, image.Point{}, draw.Src)
 
 	resp.Write(tsg.WidgetSuccess, "success")
-}
-
-func (i Config) Generate(canvas draw.Image, opts ...any) error {
-
-	filename := i.Image
-	if filename == "" {
-		return fmt.Errorf("0161 No image declared")
-	}
-
-	if len(opts) != 1 {
-		return fmt.Errorf("0168 incorrect number of parameters passed to add image")
-	}
-	c, ok := opts[0].(*context.Context)
-	if !ok {
-		return fmt.Errorf("0169 configuration error when assiging context toadd image")
-	}
-	wDir := core.GetDir(*c)
-	// Just check if it's a website first
-	webBytes, errOpen := core.GetWebBytes(c, filename)
-	var newImage image.Image
-	var err error
-	var depth int
-	// Open a local file next if not
-	if errOpen != nil {
-
-		file, errOpen := os.Open(filepath.Join(wDir, filename))
-		if errOpen != nil {
-			return fmt.Errorf("0162 %v", errOpen)
-		}
-		newImage, depth, err = fToImg(file, file.Name())
-	} else {
-		bufRead := bytes.NewReader(webBytes)
-		name := strings.Split(filename, "/")
-		newImage, depth, err = fToImg(bufRead, name[len(name)-1])
-	}
-
-	if err != nil {
-		return err
-	}
-
-	var extraX, extraY int
-	// stretch the image if required
-	if i.ImgFill != "preserve" {
-
-		// Get wh and resize if needed if wh>xy throw an exception
-		// w, h := canvas.Bounds().Max.X, canvas.Bounds().Max.Y // ImgSize()
-
-		// if image fill is not called then move it around.
-
-		// Replace with our own brand eventually that is true 64 bit
-		// Make it 64 but it needs a proper method to change it
-		w, h := resizeParams(i.ImgFill, newImage.Bounds().Max, canvas.Bounds().Max)
-
-		if w != newImage.Bounds().Max.X || h != newImage.Bounds().Max.Y {
-			newImage = resize.Resize(uint(w), uint(h), newImage, resize.Bicubic)
-			// https://pkg.go.dev/golang.org/x/image/draw#pkg-variables use a different resize
-		}
-	} else {
-		// get centre
-
-		extraX = (canvas.Bounds().Dx() - newImage.Bounds().Dx()) / 2
-		extraY = (canvas.Bounds().Dy() - newImage.Bounds().Dy()) / 2
-	}
-	// newImg64 := gridgen.ImageGenerator(*c, image.Rect(0, 0, newImage.Bounds().Max.X, newImage.Bounds().Max.Y))
-	if i.ColourSpace == nil {
-		i.ColourSpace = &colour.ColorSpace{}
-	}
-
-	newImg64 := colour.NewNRGBA64(*i.ColourSpace, newImage.Bounds())
-
-	imgOffset, err := i.CalcOffset(canvas.Bounds().Max)
-	imgOffset = imgOffset.Add(image.Point{X: extraX, Y: extraY})
-
-	// imgOffset = imgOffset.Add()
-	if err != nil {
-		return fmt.Errorf("0DEV error extracting the image offset %v", err)
-	}
-
-	if depth == 8 {
-		b := newImg64.Bounds().Max
-		for x := 0; x < b.X; x++ {
-			for y := 0; y < b.Y; y++ {
-				got := newImage.At(x, y)
-
-				// fullDepth := colourgen.ConvertNRGBA64(got)
-
-				newImg64.Set(x, y, got) // fullDepth)
-
-			}
-		}
-	} else {
-		colour.Draw(newImg64, newImg64.Bounds(), newImage, image.Point{}, draw.Over)
-	}
-
-	// draw.Src ensures the colourspace transformations are kept
-	// as long as the picture has no alpha
-	colour.Draw(canvas, image.Rectangle{Min: canvas.Bounds().Min.Add(imgOffset), Max: canvas.Bounds().Max}, newImg64, image.Point{}, draw.Src)
-
-	return nil
 }
 
 func fToImg(file io.Reader, fname string) (img image.Image, depth int, err error) {

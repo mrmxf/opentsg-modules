@@ -1,16 +1,18 @@
 {
+    "borderColor": "rgb(134,24,180)",
+    "borderSize": 10,
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.textbox"
+    },
     "text": [
         "sample",
         "text"
-    ],
-    "colorSpace": {
-        "primaries": {
-            "Red": {},
-            "Green": {},
-            "Blue": {},
-            "WhitePoint": {}
-        }
-    },
-    "borderColor": "rgb(134,24,180)",
-    "borderSize": 10
+    ]
 }

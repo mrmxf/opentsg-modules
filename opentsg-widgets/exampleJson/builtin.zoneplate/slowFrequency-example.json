@@ -1,12 +1,4 @@
 {
-    "colorSpace": {
-        "primaries": {
-            "Blue": {},
-            "Green": {},
-            "Red": {},
-            "WhitePoint": {}
-        }
-    },
     "frequency": "π*13/200",
     "offset": {
         "x": "20%",

@@ -1,8 +1,8 @@
 {
-    "props" :{
-        "type": "builtin.canvas"},
-        "type": "builtin.canvas",
-     "outputs": [
+    "props": {
+        "type": "builtin.canvas"
+    },
+    "outputs": [
         "./testdata/handlerLoaders/racer.png"
     ],
     "frameSize": {
@@ -11,8 +11,8 @@
     },
     "linewidth": 1,
     "filedepth": 16,
-    "gridColumns" : 16,
-    "gridRows":9, 
-    "backgroundFillColor":"rgb12(1656,1656,1656)" ,
-    "lineColor":"#000000"
+    "gridColumns": 16,
+    "gridRows": 9,
+    "backgroundFillColor": "rgb12(1656,1656,1656)",
+    "lineColor": "#000000"
 }

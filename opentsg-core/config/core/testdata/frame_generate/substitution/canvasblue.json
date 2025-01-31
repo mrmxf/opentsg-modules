@@ -1,10 +1,17 @@
 {
-    "type": "builtin.canvas",
-     "outputs": ["blue-{{framenumber}}.png"],
-    "frameSize": { "w": 4096, "h": 2160 },
-    "linewidth": 0.5,
-    "filedepth": 16,
-    "gridColumns": 1024,
-    "gridRows": 540,
-    "backgroundColor": "#0000FF"
-  }
+  "props": {
+    "type": "builtin.canvas"
+  },
+  "outputs": [
+    "blue-{{framenumber}}.png"
+  ],
+  "frameSize": {
+    "w": 4096,
+    "h": 2160
+  },
+  "linewidth": 0.5,
+  "filedepth": 16,
+  "gridColumns": 1024,
+  "gridRows": 540,
+  "backgroundColor": "#0000FF"
+}

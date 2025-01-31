@@ -171,6 +171,32 @@ func TestGridGeometry(t *testing.T) {
 
 }
 
+func TestError(t *testing.T) {
+	cb := context.Background()
+
+	files := []string{"./testdata/tpig/fail/nolayout.json",
+		"./testdata/tpig/fail/badfield.json"}
+
+	expected := []string{
+		"0DEV 0027 tileLayout is required in unknown files please check your files for the tileLayout property in the name ./testdata/tpig/fail/nolayout.json, 0026 Additional property tile Layout is not allowed at line 2 in ./testdata/tpig/fail/nolayout.json, for ./testdata/tpig/fail/nolayout.json, ",
+		"0DEV 0026 Invalid type. Expected: integer, given: string at line 11 in ./testdata/tpig/fail/badfield.json, for ./testdata/tpig/fail/badfield.json, ",
+	}
+
+	for i, file := range files {
+
+		_, err := flatmap(&cb, "", file)
+		// the contents will be checked throughout
+		Convey("Checking the tsig passes the schema", t, func() {
+			Convey(fmt.Sprintf("using a %v as the input file", file), func() {
+				Convey("An error is generated extracting the file as it didn't pass the schema", func() {
+
+					So(err, ShouldResemble, fmt.Errorf(expected[i]))
+				})
+			})
+		})
+	}
+}
+
 /*
 func TestTpigGeometryHouse(t *testing.T) {
 	c := context.Background()

@@ -1,15 +1,17 @@
 {
-    "plateType": "horizontalSweep",
-    "colorSpace": {
-        "primaries": {
-            "Red": {},
-            "Green": {},
-            "Blue": {},
-            "WhitePoint": {}
-        }
-    },
-    "startColor": "white",
-    "frequency": null,
     "cwRotation": "π*1/2",
-    "offset": {}
+    "frequency": null,
+    "offset": {},
+    "plateType": "horizontalSweep",
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.zoneplate"
+    },
+    "startColor": "white"
 }

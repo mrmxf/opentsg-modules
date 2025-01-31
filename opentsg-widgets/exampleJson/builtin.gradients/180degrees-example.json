@@ -1,9 +1,15 @@
 {
-    "groupsTemplates": {
-        "separator": {
-            "height": 0,
-            "color": "white"
+    "groups": [
+        {
+            "color": "green",
+            "initialPixelValue": 960
         },
+        {
+            "color": "gray",
+            "initialPixelValue": 960
+        }
+    ],
+    "groupsTemplates": {
         "gradientSeparator": {
             "colors": [
                 "white",
@@ -15,55 +21,51 @@
         },
         "gradients": [
             {
-                "height": 5,
                 "bitDepth": 4,
+                "height": 5,
                 "label": "4b"
             },
             {
-                "height": 5,
                 "bitDepth": 6,
+                "height": 5,
                 "label": "6b"
             },
             {
-                "height": 5,
                 "bitDepth": 8,
+                "height": 5,
                 "label": "8b"
             },
             {
-                "height": 5,
                 "bitDepth": 10,
+                "height": 5,
                 "label": "10b"
             }
-        ]
-    },
-    "groups": [
-        {
-            "color": "green",
-            "initialPixelValue": 960
-        },
-        {
-            "color": "gray",
-            "initialPixelValue": 960
+        ],
+        "separator": {
+            "color": "white",
+            "height": 0
         }
-    ],
+    },
+    "props": {
+        "location": {
+            "alias": "A demo Alias",
+            "box": {
+                "x": 1,
+                "y": 1
+            }
+        },
+        "type": "builtin.gradients"
+    },
     "widgetProperties": {
+        "cwRotation": "π*1",
         "maxBitDepth": 10,
         "objectFitFill": false,
         "pixelValueRepeat": 0,
         "textProperties": {
-            "textyPosition": "top",
-            "textxPosition": "left",
+            "textColor": "#345AB6",
             "textHeight": 30,
-            "textColor": "#345AB6"
-        },
-        "cwRotation": "π*1"
-    },
-    "colorSpace": {
-        "primaries": {
-            "Red": {},
-            "Green": {},
-            "Blue": {},
-            "WhitePoint": {}
+            "textxPosition": "left",
+            "textyPosition": "top"
         }
     }
 }

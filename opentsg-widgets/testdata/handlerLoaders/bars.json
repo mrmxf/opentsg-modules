@@ -9,9 +9,5 @@
                 "y2": 116
             }
         }
-    },
-    "type": "builtin.ebu3373/bars",
-    "grid": {
-        "location": "a0:nt115"
     }
 }

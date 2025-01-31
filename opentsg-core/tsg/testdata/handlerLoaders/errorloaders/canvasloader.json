@@ -1,7 +1,7 @@
 {
 		"include": [
 			{
-				"uri": "invalidsize.json",
+				"uri": "differenttype.json",
 				"name": "canvas"
 			}
 		],

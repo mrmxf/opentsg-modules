@@ -2,27 +2,16 @@
 package nearblack
 
 import (
-	"context"
 	"image"
 	"image/draw"
-	"sync"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
-	errhandle "github.com/mrmxf/opentsg-modules/opentsg-core/errHandle"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
-	"github.com/mrmxf/opentsg-modules/opentsg-core/widgethandler"
 )
 
 const (
 	WidgetType = "builtin.ebu3373/nearblack"
 )
-
-func NBGenerate(canvasChan chan draw.Image, debug bool, c *context.Context, wg, wgc *sync.WaitGroup, logs *errhandle.Logger) {
-	defer wg.Done()
-	conf := widgethandler.GenConf[Config]{Debug: debug, Schema: Schema, WidgetType: WidgetType}
-	widgethandler.WidgetRunner(canvasChan, conf, c, logs, wgc)
-
-}
 
 var (
 	neg4  = colour.CNRGBA64{R: 2048, G: 2048, B: 2048, A: 0xffff}
@@ -36,42 +25,11 @@ var (
 	grey = colour.CNRGBA64{R: 26496, G: 26496, B: 26496, A: 0xffff}
 )
 
-func (nb Config) Generate(canvas draw.Image, opt ...any) error {
-
-	b := canvas.Bounds().Max
-	greyRun := grey
-	greyRun.UpdateColorSpace(nb.ColourSpace)
-	colour.Draw(canvas, canvas.Bounds(), &image.Uniform{&greyRun}, image.Point{}, draw.Src)
-	// Scale everything so it fits the shape of the canvas
-	wScale := (float64(b.X) / 3840.0)
-	startPoint := wScale * 480
-	off := wScale * 206
-
-	order := []colour.CNRGBA64{neg4, neg2, neg1, pos1, pos2, pos4}
-	area := image.Rect(int(startPoint), 0, int(startPoint+off*2), b.Y)
-	colour.Draw(canvas, area, &image.Uniform{&black}, image.Point{}, draw.Src)
-	startPoint += off * 2
-	for _, c := range order {
-		// alternate through the colours
-		fill := c
-		fill.UpdateColorSpace(nb.ColourSpace)
-		colour.Draw(canvas, image.Rect(int(startPoint), 0, int(startPoint+off), b.Y), &image.Uniform{&c}, image.Point{}, draw.Src)
-		startPoint += off
-		// append with the 0% black
-		blackRun := black
-		blackRun.UpdateColorSpace(nb.ColourSpace)
-		colour.Draw(canvas, image.Rect(int(startPoint), 0, int(startPoint+off), b.Y), &image.Uniform{&blackRun}, image.Point{}, draw.Src)
-		startPoint += off
-	}
-
-	return nil
-}
-
 func (nb Config) Handle(resp tsg.Response, req *tsg.Request) {
 
 	b := resp.BaseImage().Bounds().Max
 	greyRun := grey
-	greyRun.UpdateColorSpace(nb.ColourSpace)
+	greyRun.UpdateColorSpace(req.PatchProperties.ColourSpace)
 	colour.Draw(resp.BaseImage(), resp.BaseImage().Bounds(), &image.Uniform{&greyRun}, image.Point{}, draw.Src)
 	// Scale everything so it fits the shape of the canvas
 	wScale := (float64(b.X) / 3840.0)
@@ -85,12 +43,12 @@ func (nb Config) Handle(resp tsg.Response, req *tsg.Request) {
 	for _, c := range order {
 		// alternate through the colours
 		fill := c
-		fill.UpdateColorSpace(nb.ColourSpace)
+		fill.UpdateColorSpace(req.PatchProperties.ColourSpace)
 		colour.Draw(resp.BaseImage(), image.Rect(int(startPoint), 0, int(startPoint+off), b.Y), &image.Uniform{&c}, image.Point{}, draw.Src)
 		startPoint += off
 		// append with the 0% black
 		blackRun := black
-		blackRun.UpdateColorSpace(nb.ColourSpace)
+		blackRun.UpdateColorSpace(req.PatchProperties.ColourSpace)
 		colour.Draw(resp.BaseImage(), image.Rect(int(startPoint), 0, int(startPoint+off), b.Y), &image.Uniform{&blackRun}, image.Point{}, draw.Src)
 		startPoint += off
 	}

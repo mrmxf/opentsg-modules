@@ -1,7 +1,6 @@
 package bowtie
 
 import (
-	"context"
 	"crypto/sha256"
 	"fmt"
 	"image"
@@ -11,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
 	. "github.com/smartystreets/goconvey/convey"
@@ -30,13 +30,12 @@ func TestBowties(t *testing.T) {
 	bowties := []Config{simple, corners, colours, all} //, all}
 
 	for i, s := range bowties {
-
-		cb := context.Background()
 		img := image.NewNRGBA64(image.Rect(0, 0, 200, 160))
 
 		examplejson.SaveExampleJson(s, WidgetType, explanation[i], true)
 
-		genErr := s.Generate(img, &cb)
+		out := tsg.TestResponder{BaseImg: img}
+		s.Handle(&out, &tsg.Request{})
 
 		//	f, _ := os.Create(fmt.Sprintf("./testdata/swirl%v.png", i))
 		//	png.Encode(f, img)
@@ -59,7 +58,7 @@ func TestBowties(t *testing.T) {
 		Convey("Generating bowties, comparing them with the defaults", t, func() {
 			Convey(fmt.Sprintf("Making the bowties with the parameters %v ", s), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -81,12 +80,13 @@ func TestOffsets(t *testing.T) {
 
 	for i, off := range offsets {
 
-		cb := context.Background()
 		img := image.NewNRGBA64(image.Rect(0, 0, 200, 160))
 
 		//examplejson.SaveExampleJson(s, widgetType, explanation[i], true)
 		all.Offset = off
-		genErr := all.Generate(img, &cb)
+
+		out := tsg.TestResponder{BaseImg: img}
+		all.Handle(&out, &tsg.Request{})
 		examplejson.SaveExampleJson(all, WidgetType, explanation[i], true)
 
 		file, _ := os.Open(fmt.Sprintf("./testdata/offset%v.png", i))
@@ -106,7 +106,7 @@ func TestOffsets(t *testing.T) {
 		Convey("Generating bowties, and offsetting the origin", t, func() {
 			Convey(fmt.Sprintf("Offsetting the bowties with the parameters %v ", off), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -129,10 +129,11 @@ func TestBlends(t *testing.T) {
 
 	for i, s := range sins {
 		s.Blend = "sin"
-		cb := context.Background()
-		img := image.NewNRGBA64(image.Rect(0, 0, 200, 160))
 
-		genErr := s.Generate(img, &cb)
+		img := image.NewNRGBA64(image.Rect(0, 0, 200, 160))
+		out := tsg.TestResponder{BaseImg: img}
+		s.Handle(&out, &tsg.Request{})
+
 		// f, _ := os.Create(fmt.Sprintf("./testdata/blendSin%v.png", i))
 		// png.Encode(f, img)
 		examplejson.SaveExampleJson(s, WidgetType, explanation[i], true)
@@ -154,7 +155,7 @@ func TestBlends(t *testing.T) {
 		Convey("Generating bowties with blends", t, func() {
 			Convey(fmt.Sprintf("Generating a bow tie with the following properties %v", s), func() {
 				Convey("No error is returned and a blended bowtie is generated", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -170,18 +171,18 @@ func TestErrors(t *testing.T) {
 	badAng.CwRotation = "math.Pi"
 
 	bowties := []Config{simple, badAng} //, all}
-	errs := []string{"0DEV 4 or more segments required, received 3", "0DEV error calculating the rotational angle math.Pi is not a valid angle"}
+	errs := []string{"0DEV 4 or more segments required, received 3", "math.Pi is not a valid angle"}
 
 	for i, s := range bowties {
 
-		cb := context.Background()
 		img := image.NewNRGBA64(image.Rect(0, 0, 200, 160))
-		genErr := s.Generate(img, &cb)
+		out := tsg.TestResponder{BaseImg: img}
+		s.Handle(&out, &tsg.Request{})
 
 		Convey("Generating bowties that deliberately generate errors", t, func() {
 			Convey(fmt.Sprintf("Generating the error %v ", errs[i]), func() {
 				Convey("The error is correctly generated", func() {
-					So(genErr, ShouldResemble, fmt.Errorf(errs[i]))
+					So(out.Message, ShouldResemble, errs[i])
 
 				})
 			})
@@ -203,15 +204,11 @@ func TestRotate(t *testing.T) {
 	for i, rot := range rotates {
 
 		rot.CwRotation = "π*15/407"
-		cb := context.Background()
+
 		img := image.NewNRGBA64(image.Rect(0, 0, 200, 160))
 
-		framePos = func(_ context.Context) int {
-
-			return i + 17
-		}
-
-		genErr := rot.Generate(img, &cb)
+		out := tsg.TestResponder{BaseImg: img}
+		rot.Handle(&out, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameNumber: i + 17}})
 		//	f, _ := os.Create(fmt.Sprintf("./testdata/rotate%v.png", i))
 		//	png.Encode(f, img)
 
@@ -230,9 +227,9 @@ func TestRotate(t *testing.T) {
 		htest.Write(img.Pix)
 
 		Convey("Generating bowties and mocking the rotation", t, func() {
-			Convey(fmt.Sprintf("Generating a bow tie that has the following properties %v on frame %v", rot, framePos(nil)), func() {
+			Convey(fmt.Sprintf("Generating a bow tie that has the following properties %v on frame %v", rot, i+17), func() {
 				Convey("No error is returned and the bowtie has rotated", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})

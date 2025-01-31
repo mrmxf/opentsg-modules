@@ -14,7 +14,10 @@ import (
 	"strings"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/config/validator"
 	"github.com/mrmxf/opentsg-modules/opentsg-core/credentials"
+
+	_ "embed"
 )
 
 // TSIG is the top level TSIG struct for importing 3d geometry.
@@ -68,6 +71,9 @@ type XY2D struct {
 	Y1 int `json:"Y1,omitempty" yaml:"Y1,omitempty"`
 }
 
+//go:embed schema/tsigschema.json
+var tsigSchema []byte
+
 func flatmap(c *context.Context, basePath, tpigpath string) (canvasAndMask, error) {
 
 	// update the path getting to be localised
@@ -79,6 +85,22 @@ func flatmap(c *context.Context, basePath, tpigpath string) (canvasAndMask, erro
 		if err != nil {
 			return canvasAndMask{}, fmt.Errorf("0DEV error accessing the TSIG file %v", err)
 		}
+	}
+
+	jline := make(validator.JSONLines)
+	err = validator.Liner(file, tpigpath, "schema", jline)
+
+	if err != nil {
+		return canvasAndMask{}, fmt.Errorf("0DEV error extracting json lines %v", err)
+	}
+
+	errs := validator.SchemaValidator(tsigSchema, file, tpigpath, jline)
+	if len(errs) > 0 {
+		mess := ""
+		for _, err = range errs {
+			mess += err.Error() + ", "
+		}
+		return canvasAndMask{}, fmt.Errorf("0DEV %s", mess)
 	}
 
 	var segmentLayout TSIG

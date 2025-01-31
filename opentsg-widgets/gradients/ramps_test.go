@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/text"
 	. "github.com/smartystreets/goconvey/convey"
@@ -64,7 +65,8 @@ func TestTemp(t *testing.T) {
 			Gradients:         []Gradient{{Height: 5, BitDepth: 4, Label: "4b"}, {Height: 5, BitDepth: 6, Label: "6b"}, {Height: 5, BitDepth: 8, Label: "8b"}, {Height: 5, BitDepth: 10, Label: "10b"}}},
 		WidgetProperties: control{MaxBitDepth: 10, TextProperties: textObjectJSON{TextHeight: 30, TextColour: "#345AB6", TextXPosition: text.AlignmentLeft, TextYPosition: text.AlignmentTop}}}
 	tester := image.NewNRGBA64(image.Rect(0, 0, 1024, 1000)) // 960))
-	mock.Generate(tester)
+	out := tsg.TestResponder{BaseImg: tester}
+	mock.Handle(&out, &tsg.Request{})
 
 	examplejson.SaveExampleJson(mock, WidgetType, "demo", false)
 
@@ -91,7 +93,8 @@ func TestRotation(t *testing.T) {
 
 		angleImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{4096, 2000}})
 		examplejson.SaveExampleJson(mock, WidgetType, explanationRight[i], false)
-		genErr := mock.Generate(angleImage)
+		out := tsg.TestResponder{BaseImg: angleImage}
+		mock.Handle(&out, &tsg.Request{})
 
 		// Generate the ramp image
 		// genErr := mock.Generate(myImage)
@@ -114,7 +117,7 @@ func TestRotation(t *testing.T) {
 		Convey("Checking the ramps are generated at 90 degree angles", t, func() {
 			Convey(fmt.Sprintf("Comparing the generated ramp to %v with an angle of %v", testFRight[i], angle), func() {
 				Convey("No error is returned and the file matches", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -130,7 +133,8 @@ func TestRotation(t *testing.T) {
 		angleImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{4096, 2000}})
 		examplejson.SaveExampleJson(mock, WidgetType, explanation[i], false)
 		// Generate the ramp image
-		genErr := mock.Generate(angleImage)
+		out := tsg.TestResponder{BaseImg: angleImage}
+		mock.Handle(&out, &tsg.Request{})
 		// Open the image to compare to
 		file, _ := os.Open(testFRightOff[i])
 
@@ -153,7 +157,7 @@ func TestRotation(t *testing.T) {
 		Convey("Checking the ramps are generated at angles other than 90 degrees", t, func() {
 			Convey(fmt.Sprintf("Comparing the generated ramp to %v with an angle of %v", testFRightOff[i], angle), func() {
 				Convey("No error is returned and the file matches", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})

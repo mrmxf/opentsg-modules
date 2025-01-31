@@ -1,7 +1,6 @@
 package framecount
 
 import (
-	"context"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
@@ -13,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/text"
 	. "github.com/smartystreets/goconvey/convey"
@@ -36,7 +36,6 @@ func TestDemo(t *testing.T) {
 func TestStringGen(t *testing.T) {
 	// Check if this is a suitable build of go to run these tests
 	bi, _ := debug.ReadBuildInfo()
-	c := context.Background()
 
 	// Keep this in the background unti it runs
 	if bi.GoVersion[:6] != "go1.18" {
@@ -46,12 +45,12 @@ func TestStringGen(t *testing.T) {
 		yesFrame := Config{FrameCounter: true, FontSize: 100}
 		//	yesFrame.FrameCounter = true
 
-		for i := range numberToCheck {
+		for i, num := range numberToCheck {
 			// Generate the image and the string
-			inter := func() int { return numberToCheck[i] }
-			pos = inter
+
 			myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{33, 33}})
-			genErr := yesFrame.Generate(myImage, &c)
+			out := tsg.TestResponder{BaseImg: myImage}
+			yesFrame.Handle(&out, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameNumber: num}})
 
 			examplejson.SaveExampleJson(yesFrame, WidgetType, explanation[i], false)
 
@@ -81,7 +80,7 @@ func TestStringGen(t *testing.T) {
 			Convey("Checking the frame count image is generated", t, func() {
 				Convey(fmt.Sprintf("using  %v as integer ", numberToCheck[i]), func() {
 					Convey(fmt.Sprintf("A 4 digit number of %v is expected and the generated sha256 are identical", expecResult[i]), func() {
-						So(genErr, ShouldBeNil)
+						So(out.Message, ShouldResemble, "success")
 						So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 					})
 				})
@@ -98,10 +97,9 @@ func TestStringGen(t *testing.T) {
 func TestFonts(t *testing.T) {
 	// Test the size -but these aren't here yet with go1.19
 	bi, _ := debug.ReadBuildInfo()
-	c := context.Background()
+
 	// Keep this in the background unti it runs
 	if bi.GoVersion[:6] != "go1.18" {
-		pos = func() int { return 567 }
 		var mockFrame Config
 		mockFrame.FrameCounter = true
 		fontType := []string{"header", "", "./testdata/Timmy-Regular.ttf", "title"}
@@ -112,7 +110,8 @@ func TestFonts(t *testing.T) {
 			mockFrame.Font = fon
 			mockFrame.FontSize = sizes[i]
 			myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{100, 100}})
-			genErr := mockFrame.Generate(myImage, &c)
+			out := tsg.TestResponder{BaseImg: myImage}
+			mockFrame.Handle(&out, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameNumber: 567}})
 
 			examplejson.SaveExampleJson(mockFrame, WidgetType, explanation[i], false)
 			// Save these images when we can test for them
@@ -122,7 +121,7 @@ func TestFonts(t *testing.T) {
 			Convey("Checking the frame count image is generated with different fonts and sizes", t, func() {
 				Convey(fmt.Sprintf("using  %v as the font", fon), func() {
 					Convey("No error is expected", func() {
-						So(genErr, ShouldBeNil)
+						So(out.Message, ShouldResemble, "success")
 
 					})
 				})
@@ -132,7 +131,6 @@ func TestFonts(t *testing.T) {
 }
 
 func TestErrors(t *testing.T) {
-	c := context.Background()
 
 	numberToCheck := []int{99999}
 	expecResult := []string{"frame Count greater then 9999"}
@@ -143,16 +141,15 @@ func TestErrors(t *testing.T) {
 
 	for i, n := range numberToCheck {
 		// Generate the image and the string
-		inter := func() int { return n }
-		pos = inter
 
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{29, 29}})
-		genErr := yesFrame.Generate(myImage, &c)
+		out := tsg.TestResponder{BaseImg: myImage}
+		yesFrame.Handle(&out, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameNumber: n}})
 
 		Convey("Checking the frame count catches errors", t, func() {
 			Convey(fmt.Sprintf("Checking for an error of  %v", expecResult[i]), func() {
 				Convey("The expected error is caught", func() {
-					So(genErr.Error(), ShouldEqual, expecResult[i])
+					So(out.Message, ShouldEqual, expecResult[i])
 				})
 			})
 		})

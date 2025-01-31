@@ -211,6 +211,8 @@ func TestMiddlewares(t *testing.T) {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "properties": {
+	"fail": {
+	 "type": "number" }
     },
     "required": [
         "fail"
@@ -239,7 +241,7 @@ func TestMiddlewares(t *testing.T) {
 			Convey("the logs match that order", func() {
 				So(err, ShouldBeNil)
 				So(orderLog.logs, ShouldResemble, []string{"first", "second",
-					"0027 fail is required in unknown files please check your files for the fail property in the name blue,",
+					"0027 fail is required in unknown files please check your files for the fail property in the name blue",
 					"first", "second",
 				})
 			})
@@ -267,9 +269,9 @@ func TestMiddlewares(t *testing.T) {
 		Convey("running the json with a schema that will fail", func() {
 			Convey("3 logs are returned denoting, each denoting a schema failure", func() {
 				So(err, ShouldBeNil)
-				So(logArr.logs, ShouldResemble, []string{"0027 fail is required in unknown files please check your files for the fail property in the name cs.blue,",
-					"0027 fail is required in unknown files please check your files for the fail property in the name cs.green,",
-					"0027 fail is required in unknown files please check your files for the fail property in the name cs.red,"})
+				So(logArr.logs, ShouldResemble, []string{"0027 fail is required in unknown files please check your files for the fail property in the name cs.blue",
+					"0027 fail is required in unknown files please check your files for the fail property in the name cs.green",
+					"0027 fail is required in unknown files please check your files for the fail property in the name cs.red"})
 
 			})
 		})
@@ -320,6 +322,7 @@ func TestMetadata(t *testing.T) {
 
 type Filler struct {
 	Fill string `json:"fill" yaml:"fill"`
+	Fail string `json:"fail" yaml:"fail"`
 }
 
 func (f Filler) Handle(r Response, _ *Request) {
@@ -387,10 +390,11 @@ func TestErrors(t *testing.T) {
 		}
 	},
     "fill":"#0000ff"
-}`}
+}`,
+	}
 
 	expectedErrs := []string{"No handler found for widgets of type \"test.fills\" for widget path \"err\"",
-		"\"a\" is not a valid grid alias"}
+		"\"a\" is not a valid grid alias", ""}
 
 	for i, e := range errors {
 		f, fErr := os.Create("./testdata/handlerLoaders/err.json")
@@ -441,10 +445,13 @@ func TestErrors(t *testing.T) {
 
 	path, _ := os.Getwd()
 	errPath := filepath.Join(path, "/testdata/handlerLoaders/errorloaders/invalidsize.json")
+	errPathDiff := filepath.Join(path, "/testdata/handlerLoaders/errorloaders/differenttype.json")
 
-	canvasErrors := []string{"corruptcanvas.json", "invalidsize.json"}
-	canvasExpecErr := []string{"0061 no \"builtin.canvas\" widget has been loaded, can not configure openTSG",
-		"0026 Must be greater than or equal to 24 at line 10 in " + errPath + ", for canvas"}
+	canvasErrors := []string{"corruptcanvas.json", "invalidsize.json", "differenttype.json"}
+	canvasExpecErr := [][]string{{"0061 \"builtin.canvas\" widget has not been loaded, can not configure openTSG"},
+		{"0026 Additional property type is not allowed at line 4 in " + errPath + ", for canvas",
+			"0026 Must be greater than or equal to 24 at line 10 in " + errPath + ", for canvas"}, {
+			"0026 Invalid type. Expected: integer, given: string at line 10 in " + errPathDiff + ", for canvas"}}
 
 	for i, e := range canvasErrors {
 		f, fErr := os.Create("./testdata/handlerLoaders/errorloaders/canvasloader.json")
@@ -464,7 +471,7 @@ func TestErrors(t *testing.T) {
 					So(fErr, ShouldBeNil)
 					So(wErr, ShouldBeNil)
 					So(err, ShouldBeNil)
-					So(orderLog.logs, ShouldResemble, []string{canvasExpecErr[i]})
+					So(orderLog.logs[:len(orderLog.logs)-1], ShouldResemble, canvasExpecErr[i])
 				})
 			})
 		})

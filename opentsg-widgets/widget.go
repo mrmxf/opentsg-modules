@@ -12,7 +12,6 @@ import (
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/framecount"
 	geometrytext "github.com/mrmxf/opentsg-modules/opentsg-widgets/geometryText"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/gradients"
-	"github.com/mrmxf/opentsg-modules/opentsg-widgets/legacy"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/noise"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/qrgen"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/resize"
@@ -69,8 +68,5 @@ func AddBuiltinWidgets(otsg *tsg.OpenTSG) {
 	otsg.Handle(textbox.WidgetType, textbox.Schema, textbox.TextboxJSON{})
 	// ZonePlate
 	otsg.Handle(zoneplate.WidgetType, zoneplate.Schema, zoneplate.ZConfig{})
-
-	// Legacy
-	otsg.Handle(legacy.WidgetType, []byte(`{}`), legacy.Legacy{})
 
 }

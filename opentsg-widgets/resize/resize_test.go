@@ -1,7 +1,6 @@
 package resize
 
 import (
-	"context"
 	"crypto/sha256"
 	"fmt"
 	"image"
@@ -11,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/mrmxf/opentsg-modules/opentsg-core/colour"
+	"github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
 	examplejson "github.com/mrmxf/opentsg-modules/opentsg-widgets/exampleJson"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/text"
 	"github.com/mrmxf/opentsg-modules/opentsg-widgets/utils/parameters"
@@ -20,9 +20,7 @@ import (
 )
 
 func TestExample(t *testing.T) {
-	getPictureSize = func(c context.Context) image.Point {
-		return image.Point{3840, 2160}
-	}
+
 	examples := []Config{
 		{XDetections: []*parameters.DistanceField{{"3840px"}, {"1920px"}},
 			YDetections: []*parameters.DistanceField{{"1080px"}, {"540px"}}},
@@ -44,7 +42,8 @@ func TestExample(t *testing.T) {
 
 	for i, example := range examples {
 
-		examplejson.SaveExampleJson(example, WidgetType, desc[i], true)
+		examplejson.SaveExampleJsonRequest(example, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameDimensions: image.Point{3840, 2160}}},
+			WidgetType, desc[i], true)
 	}
 
 }
@@ -57,11 +56,9 @@ func TestResizeDirections(t *testing.T) {
 	for i, p := range canvasSize {
 		base := image.NewNRGBA64(image.Rectangle{image.Point{}, p})
 
-		c := context.Background()
-		getPictureSize = func(c context.Context) image.Point {
-			return p
-		}
-		genErr := Config{XDetections: []*parameters.DistanceField{{destX[i]}}}.Generate(base, &c)
+		out := tsg.TestResponder{BaseImg: base}
+		Config{XDetections: []*parameters.DistanceField{{destX[i]}}}.Handle(
+			&out, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameDimensions: p}})
 
 		// f, _ := os.Create(fmt.Sprintf("./testdata/resize%v.png", p.X))
 		// png.Encode(f, base)
@@ -82,7 +79,7 @@ func TestResizeDirections(t *testing.T) {
 		Convey("Checking the detectors are generated", t, func() {
 			Convey(fmt.Sprintf("generating an x detection of %v for a canvas of %v", destX, canvasSize[i]), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -108,11 +105,10 @@ func TestResizeDirections(t *testing.T) {
 	for i := range destY {
 		base := image.NewNRGBA64(image.Rectangle{image.Point{}, canvasSize[i]})
 
-		c := context.Background()
-		getPictureSize = func(c context.Context) image.Point {
-			return canvasSize[i]
-		}
-		genErr := Config{YDetections: []*parameters.DistanceField{{destY[i]}}}.Generate(base, &c)
+		out := tsg.TestResponder{BaseImg: base}
+		Config{YDetections: []*parameters.DistanceField{{destY[i]}}}.Handle(
+			&out, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameDimensions: canvasSize[i]}})
+
 		// f, _ := os.Create(fmt.Sprintf("./testdata/resize%v.png", canvasSize[i].Y))
 		// png.Encode(f, base)
 
@@ -133,7 +129,7 @@ func TestResizeDirections(t *testing.T) {
 		Convey("Checking the detectors are generated", t, func() {
 			Convey(fmt.Sprintf("generating an y detection of %v for a canvas of %v", destY, canvasSize[i]), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -166,13 +162,8 @@ func TestBoxes(t *testing.T) {
 	}
 
 	baseImageSize := image.Point{X: 1920, Y: 1080}
-	c := context.Background()
 
 	for i, size := range boxSizes {
-
-		getPictureSize = func(c context.Context) image.Point {
-			return baseImageSize
-		}
 
 		fill := make([]*parameters.DistanceField, size)
 
@@ -180,7 +171,9 @@ func TestBoxes(t *testing.T) {
 			fill[i] = &parameters.DistanceField{"1280px"}
 		}
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{}, imageSize[i]})
-		genErr := Config{XDetections: fill}.Generate(myImage, &c)
+		out := tsg.TestResponder{BaseImg: myImage}
+		Config{XDetections: fill}.Handle(
+			&out, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameDimensions: baseImageSize}})
 
 		// f, _ := os.Create(fmt.Sprintf("./testdata/%vbox.png", size))
 		// png.Encode(f, myImage)
@@ -203,7 +196,7 @@ func TestBoxes(t *testing.T) {
 		Convey("Checking the boxes fill the space easily", t, func() {
 			Convey(fmt.Sprintf("seeing how %v boxes fill a space of %v", size, imageSize[i]), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
@@ -218,17 +211,14 @@ func TestSteps(t *testing.T) {
 	graticules := []string{text.AlignmentLeft, text.AlignmentRight, text.AlignmentTop, text.AlignmentBottom}
 	imageSize := image.Point{1920, 1080}
 
-	c := context.Background()
-
 	for i, step := range steps {
 
-		getPictureSize = func(_ context.Context) image.Point {
-			return imageSize
-		}
-
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{}, imageSize})
-		genErr := Config{XStep: &step, XStepEnd: &ends[i],
-			Graticule: graticule{Position: graticules[i]}}.Generate(myImage, &c)
+
+		out := tsg.TestResponder{BaseImg: myImage}
+		Config{XStep: &step, XStepEnd: &ends[i],
+			Graticule: graticule{Position: graticules[i]}}.Handle(
+			&out, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameDimensions: imageSize}})
 
 		// f, _ := os.Create(fmt.Sprintf("./testdata/steps/step%v%s.png", step.Dist, graticules[i]))
 		// png.Encode(f, myImage)
@@ -251,7 +241,7 @@ func TestSteps(t *testing.T) {
 		Convey("Checking the boxes fill the space easily", t, func() {
 			Convey(fmt.Sprintf("seeing how %v boxes fill a space of %v", step, imageSize), func() {
 				Convey("No error is returned and the file matches exactly", func() {
-					So(genErr, ShouldBeNil)
+					So(out.Message, ShouldResemble, "success")
 					So(htest.Sum(nil), ShouldResemble, hnormal.Sum(nil))
 				})
 			})
