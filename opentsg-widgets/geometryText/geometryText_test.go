@@ -53,11 +53,11 @@ func TestFillMethod(t *testing.T) {
 		hnormal.Write(readImage.Pix)
 		htest.Write(canvas.Pix)
 
-		for i, p := range readImage.Pix {
-			if p != canvas.Pix[i] {
-				//	fmt.Println(i, p, canvas.Pix[i], reflect.TypeOf(canvas), reflect.TypeOf(baseVals))
-			}
-		}
+		//	for i, p := range readImage.Pix {
+		//		if p != canvas.Pix[i] {
+		//	fmt.Println(i, p, canvas.Pix[i], reflect.TypeOf(canvas), reflect.TypeOf(baseVals))
+		//		}
+		//	}
 		// f, _ := os.Create(testFRight[i] + ".png")
 		// png.Encode(f, angleImage)
 

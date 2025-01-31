@@ -165,13 +165,13 @@ func averageCalc(targetImg draw.Image) any {
 
 // Unmarshal unmarshals creates a function that unmarsahals yaml bytes
 // into the handler type. This must be initialised with a struct.
-func Unmarshal(Han Handler) func(input []byte) (Handler, error) {
+func Unmarshal(han Handler) func(input []byte) (Handler, error) {
 
 	return func(input []byte) (Handler, error) {
 		// copy the underlying type to generate a new value
 		// that points to the type that implements the handler method and not
 		// just the handler method itself
-		v := reflect.New(reflect.TypeOf(Han))
+		v := reflect.New(reflect.TypeOf(han))
 		err := yaml.Unmarshal(input, v.Interface())
 
 		if err != nil {

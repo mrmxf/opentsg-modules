@@ -157,19 +157,6 @@ func rotate(x, y, angle float64) (float64, float64) {
 	return xp, yp
 }
 
-func xyToAngle(x, y float64) float64 {
-
-	ang := math.Atan2(y, x)
-
-	// add 2 pi by the inverse to keep the angle
-	// incrementinh
-	if ang < 0 {
-		return ang + math.Pi*2
-	}
-
-	return ang
-}
-
 func startOffset(start string) float64 {
 	// Set the phi for sin to move the base colour from 0 to 1 or -1
 	switch strings.ToLower(start) {

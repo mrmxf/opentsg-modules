@@ -590,7 +590,7 @@ func (l Location) GetGridGeometry(c *context.Context, unit string) ([]Segmenter,
 
 }
 
-func getTiles(c *context.Context, GridKeys []string) ([]*Segmenter, error) {
+func getTiles(c *context.Context, gridKeys []string) ([]*Segmenter, error) {
 	// set the bounds to cover the area
 	geometry := (*c).Value(tilekey)
 
@@ -616,16 +616,16 @@ func getTiles(c *context.Context, GridKeys []string) ([]*Segmenter, error) {
 	}
 
 	// if grid keys are not used then we stop here
-	if len(GridKeys) == 0 {
+	if len(gridKeys) == 0 {
 		return geometryHolder, nil
 	}
 
 	var matches []*Segmenter
 	regTSIG := regexp.MustCompile(`^tsig:`)
 
-	targets := make([]string, len(GridKeys))
+	targets := make([]string, len(gridKeys))
 	// get the matches
-	for i, key := range GridKeys {
+	for i, key := range gridKeys {
 
 		if !regTSIG.MatchString(key) {
 			return nil, fmt.Errorf("invalid key of \"%s\" used", key)
@@ -667,7 +667,7 @@ func getTiles(c *context.Context, GridKeys []string) ([]*Segmenter, error) {
 
 	// no matches
 	if len(matches) == 0 {
-		return nil, fmt.Errorf("no tiles found with the keys \"%s\"", GridKeys)
+		return nil, fmt.Errorf("no tiles found with the keys \"%s\"", gridKeys)
 	}
 
 	return matches, nil

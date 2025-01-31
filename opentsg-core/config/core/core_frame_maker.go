@@ -29,13 +29,6 @@ type data struct {
 	Data       []map[string]any `json:"data" yaml:"data"`
 }
 
-// each json has factory has a tag that defines the widget it represents
-type widgetEssentials struct {
-	WType       string            `json:"type,omitempty" yaml:"type,omitempty"`
-	ColourSpace colour.ColorSpace `json:"colorSpace,omitempty" yaml:"colorSpace,omitempty"`
-	Loc         gridgen.Location  `json:"location,omitempty" yaml:"location,omitempty"`
-}
-
 // FrameWidgetsGeneratorHandle runs the create frame for the given position. Applying any updates required and generating any
 // extra json from data. It returns an initial context with all the frame and configuration information.
 /*

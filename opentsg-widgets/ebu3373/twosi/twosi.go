@@ -260,17 +260,6 @@ func aPos(p int) int {
 	}
 }
 
-func aPosY(p int) int {
-	// Basic loop increasing until it is an A channel start int
-	for {
-		if p%2 == 0 {
-
-			return p
-		}
-		p++
-	}
-}
-
 func mask(x, y, xOff, yOff int) *image.NRGBA64 {
 	img := image.NewNRGBA64(image.Rect(0, 0, x, y))
 	b := img.Bounds().Max
