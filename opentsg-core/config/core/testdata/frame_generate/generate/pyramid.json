@@ -2,12 +2,12 @@
   "props": {
     "type": "builtin.textbox",
     "location": {
-            "alias": "A demo Alias",
-            "box": {
-                "x": 1,
-                "y": 1
-            }
-        }
+      "alias": "A demo Alias",
+      "box": {
+        "x": 1,
+        "y": 1
+      }
+    }
   },
   "text": [
     ""
@@ -17,5 +17,4 @@
   "bordercolor": "#333333",
   "backgroundcolor": "#000000",
   "bordersize": 0
-
 }

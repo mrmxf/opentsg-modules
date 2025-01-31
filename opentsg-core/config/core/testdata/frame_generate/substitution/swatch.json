@@ -27,11 +27,11 @@
           "ranges": ["full", 8 ,"half"],
           "action": {
            "pyramid" : {
-           "d.{{swatchType}}": ["grid.location","backgroundcolor"]}
+           "d.{{swatchType}}": ["props.location.alias","backgroundcolor"]}
           },
           "action old": {
             "pyramid" : {
-            "d.{{swatchType}}R{{R}}.C{{C}}.B{{B}}": ["grid.location","backgroundcolor"]}
+            "d.{{swatchType}}R{{R}}.C{{C}}.B{{B}}": ["props.location.alias","backgroundcolor"]}
            }
       }
     ]

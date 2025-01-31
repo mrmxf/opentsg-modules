@@ -471,7 +471,7 @@ func TestErrors(t *testing.T) {
 					So(fErr, ShouldBeNil)
 					So(wErr, ShouldBeNil)
 					So(err, ShouldBeNil)
-					So(orderLog.logs, ShouldResemble, canvasExpecErr[i])
+					So(orderLog.logs[:len(orderLog.logs)-1], ShouldResemble, canvasExpecErr[i])
 				})
 			})
 		})

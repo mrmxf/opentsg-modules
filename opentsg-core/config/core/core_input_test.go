@@ -76,7 +76,7 @@ func TestBadJson(t *testing.T) {
 	}
 }
 
-func TestJsonRread(t *testing.T) {
+func TestJsonRead(t *testing.T) {
 	inputFile := "./testdata/frame_generate/sequence.json"
 	c, _, _ := FileImport(inputFile, "", false)
 
@@ -129,8 +129,8 @@ func TestYamlRead(t *testing.T) {
 		n, es := FrameWidgetsGeneratorHandle(cYaml, i)
 		fmt.Println(es, "second erro")
 		expec, got := genHash(n, pv)
-		bar := n.Value(baseKey).(map[string]widgetContents)
 
+		bar := n.Value(baseKey).(map[string]WidgetContents)
 		frameJSON := make(map[string]map[string]any)
 
 		for k, v := range bar {
@@ -166,7 +166,7 @@ func TestYamlRead(t *testing.T) {
 		n, es := FrameWidgetsGeneratorHandle(cYamlRoot, i)
 
 		expec, got := genHash(n, pv)
-		bar := n.Value(baseKey).(map[string]widgetContents)
+		bar := n.Value(baseKey).(map[string]WidgetContents)
 
 		frameJSON := make(map[string]map[string]any)
 
@@ -261,7 +261,7 @@ func TestMetadataUpdate(t *testing.T) {
 		n, _ := FrameWidgetsGeneratorHandle(cYamlRoot, i)
 
 		expec, got := genHash(n, pv)
-		bar := n.Value(baseKey).(map[string]widgetContents)
+		bar := n.Value(baseKey).(map[string]WidgetContents)
 
 		frameJSON := make(map[string]map[string]any)
 

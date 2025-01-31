@@ -26,5 +26,5 @@ generate:
     action:
       pyramid:
         "d.{{swatchType}}":
-          - grid.location
+          - props.location.alias
           - backgroundcolor

@@ -28,7 +28,7 @@
           "name": [{"R":"[:]"}, {"CD":"[:]"}, {"B":"[:]"}],
           "action": {
            "pyramid" : {
-           "d.{{swatchType}}": ["grid.location","backgroundcolor"]}
+           "d.{{swatchType}}": ["props.location.alias","backgroundcolor"]}
           }
       }
     ]

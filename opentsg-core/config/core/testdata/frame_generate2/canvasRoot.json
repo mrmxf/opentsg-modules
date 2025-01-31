@@ -1,5 +1,7 @@
 {
-    "type": "builtin.canvas",
+    "props":{
+      "type": "builtin.canvas"
+    },
      "outputs": ["x{{framenumber}}-{{Title}}.png"],
     "frameSize": { "w": 4096, "h": 2160 },
     "linewidth": 0.5,

@@ -23,14 +23,14 @@
           "name": [{"R":"[:]"}, {"C":"[:]"}, {"B":"[:1]"}],
           "action": {
            "pyramid" : {
-           "d.{{swatchType}}": ["grid.location","backgroundcolor"]}
+           "d.{{swatchType}}": ["props.location.alias","backgroundcolor"]}
           }
       },
       {
           "name": [{"R":"[2:]"}, {"C":"[1]"}, {"Bdif":"[2:]"}],
           "action": {
            "pyramid" : {
-           "d.{{swatchType}}": ["grid.location"]}
+           "d.{{swatchType}}": ["props.location.alias"]}
           }
       }
     ]

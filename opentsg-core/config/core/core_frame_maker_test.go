@@ -44,22 +44,8 @@ func TestGenerateAndCreateMethods(t *testing.T) {
 		expec, got := genHash(n, pv)
 
 		/*
-			bar := n.Value(baseKey).(map[string]WidgetContents)
-			frameJSON := make(map[string]map[string]any)
 
-			for k, v := range bar {
-				if v.Data != nil { // fill the ones with actual data
-					var m map[string]any
-					yaml.Unmarshal(v.Data, &m)
-					frameJSON[k] = m
-				}
-			}
-
-			gen, _ := yaml.Marshal(frameJSON)
-
-			f, _ := os.Create("./testdata/frame_generate/generate/blue_gen.yaml")
-
-			f.Write(gen)*/
+		 */
 
 		Convey("Checking arguments are parsed in only generate", t, func() {
 			Convey("using ./testdata/sequence_generate.json as the input which only uses generate to make jsons", func() {
@@ -106,6 +92,25 @@ func TestSubstitutions(t *testing.T) {
 		n, _ := FrameWidgetsGeneratorHandle(c, i)
 
 		expec, got := genHash(n, pv)
+
+		// bar := n.Value(baseKey).(map[string]WidgetContents)
+
+		// frameJSON := make(map[string]map[string]any)
+
+		// for k, v := range bar {
+		// 	if v.Data != nil { // fill the ones with actual data
+		// 		var m map[string]any
+		// 		yaml.Unmarshal(v.Data, &m)
+		// 		frameJSON[k] = m
+		// 	}
+		// }
+
+		// fmt.Printf("\n\n\n")
+		// fmt.Println(frameJSON, "end")
+
+		// b, _ := yaml.Marshal(frameJSON)
+		// res, _ := os.Create("./testdata/frame_generate/substitution/result_green.yaml")
+		// res.Write(b)
 
 		Convey("Checking arguments are parsed as alias names", t, func() {
 			Convey("using ./testdata/frame_generate/substitution/sequence.json as the input ", func() {
@@ -405,7 +410,7 @@ func TestZpos(t *testing.T) {
 
 		c, err := contMocker(madeFile[i], inputFile, e)
 
-		frame := c.Value(baseKey).(map[string]widgetContents)
+		frame := c.Value(baseKey).(map[string]WidgetContents)
 
 		//  map the z positions
 		results := make(map[int]bool)

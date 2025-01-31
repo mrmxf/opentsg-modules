@@ -1,5 +1,6 @@
 ---
-type: "builtin.textbox"
+props:
+  type: "builtin.textbox"
 text:
   - ""
 font: body
@@ -7,5 +8,3 @@ textcolor: "#f2e2eb"
 bordercolor: "#333333"
 backgroundcolor: "#000000"
 bordersize: 0
-grid:
-  location: "a0"
