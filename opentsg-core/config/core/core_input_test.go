@@ -300,7 +300,7 @@ func TestMetadataUpdate(t *testing.T) {
 		Convey("Checking arguments are mustached with previous, so arguments can be built upon", t, func() {
 			Convey(fmt.Sprintf("Using frame %v ./testdata/frame_generate2/metadataUpdates/sequence.json as the input ", i), func() {
 				Convey("The generated widget map as a json body matches "+pv, func() {
-					So(es, ShouldResemble, []error{fmt.Errorf(predictedErrors[i])})
+					So(es, ShouldResemble, []error{fmt.Errorf("%s", predictedErrors[i])})
 				})
 			})
 		})

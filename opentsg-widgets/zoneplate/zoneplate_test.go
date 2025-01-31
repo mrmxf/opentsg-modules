@@ -29,7 +29,7 @@ func TestDemo(t *testing.T) {
 	tbDemoNoAngle := ZConfig{PlateType: horizontalSweep, Startcolour: "black"}
 	examplejson.SaveExampleJson(tbDemoNoAngle, WidgetType, "noangle", true)
 
-	tbDemoFre := ZConfig{Frequency: parameters.AngleField{Ang: "π*13/200"}, Offset: parameters.Offset{parameters.XYOffset{X: "20%", Y: "-25"}}}
+	tbDemoFre := ZConfig{Frequency: parameters.AngleField{Ang: "π*13/200"}, Offset: parameters.Offset{Offset: parameters.XYOffset{X: "20%", Y: "-25"}}}
 	examplejson.SaveExampleJson(tbDemoFre, WidgetType, "slowFrequency", true)
 
 }

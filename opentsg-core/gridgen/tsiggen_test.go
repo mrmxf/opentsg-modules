@@ -130,7 +130,7 @@ func TestTpigGeometry(t *testing.T) {
 func TestGridGeometry(t *testing.T) {
 	// get my picture size
 	//// check the lines of halves and fulls
-	//size = func(context.Context) image.Point { return image.Point{30, 30} }
+	// size = func(context.Context) image.Point { return image.Point{30, 30} }
 	//rows = func(c context.Context) int { return 3 }
 	//cols = func(c context.Context) int { return 3 }
 
@@ -190,7 +190,7 @@ func TestError(t *testing.T) {
 			Convey(fmt.Sprintf("using a %v as the input file", file), func() {
 				Convey("An error is generated extracting the file as it didn't pass the schema", func() {
 
-					So(err, ShouldResemble, fmt.Errorf(expected[i]))
+					So(err, ShouldResemble, fmt.Errorf("%s", expected[i]))
 				})
 			})
 		})

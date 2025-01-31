@@ -21,7 +21,7 @@ const (
 var (
 	grey       = colour.CNRGBA64{R: 26496, G: 26496, B: 26496, A: 0xffff}
 	letterFill = colour.CNRGBA64{R: 41470, G: 41470, B: 41470, A: 0xffff}
-	//letterFill = colour.CNRGBA64{R: 41470, G: 0, B: 0, A: 0xffff}
+	// letterFill = colour.CNRGBA64{R: 41470, G: 0, B: 0, A: 0xffff}
 )
 
 // Each abcd channel follows this format

@@ -283,7 +283,7 @@ func (b Location) generatePatch(c *context.Context) (draw.Image, image.Point, dr
 // CalcArea calculates the dimension of the box and the coordinate the top left is placed at.
 func (l Location) CalcArea(c *context.Context) (image.Rectangle, image.Point, error) {
 	if l.Box.X == nil || l.Box.Y == nil {
-		//invalid coordinates received
+		// invalid coordinates received
 		return image.Rectangle{}, image.Point{}, fmt.Errorf("invalid coordinates of x %v and y %v received", l.Box.X, l.Box.Y)
 	}
 
@@ -700,7 +700,7 @@ func gridToTSIG(x, y int, xscale, yscale float64) []*Segmenter {
 			if ypos != 0 {
 				neighbours = append(neighbours, fmt.Sprintf("%v%v", gridToScale(xpos), ypos-1))
 			}
-			//below
+			// below
 			if ypos+1 < y {
 				neighbours = append(neighbours, fmt.Sprintf("%v%v", gridToScale(xpos), ypos+1))
 			}

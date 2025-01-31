@@ -30,7 +30,7 @@ const (
 func (c Config) Handle(resp tsg.Response, req *tsg.Request) {
 	filename := c.Image
 	if filename == "" {
-		resp.Write(tsg.WidgetError, fmt.Sprintf("0161 No image declared"))
+		resp.Write(tsg.WidgetError, "0161 No image declared")
 		return
 	}
 

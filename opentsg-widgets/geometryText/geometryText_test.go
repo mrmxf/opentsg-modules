@@ -34,7 +34,7 @@ func TestFillMethod(t *testing.T) {
 
 		out := tsg.TestResponder{BaseImg: canvas}
 		mockJson4.Handle(&out, &tsg.Request{PatchProperties: tsg.PatchProperties{Geometry: mg}})
-		//f, _ := os.Create(fmt.Sprintf("./testdata/generatecheck%v.png", n))
+		// f, _ := os.Create(fmt.Sprintf("./testdata/generatecheck%v.png", n))
 		// png.Encode(f, canvas)
 
 		file, _ := os.Open(fmt.Sprintf("./testdata/generatecheck%v.png", n))

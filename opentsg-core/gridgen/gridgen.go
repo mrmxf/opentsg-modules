@@ -109,7 +109,7 @@ func baseGen(c *context.Context, geomCanvas draw.Image, frame FrameConfiguration
 
 	colour.Draw(canvas, canvas.Bounds(), &image.Uniform{background}, image.Point{}, draw.Src)
 	// make the squares sizes
-	//x := cols(*c)
+	// x := cols(*c)
 	//y := rows(*c)
 	if frame.Cols == 0 || frame.Rows == 0 {
 		return canvas, fmt.Errorf("0041 No columns or rows declared, got %v rows and %v columns", frame.Rows, frame.Cols)
@@ -389,7 +389,7 @@ func gridSquareLocatorAndGenerator(gridString, alias string, c *context.Context)
 		// g.GImage = image.NewNRGBA64(image.Rect(0, 0, squareX*(xend-x+1), squareY*(yend-y+1)))
 	case regXY.MatchString(gridString):
 		// remove surronding brackets and replace
-		//gridString = strings.ReplaceAll(gridString, "(", "")
+		// gridString = strings.ReplaceAll(gridString, "(", "")
 		//gridString = strings.ReplaceAll(gridString, ")", "")
 		// split at the mid point
 		grid := strings.Split(gridString, ")-(")
@@ -481,7 +481,7 @@ func gridSquareLocatorAndGenerator(gridString, alias string, c *context.Context)
 	maxBounds := (*c).Value(sizekey).(image.Point)
 	gb := generatedGridInfo.GImage.Bounds().Max
 
-	//ignore the XY coordinate power user
+	// ignore the XY coordinate power user
 	if (((gb.X + generatedGridInfo.X) > maxBounds.X) || (gb.Y+generatedGridInfo.Y) > maxBounds.Y) && !regXY.MatchString(gridString) {
 
 		return emptyGrid, fmt.Errorf(errBounds, maxBounds, gb.X+generatedGridInfo.X, gb.Y+generatedGridInfo.Y)

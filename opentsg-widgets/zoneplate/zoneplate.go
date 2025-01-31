@@ -119,7 +119,7 @@ const (
 )
 
 func zoneToColour(zone float64) colour.CNRGBA64 {
-	//colourPos := 8192 + uint16(49151*(zone+1)/2)
+	// colourPos := 8192 + uint16(49151*(zone+1)/2)
 	colourPos := uint16(0xffff * (zone + 1) / 2)
 	return colour.CNRGBA64{R: colourPos, G: colourPos, B: colourPos, A: 0xffff}
 }

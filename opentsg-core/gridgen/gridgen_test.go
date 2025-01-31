@@ -19,7 +19,7 @@ import (
 
 func TestGrids(t *testing.T) {
 
-	//getWidth = func(c context.Context) float64 { return 1 }
+	// getWidth = func(c context.Context) float64 { return 1 }
 	//size = func(c context.Context) image.Point { return image.Point{1000, 1000} }
 	// imageType = func(c context.Context) string { return "" }
 
@@ -146,7 +146,7 @@ func TestPtoCanvas(t *testing.T) { // test the way [{}] are read etc
 		})
 	}
 
-	tooLarge := []string{"a5:q6", "t6:at20"} //"(200,200)-(500,901)", "t6:at20"}
+	tooLarge := []string{"a5:q6", "t6:at20"} // "(200,200)-(500,901)", "t6:at20"}
 	largeErr := []string{"0047 Area outside of image bounds of (1600,900), received an x value of 1700 and a y value of 700",
 		//	"0047 Area outside of image bounds of (1600,900), received an x value of 500 and a y value of 901",
 		"0047 Area outside of image bounds of (1600,900), received an x value of 4600 and a y value of 2100",
@@ -173,7 +173,7 @@ func TestPtoCanvas(t *testing.T) { // test the way [{}] are read etc
 func TestGridGen(t *testing.T) {
 	// get my picture size
 	//// check the lines of halves and fulls
-	//size = func(context.Context) image.Point { return image.Point{1600, 900} }
+	// size = func(context.Context) image.Point { return image.Point{1600, 900} }
 	widths := []float64{0.5, 1, 5}
 	targets := []string{"./testdata/halfgrid.png", "./testdata/onegrid.png", "./testdata/fivegrid.png"}
 

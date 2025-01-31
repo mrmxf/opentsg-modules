@@ -20,14 +20,14 @@ func TestBowties(t *testing.T) {
 
 	simple := Config{SegementCount: 8}
 	corners := Config{SegementCount: 12}
-	colours := Config{SegementCount: 12, SegmentColours: []parameters.HexString{"#C2A649", "#9A3A73", "#91B645", "#433F87"}} //, "#433F87"}} //, "#433F87"}}
+	colours := Config{SegementCount: 12, SegmentColours: []parameters.HexString{"#C2A649", "#9A3A73", "#91B645", "#433F87"}} // , "#433F87"}} //, "#433F87"}}
 	all := Config{SegementCount: 32, SegmentColours: []parameters.HexString{"#C2A649", "#9A3A73", "#91B645", "#433F87"}}
 	all.CwRotation = "π*23/47"
 
 	explanation := []string{"8Segment", "12Segment", "colourSegments", "32Segments"}
 	testF := []string{"./testdata/swirl0.png", "./testdata/swirl1.png", "./testdata/swirl2.png", "./testdata/swirl3.png"}
 
-	bowties := []Config{simple, corners, colours, all} //, all}
+	bowties := []Config{simple, corners, colours, all} // , all}
 
 	for i, s := range bowties {
 		img := image.NewNRGBA64(image.Rect(0, 0, 200, 160))
@@ -76,13 +76,13 @@ func TestOffsets(t *testing.T) {
 
 	explanation := []string{"offsetXLeft", "offsetXAndY", "offSetY"}
 
-	offsets := []parameters.Offset{left, offRight, offUp} //, all}
+	offsets := []parameters.Offset{left, offRight, offUp} // , all}
 
 	for i, off := range offsets {
 
 		img := image.NewNRGBA64(image.Rect(0, 0, 200, 160))
 
-		//examplejson.SaveExampleJson(s, widgetType, explanation[i], true)
+		// examplejson.SaveExampleJson(s, widgetType, explanation[i], true)
 		all.Offset = off
 
 		out := tsg.TestResponder{BaseImg: img}
@@ -112,7 +112,7 @@ func TestOffsets(t *testing.T) {
 			})
 		})
 
-		//f, _ := os.Create(fmt.Sprintf("./testdata/offset%v.png", i))
+		// f, _ := os.Create(fmt.Sprintf("./testdata/offset%v.png", i))
 		//png.Encode(f, img)
 	}
 }
@@ -170,7 +170,7 @@ func TestErrors(t *testing.T) {
 	badAng := Config{SegementCount: 300}
 	badAng.CwRotation = "math.Pi"
 
-	bowties := []Config{simple, badAng} //, all}
+	bowties := []Config{simple, badAng} // , all}
 	errs := []string{"0DEV 4 or more segments required, received 3", "math.Pi is not a valid angle"}
 
 	for i, s := range bowties {

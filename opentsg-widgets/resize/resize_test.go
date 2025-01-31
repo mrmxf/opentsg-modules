@@ -22,19 +22,19 @@ import (
 func TestExample(t *testing.T) {
 
 	examples := []Config{
-		{XDetections: []*parameters.DistanceField{{"3840px"}, {"1920px"}},
-			YDetections: []*parameters.DistanceField{{"1080px"}, {"540px"}}},
+		{XDetections: []*parameters.DistanceField{{Dist: "3840px"}, {Dist: "1920px"}},
+			YDetections: []*parameters.DistanceField{{Dist: "1080px"}, {Dist: "540px"}}},
 
-		{XDetections: []*parameters.DistanceField{{"75%"}, {"50%"}},
-			YDetections: []*parameters.DistanceField{{"50%"}, {"25%"}},
+		{XDetections: []*parameters.DistanceField{{Dist: "75%"}, {Dist: "50%"}},
+			YDetections: []*parameters.DistanceField{{Dist: "50%"}, {Dist: "25%"}},
 			Graticule:   graticule{Position: text.AlignmentMiddle, TextColor: "#C2A649"}},
 
-		{XStep: &parameters.DistanceField{"500px"}, YStep: &parameters.DistanceField{"250px"}},
+		{XStep: &parameters.DistanceField{Dist: "500px"}, YStep: &parameters.DistanceField{Dist: "250px"}},
 
-		{XStep: &parameters.DistanceField{"10%"}, YStep: &parameters.DistanceField{"10%"},
-			XStepEnd: &parameters.DistanceField{"50%"}, YStepEnd: &parameters.DistanceField{"50%"}},
+		{XStep: &parameters.DistanceField{Dist: "10%"}, YStep: &parameters.DistanceField{Dist: "10%"},
+			XStepEnd: &parameters.DistanceField{Dist: "50%"}, YStepEnd: &parameters.DistanceField{Dist: "50%"}},
 
-		{XStep: &parameters.DistanceField{"10%"}, XStepEnd: &parameters.DistanceField{"50%"},
+		{XStep: &parameters.DistanceField{Dist: "10%"}, XStepEnd: &parameters.DistanceField{Dist: "50%"},
 			Graticule: graticule{Position: text.AlignmentLeft, TextColor: "#C2A649", GraticuleColour: "#9A3A73"}},
 	}
 
@@ -57,7 +57,7 @@ func TestResizeDirections(t *testing.T) {
 		base := image.NewNRGBA64(image.Rectangle{image.Point{}, p})
 
 		out := tsg.TestResponder{BaseImg: base}
-		Config{XDetections: []*parameters.DistanceField{{destX[i]}}}.Handle(
+		Config{XDetections: []*parameters.DistanceField{{Dist: destX[i]}}}.Handle(
 			&out, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameDimensions: p}})
 
 		// f, _ := os.Create(fmt.Sprintf("./testdata/resize%v.png", p.X))
@@ -106,7 +106,7 @@ func TestResizeDirections(t *testing.T) {
 		base := image.NewNRGBA64(image.Rectangle{image.Point{}, canvasSize[i]})
 
 		out := tsg.TestResponder{BaseImg: base}
-		Config{YDetections: []*parameters.DistanceField{{destY[i]}}}.Handle(
+		Config{YDetections: []*parameters.DistanceField{{Dist: destY[i]}}}.Handle(
 			&out, &tsg.Request{FrameProperties: tsg.FrameProperties{FrameDimensions: canvasSize[i]}})
 
 		// f, _ := os.Create(fmt.Sprintf("./testdata/resize%v.png", canvasSize[i].Y))
@@ -168,7 +168,7 @@ func TestBoxes(t *testing.T) {
 		fill := make([]*parameters.DistanceField, size)
 
 		for i := range fill {
-			fill[i] = &parameters.DistanceField{"1280px"}
+			fill[i] = &parameters.DistanceField{Dist: "1280px"}
 		}
 		myImage := image.NewNRGBA64(image.Rectangle{image.Point{}, imageSize[i]})
 		out := tsg.TestResponder{BaseImg: myImage}
@@ -206,8 +206,8 @@ func TestBoxes(t *testing.T) {
 
 func TestSteps(t *testing.T) {
 
-	steps := []parameters.DistanceField{{10}, {15}, {"100px"}, {"256px"}}
-	ends := []parameters.DistanceField{{10}, {0}, {"800px"}, {"512px"}}
+	steps := []parameters.DistanceField{{Dist: 10}, {Dist: 15}, {Dist: "100px"}, {Dist: "256px"}}
+	ends := []parameters.DistanceField{{Dist: 10}, {Dist: 0}, {Dist: "800px"}, {Dist: "512px"}}
 	graticules := []string{text.AlignmentLeft, text.AlignmentRight, text.AlignmentTop, text.AlignmentBottom}
 	imageSize := image.Point{1920, 1080}
 
