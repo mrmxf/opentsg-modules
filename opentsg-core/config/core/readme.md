@@ -30,7 +30,7 @@ reduce the amount of input files and repeated code.
 Each factory or widget declares which metadata keys it uses, with the "args" key
 (this can be no keys). This would be implemented in the json like so.
 
-```json
+```javascript
 "include": [
     {"uri":"canvas.json", "name":"canvas",  "args":["title","update"]}
 ]

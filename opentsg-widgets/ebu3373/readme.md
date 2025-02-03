@@ -15,7 +15,7 @@ Rec 709.
 
 It has no fields, only the location is required.
 
-```json .valid
+```json 
 {
     "props": {
     "type": "builtin.ebu3373/bars",

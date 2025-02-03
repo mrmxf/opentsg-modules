@@ -71,7 +71,7 @@ type XY2D struct {
 	Y1 int `json:"Y1,omitempty" yaml:"Y1,omitempty"`
 }
 
-//go:embed schema/tsigschema.json
+//go:embed jsonschema/tsigschema.json
 var tsigSchema []byte
 
 func flatmap(c *context.Context, basePath, tpigpath string) (canvasAndMask, error) {

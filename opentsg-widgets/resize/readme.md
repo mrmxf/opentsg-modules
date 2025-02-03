@@ -73,7 +73,7 @@ value is `#888888`. It follows the [opentsg colour system][cgen]
         "textColor": "#C2A649"
     },
     "xStep": "10%",
-    "xStepEnd": "50%",
+    "xStepEnd": "50%"
 }
 ```
 

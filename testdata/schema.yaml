@@ -1,0 +1,6 @@
+schemaCheck:
+  - directory: "opentsg-core"
+  - directory: "opentsg-io"
+  - directory: "opentsg-widgets"
+    schema: "."
+    

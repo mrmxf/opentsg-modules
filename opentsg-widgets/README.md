@@ -25,6 +25,7 @@ so OpenTSG can identify and handle the widget.
 More information about the `TSIG` can be found [here.](../opentsg-core/gridgen/readme.md#the-tsig-property)
 
 ```json
+{
 "props":{
     "type" : "builtin.example",
     "location": {
@@ -36,6 +37,7 @@ More information about the `TSIG` can be found [here.](../opentsg-core/gridgen/r
     },
     "TSIG": {
         "grouping":"example"
+        }
     }
 }
 

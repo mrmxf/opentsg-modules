@@ -16,7 +16,7 @@ in the `"Tags"` field of the TSIG. These are defined
 with the `"neighbour:"` prefix within the tag.
 Like so
 
-```json
+```javascript
 "Tags": ["neighbour:A1","neighbour:A2"]
 ```
 
