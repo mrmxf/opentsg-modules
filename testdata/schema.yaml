@@ -1,6 +1,16 @@
 schemaCheck:
   - directory: "opentsg-core"
+    ignore:
+      - errors
+    schema: "."
   - directory: "opentsg-io"
   - directory: "opentsg-widgets"
-    schema: "."
-    
+    schema:
+      - "opentsg-widgets"
+      - "opentsg-core"
+  - directory: "."
+    ignore:
+      - errors 
+      - tmp
+      - releases.yaml
+      - testdata

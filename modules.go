@@ -4,6 +4,7 @@ import (
 	"context"
 	"embed"
 	"log/slog"
+	"reflect"
 
 	"encoding/json"
 	"fmt"
@@ -59,6 +60,7 @@ type run struct {
 	schemaOrigin string
 	schemas      []schemaBody
 	target       string
+	ignores      []string
 }
 
 // SchemaConfig contains an array
@@ -93,6 +95,10 @@ type SchemaCheck struct {
 
 	// a folder or file to check
 	DirectoryToCheck string `yaml:"directory"`
+
+	// strings that are set up to be ignored
+	// string must match any part of the path to be skipped
+	Ignore []string `yaml:"ignore"`
 }
 
 // NewSchemaValidatorFile validates files based off an input file
@@ -131,6 +137,7 @@ func NewSchemaValidator(conf *SchemaConfig) (*SchemaValidator, error) {
 	for i, sc := range conf.SchemaChecks {
 		var gotSchemas []schemaBody
 		schemaOrigin := "default OTSG schemas"
+		fmt.Println(reflect.TypeOf(sc.Schema))
 		switch schMethod := sc.Schema.(type) {
 
 		/*
@@ -139,13 +146,35 @@ func NewSchemaValidator(conf *SchemaConfig) (*SchemaValidator, error) {
 			case map[string]any:
 				presume its a schema
 		*/
+		case []any:
+
+			names := make([]string, len(schMethod))
+			// loop through adding to the array of schemas
+			for i, origin := range schMethod {
+
+				midOrigin, err := filepath.Abs(fmt.Sprintf("%v", origin))
+				if err != nil {
+					return nil, err
+				}
+
+				// update the schemas with each origin
+				gotSchemas, err = getSchemas(gotSchemas, midOrigin)
+				if err != nil {
+					return nil, err
+				}
+
+				names[i] = fmt.Sprintf("%v", origin)
+			}
+
+			schemaOrigin = strings.Join(names, ",")
+
 		case string:
 			var err error
 			schemaOrigin, err = filepath.Abs(schMethod)
 			if err != nil {
 				return nil, err
 			}
-			gotSchemas, err = getSchemas(gotSchemas, schMethod)
+			gotSchemas, err = getSchemas(gotSchemas, schemaOrigin)
 
 			if err != nil {
 				return nil, err
@@ -155,7 +184,8 @@ func NewSchemaValidator(conf *SchemaConfig) (*SchemaValidator, error) {
 			gotSchemas = schems
 		}
 
-		runners[i] = run{schemaOrigin: schemaOrigin, target: sc.DirectoryToCheck, schemas: gotSchemas}
+		runners[i] = run{schemaOrigin: schemaOrigin, target: sc.DirectoryToCheck,
+			schemas: gotSchemas, ignores: sc.Ignore}
 	}
 
 	return &SchemaValidator{schemas: schems,
@@ -194,7 +224,7 @@ func (s *SchemaValidator) ValidateJsons(t *testing.T) {
 
 		// loop through every run
 
-		base, jErr := s.getJsons(directory, make([]string, 0))
+		base, jErr := s.getJsons(directory, make([]string, 0), runner.ignores)
 
 		s.globalPass = true
 		valErr := s.validateJsons(base, runner.schemas)
@@ -216,7 +246,7 @@ func (s *SchemaValidator) ValidateJsons(t *testing.T) {
 }
 
 // Get all the files in the directory with a recursive search
-func (s *SchemaValidator) getJsons(directory string, files []string) ([]string, error) {
+func (s *SchemaValidator) getJsons(directory string, files []string, ignore []string) ([]string, error) {
 
 	// get the files in the directory
 	dirs, err := os.ReadDir(directory)
@@ -232,7 +262,7 @@ func (s *SchemaValidator) getJsons(directory string, files []string) ([]string, 
 			if jsonFile.MatchString(dir.Name()) || yamlFile.MatchString(dir.Name()) {
 
 				// is it a file we want to read?
-				if fileFence(jPath) {
+				if fileFence(jPath, ignore) {
 					slog.Log(context.TODO(), slog.LevelInfo, jPath, "Staus", "Skip")
 
 					continue
@@ -247,7 +277,7 @@ func (s *SchemaValidator) getJsons(directory string, files []string) ([]string, 
 		} else {
 			// continue the path search
 			dpath := filepath.Join(directory, "/", dir.Name())
-			files, err = s.getJsons(dpath, files)
+			files, err = s.getJsons(dpath, files, ignore)
 
 			if err != nil {
 				return nil, err
@@ -398,11 +428,13 @@ func (s *SchemaValidator) validateJsons(targets []string, schemas []schemaBody) 
 }
 
 // fileFence fences files that may be in the errors test folders
-func fileFence(filepath string) (skip bool) {
+func fileFence(filepath string, ignores []string) (skip bool) {
 
-	// add more fields here as the tests grow
-	if strings.Contains(filepath, "errors") {
-		return true
+	for _, ignore := range ignores {
+		// add more fields here as the tests grow
+		if strings.Contains(filepath, ignore) {
+			return true
+		}
 	}
 
 	return false

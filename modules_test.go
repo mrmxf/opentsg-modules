@@ -23,14 +23,16 @@ func TestJsonSnippets(t *testing.T) {
 	*/
 
 	sv, _ := NewSchemaValidator(&SchemaConfig{[]SchemaCheck{
-		{DirectoryToCheck: "./opentsg-core"},
+		{DirectoryToCheck: "./opentsg-core", Ignore: []string{"errors"}},
 		{DirectoryToCheck: "./opentsg-io", Schema: "."},
 		{DirectoryToCheck: "./opentsg-widgets"},
 	}})
 
 	sv.ValidateJsons(t)
 
+}
+
+func TestJsonSnippetsFile(t *testing.T) {
 	svf, _ := NewSchemaValidatorFile("testdata/schema.yaml")
 	svf.ValidateJsons(t)
-
 }
