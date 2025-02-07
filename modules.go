@@ -4,7 +4,6 @@ import (
 	"context"
 	"embed"
 	"log/slog"
-	"reflect"
 
 	"encoding/json"
 	"fmt"
@@ -19,7 +18,10 @@ import (
 	"gitlab.com/golang-commonmark/markdown"
 	"gopkg.in/yaml.v3"
 
+	"github.com/phsym/console-slog"
 	. "github.com/smartystreets/goconvey/convey"
+
+	slogmulti "github.com/samber/slog-multi"
 )
 
 func init() {
@@ -47,11 +49,20 @@ type schemaBody struct {
 type SchemaValidator struct {
 	schemas    []schemaBody
 	globalPass bool
-	fails      []string
-	skips      []string
-	pass       []string
 
 	run []run
+}
+
+// TestSlogger wraps the testing.T to write to t.Log
+type TestSlogger struct {
+	t *testing.T
+}
+
+// Write forwards the message to t.Log
+func (t *TestSlogger) Write(p []byte) (n int, err error) {
+	t.t.Log(string(p))
+
+	return len(p), nil
 }
 
 // run is all the fields needed
@@ -68,28 +79,13 @@ type run struct {
 // and the target directory to compare against the schemas
 type SchemaConfig struct {
 	SchemaChecks []SchemaCheck `yaml:"schemaCheck"`
-	/*
-			Option we need
-
-		 	- import local schemas or TSG schemas
-			- what markdown fields are being checked
-			- location to be checked
-
-			make defaults clear.
-			Its an array of
-			location
-			schemas
-			markdown fields to check
-			where the output goes to
-
-			how do we intialise it for tests?
-
-	*/
 }
 
+// SchemaCheck contains the configuration options
+// for checking the jsons of a directory and their schemas.
 type SchemaCheck struct {
 	// if nil use TSG,
-	// if object or object array presume its a schema to parse
+	// if object or object array presume its a schema to parse (not implemented)
 	// if string presume its a file or folder - if array repeat the process
 	Schema any `yaml:"schema"`
 
@@ -102,6 +98,7 @@ type SchemaCheck struct {
 }
 
 // NewSchemaValidatorFile validates files based off an input file
+// @TODO update to reader
 func NewSchemaValidatorFile(confFile string) (*SchemaValidator, error) {
 
 	confBytes, err := os.ReadFile(confFile)
@@ -137,7 +134,6 @@ func NewSchemaValidator(conf *SchemaConfig) (*SchemaValidator, error) {
 	for i, sc := range conf.SchemaChecks {
 		var gotSchemas []schemaBody
 		schemaOrigin := "default OTSG schemas"
-		fmt.Println(reflect.TypeOf(sc.Schema))
 		switch schMethod := sc.Schema.(type) {
 
 		/*
@@ -189,29 +185,34 @@ func NewSchemaValidator(conf *SchemaConfig) (*SchemaValidator, error) {
 	}
 
 	return &SchemaValidator{schemas: schems,
-		skips: make([]string, 0),
-		fails: make([]string, 0), pass: make([]string, 0),
 		run: runners,
 	}, nil
 }
 
-// PrintResults writes the results of a schema validator run
-func (s *SchemaValidator) PrintResults(out io.Writer) {
-	for _, p := range s.pass {
-		out.Write([]byte(fmt.Sprintf("%s\n", p)))
-	}
-	for _, s := range s.skips {
-		out.Write([]byte(fmt.Sprintf("%s\n", s)))
-	}
-	for _, f := range s.fails {
-		out.Write([]byte(fmt.Sprintf("%s\n", f)))
-	}
+// JobLogger is a no-color version of the PrettyLogger that is created
+// to append to write to a given writer
+func NewTestLogger(w io.Writer, t *testing.T, level slog.Level) *slog.Logger {
 
+	Loggers := slog.New(
+		slogmulti.Fanout(
+			console.NewHandler(w,
+				&console.HandlerOptions{Level: level, NoColor: true}),
+			// create our logging error
+			console.NewHandler(&TestSlogger{t: t},
+				&console.HandlerOptions{Level: slog.LevelWarn, NoColor: true}),
+		))
+
+	return Loggers
 }
 
 // ValidateJsons valdiates every json, yaml and markdown snippet labelled json/yaml
 // in a directory. It recursively searches every folder in the directory
 func (s *SchemaValidator) ValidateJsons(t *testing.T) {
+
+	//set the logging
+	Loggers := NewTestLogger(io.Discard, t, slog.LevelInfo)
+
+	slog.SetDefault(Loggers)
 
 	// absolute the path before processing
 	for _, runner := range s.run {
@@ -306,7 +307,7 @@ func (s *SchemaValidator) validateJsons(targets []string, schemas []schemaBody) 
 				var clean any
 				err := yaml.Unmarshal(input, &clean)
 				if err != nil {
-					slog.Log(context.TODO(), slog.LevelInfo, fmt.Sprintf("%s %s", target, err.Error()), "Staus", "Fail")
+					slog.Log(context.TODO(), slog.LevelWarn, fmt.Sprintf("%s %s", target, err.Error()), "Staus", "Fail")
 
 					s.globalPass = false
 					continue
@@ -315,7 +316,7 @@ func (s *SchemaValidator) validateJsons(targets []string, schemas []schemaBody) 
 
 				input, err = json.Marshal(clean)
 				if err != nil {
-					slog.Log(context.TODO(), slog.LevelInfo, fmt.Sprintf("%s %s", target, err.Error()), "Staus", "Fail")
+					slog.Log(context.TODO(), slog.LevelWarn, fmt.Sprintf("%s %s", target, err.Error()), "Staus", "Fail")
 					s.globalPass = false
 					continue
 					// label as bad data and flag as a dail
@@ -347,7 +348,7 @@ func (s *SchemaValidator) validateJsons(targets []string, schemas []schemaBody) 
 				slog.Log(context.TODO(), slog.LevelInfo, target, "Staus", "Pass")
 			} else {
 				s.globalPass = false
-				slog.Log(context.TODO(), slog.LevelInfo, target, "Staus", "Fail")
+				slog.Log(context.TODO(), slog.LevelWarn, target, "Staus", "Fail")
 			}
 
 		} else if mdFile.MatchString(target) {
@@ -372,7 +373,7 @@ func (s *SchemaValidator) validateJsons(targets []string, schemas []schemaBody) 
 						var clean any
 						err := yaml.Unmarshal(input, &clean)
 						if err != nil {
-							s.fails = append(s.fails, fmt.Sprintf("Fail %s %s", target, err.Error()))
+							slog.Log(context.TODO(), slog.LevelWarn, fmt.Sprintf("%s %s", target, err.Error()), "Staus", "Fail")
 							s.globalPass = false
 							continue
 							// label as a fail and continue
@@ -380,7 +381,7 @@ func (s *SchemaValidator) validateJsons(targets []string, schemas []schemaBody) 
 
 						snippet, err = json.Marshal(clean)
 						if err != nil {
-							s.fails = append(s.fails, fmt.Sprintf("Fail %s %s", target, err.Error()))
+							slog.Log(context.TODO(), slog.LevelWarn, fmt.Sprintf("%s %s", target, err.Error()), "Staus", "Fail")
 							s.globalPass = false
 							continue
 							// label as bad data and flag as a dail
@@ -416,7 +417,7 @@ func (s *SchemaValidator) validateJsons(targets []string, schemas []schemaBody) 
 						slog.Log(context.TODO(), slog.LevelInfo, target, "Staus", "Pass")
 					} else {
 						s.globalPass = false
-						slog.Log(context.TODO(), slog.LevelInfo, target, "Staus", "Fail")
+						slog.Log(context.TODO(), slog.LevelWarn, target, "Staus", "Fail")
 					}
 
 				}
@@ -440,11 +441,11 @@ func fileFence(filepath string, ignores []string) (skip bool) {
 	return false
 }
 
+// getSchemas recursively searches a directory
+// for any schemas and adds them to the schema list.
+// It presumes any files in a folder labelled jsonschema are valid and they
+// are parsed with no questions asked.
 func getSchemas(schemas []schemaBody, path string) ([]schemaBody, error) {
-
-	/*
-		loop through
-	*/
 
 	dirs, err := os.ReadDir(path)
 	if err != nil {
