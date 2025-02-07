@@ -20,7 +20,7 @@ it follows the [angle unit rules](../utils/parameters/readme.md#clockwise-rotati
 ```json
 {
     "props": {
-    "type": "builtin.zoneplate",
+      "type": "builtin.zoneplate",
       "location": {
         "alias" : "A demo Alias",
         "box": {
@@ -29,10 +29,10 @@ it follows the [angle unit rules](../utils/parameters/readme.md#clockwise-rotati
         }
       }
     },
-    "plateType": "sweep",
-    "startColor": "white",
-    "cwRotation": "π*1",
-    "frequency": "π*13/100",
+   "cwRotation": "π*34/53",
+    "frequency": null,
+    "plateType": "verticalSweep",
+    "waveType": "sin"
 }
 ```
 

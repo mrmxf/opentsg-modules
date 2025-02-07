@@ -33,7 +33,7 @@ func TestDemo(t *testing.T) {
 func TestBadStrings(t *testing.T) {
 
 	// make the test suite translatable to different os and hosts that are not gitpod
-	//location := os.Getenv("PWD")
+	// location := os.Getenv("PWD")
 	//sep := string(os.PathSeparator)
 	// Slap some text files here
 	badString := []string{"./testdata/badfile.txt", "", "./testdata/bad.dpx"}

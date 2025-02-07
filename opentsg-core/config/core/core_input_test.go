@@ -54,10 +54,10 @@ func TestFileRead(t *testing.T) {
 }
 
 func TestBadJson(t *testing.T) {
-	testFolderLocation := fmt.Sprintf("%stestdata%swrong%s", sep, sep, sep)
+	testFolderLocation := fmt.Sprintf("%stestdata%serrors%s", sep, sep, sep)
 
-	badFiles := []string{"./testdata/wrong/apiinval.json", "./testdata/wrong/empty.json",
-		"./testdata/wrong/badinclude.json", "./testdata/wrong/badincludebase.json"}
+	badFiles := []string{"./testdata/errors/apiinval.json", "./testdata/errors/empty.json",
+		"./testdata/errors/badinclude.json", "./testdata/errors/badincludebase.json"}
 	results := []string{fmt.Sprintf("0003 No frames declared in %s%sapiinval.json", location, testFolderLocation),
 		fmt.Sprintf("0002 yaml: unmarshal errors:\n  line 1: cannot unmarshal !!seq into core.factory when opening %s%sempty.json", location, testFolderLocation),
 		fmt.Sprintf("0003 No frames declared in %s%sbadinclude.json", location, testFolderLocation),
@@ -300,7 +300,7 @@ func TestMetadataUpdate(t *testing.T) {
 		Convey("Checking arguments are mustached with previous, so arguments can be built upon", t, func() {
 			Convey(fmt.Sprintf("Using frame %v ./testdata/frame_generate2/metadataUpdates/sequence.json as the input ", i), func() {
 				Convey("The generated widget map as a json body matches "+pv, func() {
-					So(es, ShouldResemble, []error{fmt.Errorf(predictedErrors[i])})
+					So(es, ShouldResemble, []error{fmt.Errorf("%s", predictedErrors[i])})
 				})
 			})
 		})

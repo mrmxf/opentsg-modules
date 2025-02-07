@@ -68,7 +68,7 @@ func TestChannels(t *testing.T) {
 			hnormal.Write(readImage.Pix)
 			htest.Write(chunk.Pix)
 
-			//f, _ := os.Create(testBase[i] + let[j] + "er.png")
+			// f, _ := os.Create(testBase[i] + let[j] + "er.png")
 			//colour.PngEncode(f, chunk)
 
 			Convey("Checking the twosi images are generated", t, func() {

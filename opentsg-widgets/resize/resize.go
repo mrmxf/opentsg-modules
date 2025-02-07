@@ -411,15 +411,11 @@ func boxSetUp(totalBoxes int, b image.Point) (xBoxCount int, yBoxCount int) {
 	// set the x and y based on the if the canvas is landscape or portrait
 	if b.Y < b.X {
 		if xBoxCount < yBoxCount {
-			xBoxCountMid := xBoxCount
-			xBoxCount = yBoxCount
-			yBoxCount = xBoxCountMid
+			xBoxCount, yBoxCount = yBoxCount, xBoxCount
 		}
 	} else {
 		if yBoxCount < xBoxCount {
-			xBoxCountMid := xBoxCount
-			xBoxCount = yBoxCount
-			yBoxCount = xBoxCountMid
+			xBoxCount, yBoxCount = yBoxCount, xBoxCount
 		}
 	}
 
@@ -438,7 +434,7 @@ func stepGenerator(stepper, endPos parameters.DistanceField, baseSize int) ([]in
 	ep, err := endPos.CalcOffset(baseSize)
 
 	if err != nil {
-
+		return nil, err
 	}
 
 	stepCount := int(math.Ceil(float64(baseSize)-float64(ep)) / float64(step))
@@ -462,7 +458,7 @@ type pixel struct {
 func createCoefficients(destX int, filterLength int, scale float64, kernel func(float64) float64) [][]pixel {
 
 	blur := 1.0
-	filterLength = filterLength * int(math.Max(math.Ceil(blur*scale), 1))
+	filterLength *= int(math.Max(math.Ceil(blur*scale), 1))
 	filterFactor := math.Min(1./(blur*scale), 1)
 
 	coeffs := make([][]pixel, destX)
@@ -557,6 +553,7 @@ func coeffSolver(coeffs [][]pixel, width int) ([]uint16, error) {
 	return out, nil
 }
 
+/*
 // A matrix mask that makes a mask on the matrix.
 // values are currently 0 or 1, anything else can lead to unexpected consequences
 func matrixMask(bounds image.Rectangle, matrix [][]int) draw.Image {
@@ -576,6 +573,7 @@ func matrixMask(bounds image.Rectangle, matrix [][]int) draw.Image {
 
 	return base
 }
+*/
 
 // lanczos sampling algorithm
 func lan(in float64) float64 {

@@ -21,7 +21,7 @@ const (
 var (
 	grey       = colour.CNRGBA64{R: 26496, G: 26496, B: 26496, A: 0xffff}
 	letterFill = colour.CNRGBA64{R: 41470, G: 41470, B: 41470, A: 0xffff}
-	//letterFill = colour.CNRGBA64{R: 41470, G: 0, B: 0, A: 0xffff}
+	// letterFill = colour.CNRGBA64{R: 41470, G: 0, B: 0, A: 0xffff}
 )
 
 // Each abcd channel follows this format
@@ -253,17 +253,6 @@ func aPos(p int) int {
 	// Basic loop increasing until it is an A channel start int
 	for {
 		if p%4 == 0 {
-
-			return p
-		}
-		p++
-	}
-}
-
-func aPosY(p int) int {
-	// Basic loop increasing until it is an A channel start int
-	for {
-		if p%2 == 0 {
 
 			return p
 		}

@@ -100,7 +100,7 @@ func LoopInitHandle(frameContext *context.Context) []error {
 
 	}
 
-	//if errs != nil {
+	// if errs != nil {
 	//	return errs
 	// }
 	globParams := ConfigVals{}

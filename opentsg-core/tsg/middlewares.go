@@ -7,8 +7,6 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
-
-	"github.com/mrmxf/opentsg-modules/opentsg-core/config/validator"
 )
 
 // os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0777)
@@ -28,32 +26,6 @@ func LogToFile(otsg *OpenTSG, opts slog.HandlerOptions, folder, jobID string) {
 	jSlog := slog.NewJSONHandler(f, &opts)
 	otsg.Use(Logger(slog.New(jSlog)))
 
-}
-
-// jsonValidator validates the input json request, against a schema.
-// It is designed to be the last middleware put on the handler stack.
-func jSONValidator(loggedJson validator.JSONLines, schema []byte, id string) func(Handler) Handler {
-
-	return func(h Handler) Handler {
-
-		return HandlerFunc(func(resp Response, req *Request) {
-
-			err := validator.SchemaValidator(schema, req.RawWidgetYAML, id, loggedJson)
-
-			if err != nil {
-				// write an error and return
-				// skip the rest of the process
-				eMess := ""
-				for _, e := range err {
-					eMess += fmt.Sprintf("%s,", e)
-				}
-				resp.Write(400, eMess)
-				return
-			}
-
-			h.Handle(resp, req)
-		})
-	}
 }
 
 // Logger initialises a slogger wrapper, that

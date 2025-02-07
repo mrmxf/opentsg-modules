@@ -34,7 +34,7 @@ func TestFillMethod(t *testing.T) {
 
 		out := tsg.TestResponder{BaseImg: canvas}
 		mockJson4.Handle(&out, &tsg.Request{PatchProperties: tsg.PatchProperties{Geometry: mg}})
-		//f, _ := os.Create(fmt.Sprintf("./testdata/generatecheck%v.png", n))
+		// f, _ := os.Create(fmt.Sprintf("./testdata/generatecheck%v.png", n))
 		// png.Encode(f, canvas)
 
 		file, _ := os.Open(fmt.Sprintf("./testdata/generatecheck%v.png", n))
@@ -53,11 +53,11 @@ func TestFillMethod(t *testing.T) {
 		hnormal.Write(readImage.Pix)
 		htest.Write(canvas.Pix)
 
-		for i, p := range readImage.Pix {
-			if p != canvas.Pix[i] {
-				//	fmt.Println(i, p, canvas.Pix[i], reflect.TypeOf(canvas), reflect.TypeOf(baseVals))
-			}
-		}
+		//	for i, p := range readImage.Pix {
+		//		if p != canvas.Pix[i] {
+		//	fmt.Println(i, p, canvas.Pix[i], reflect.TypeOf(canvas), reflect.TypeOf(baseVals))
+		//		}
+		//	}
 		// f, _ := os.Create(testFRight[i] + ".png")
 		// png.Encode(f, angleImage)
 

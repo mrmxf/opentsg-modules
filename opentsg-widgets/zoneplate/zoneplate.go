@@ -119,7 +119,7 @@ const (
 )
 
 func zoneToColour(zone float64) colour.CNRGBA64 {
-	//colourPos := 8192 + uint16(49151*(zone+1)/2)
+	// colourPos := 8192 + uint16(49151*(zone+1)/2)
 	colourPos := uint16(0xffff * (zone + 1) / 2)
 	return colour.CNRGBA64{R: colourPos, G: colourPos, B: colourPos, A: 0xffff}
 }
@@ -155,19 +155,6 @@ func rotate(x, y, angle float64) (float64, float64) {
 	yp := x*math.Sin(angle) + y*math.Cos(angle)
 
 	return xp, yp
-}
-
-func xyToAngle(x, y float64) float64 {
-
-	ang := math.Atan2(y, x)
-
-	// add 2 pi by the inverse to keep the angle
-	// incrementinh
-	if ang < 0 {
-		return ang + math.Pi*2
-	}
-
-	return ang
 }
 
 func startOffset(start string) float64 {

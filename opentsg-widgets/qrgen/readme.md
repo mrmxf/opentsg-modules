@@ -31,13 +31,13 @@ It has the following fields:
     },
     "code": "https://opentsg.studio/",
     "offset": {
-        "x":0,
-        "y": 0
+        "x": 50,
+        "y": 50
     },
     "size": {
         "height": 50,
         "width": 50
-    },
+    }
 }
 ```
 

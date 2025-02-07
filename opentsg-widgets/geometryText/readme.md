@@ -1,6 +1,6 @@
 # Geometry Text
 
-Geometry text prints the name of a tile of the Test Signal Input Geometry (TSIG). 
+Geometry text prints the name of a tile of the Test Signal Input Geometry (TSIG).
 Where the text is squeezed to fill the tile.
 
 It has the following required field:

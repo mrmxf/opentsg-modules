@@ -49,22 +49,22 @@ func AddBuiltinWidgets(otsg *tsg.OpenTSG) {
 	otsg.Handle(addimage.WidgetType, addimage.Schema, addimage.Config{})
 	// Bowtie
 	otsg.Handle(bowtie.WidgetType, bowtie.Schema, bowtie.Config{})
-	//FourColour
+	// FourColour
 	otsg.Handle(fourcolour.WidgetType, fourcolour.Schema, fourcolour.Config{})
-	//FrameCount
+	// FrameCount
 	otsg.Handle(framecount.WidgetType, framecount.Schema, framecount.Config{})
 	// GeometryText
 	otsg.Handle(geometrytext.WidgetType, geometrytext.Schema, geometrytext.Config{})
 
-	//Gradients
+	// Gradients
 	otsg.Handle(gradients.WidgetType, gradients.Schema, gradients.Ramp{})
-	//Noise
+	// Noise
 	otsg.Handle(noise.WidgetType, noise.Schema, noise.Config{})
-	//QR
+	// QR
 	otsg.Handle(qrgen.WidgetType, qrgen.Schema, qrgen.Config{})
-	//Resize
+	// Resize
 	otsg.Handle(resize.WidgetType, resize.Schema, resize.Config{})
-	//TextBox
+	// TextBox
 	otsg.Handle(textbox.WidgetType, textbox.Schema, textbox.TextboxJSON{})
 	// ZonePlate
 	otsg.Handle(zoneplate.WidgetType, zoneplate.Schema, zoneplate.ZConfig{})

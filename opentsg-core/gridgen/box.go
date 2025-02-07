@@ -283,7 +283,7 @@ func (b Location) generatePatch(c *context.Context) (draw.Image, image.Point, dr
 // CalcArea calculates the dimension of the box and the coordinate the top left is placed at.
 func (l Location) CalcArea(c *context.Context) (image.Rectangle, image.Point, error) {
 	if l.Box.X == nil || l.Box.Y == nil {
-		//invalid coordinates received
+		// invalid coordinates received
 		return image.Rectangle{}, image.Point{}, fmt.Errorf("invalid coordinates of x %v and y %v received", l.Box.X, l.Box.Y)
 	}
 
@@ -590,7 +590,7 @@ func (l Location) GetGridGeometry(c *context.Context, unit string) ([]Segmenter,
 
 }
 
-func getTiles(c *context.Context, GridKeys []string) ([]*Segmenter, error) {
+func getTiles(c *context.Context, gridKeys []string) ([]*Segmenter, error) {
 	// set the bounds to cover the area
 	geometry := (*c).Value(tilekey)
 
@@ -616,16 +616,16 @@ func getTiles(c *context.Context, GridKeys []string) ([]*Segmenter, error) {
 	}
 
 	// if grid keys are not used then we stop here
-	if len(GridKeys) == 0 {
+	if len(gridKeys) == 0 {
 		return geometryHolder, nil
 	}
 
 	var matches []*Segmenter
 	regTSIG := regexp.MustCompile(`^tsig:`)
 
-	targets := make([]string, len(GridKeys))
+	targets := make([]string, len(gridKeys))
 	// get the matches
-	for i, key := range GridKeys {
+	for i, key := range gridKeys {
 
 		if !regTSIG.MatchString(key) {
 			return nil, fmt.Errorf("invalid key of \"%s\" used", key)
@@ -667,7 +667,7 @@ func getTiles(c *context.Context, GridKeys []string) ([]*Segmenter, error) {
 
 	// no matches
 	if len(matches) == 0 {
-		return nil, fmt.Errorf("no tiles found with the keys \"%s\"", GridKeys)
+		return nil, fmt.Errorf("no tiles found with the keys \"%s\"", gridKeys)
 	}
 
 	return matches, nil
@@ -700,7 +700,7 @@ func gridToTSIG(x, y int, xscale, yscale float64) []*Segmenter {
 			if ypos != 0 {
 				neighbours = append(neighbours, fmt.Sprintf("%v%v", gridToScale(xpos), ypos-1))
 			}
-			//below
+			// below
 			if ypos+1 < y {
 				neighbours = append(neighbours, fmt.Sprintf("%v%v", gridToScale(xpos), ypos+1))
 			}

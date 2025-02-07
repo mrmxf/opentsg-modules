@@ -200,7 +200,7 @@ func fill(canvas draw.Image, colours []*colour.CNRGBA64, segments []segment, ori
 				*/
 				blendOrder := math.Sin((math.Pi / (6)) + (math.Pi/3)*((2*leftDiff)/segm.angStep)) // difference from neighbour
 
-				//blendOrder := math.Sin((math.Pi * diff) / segm.angStep)
+				// blendOrder := math.Sin((math.Pi * diff) / segm.angStep)
 				oc := colours[colourPos]
 				nc := colours[neighCol]
 

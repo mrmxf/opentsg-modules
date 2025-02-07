@@ -1,0 +1,27 @@
+schemaCheck:
+  # Check OpenTSG-core
+  # ignoring the errors folder
+  # utilising the schemas in the current directory
+  - directory: "opentsg-core"
+    ignore:
+      - errors
+    schema: "."
+  # Check openTSG-io
+  # ignoring no folders
+  # using the default schemas  
+  - directory: "opentsg-io"
+  # Check openTSG-widgets
+  # Check against the schemas in opentsg-widgets and opentsg-core (recursive)
+  - directory: "opentsg-widgets"
+    schema:
+      - "opentsg-widgets"
+      - "opentsg-core"
+  # Check the parent folder
+  # using default TSG schemas
+  # ignoring folders with the filepaths of: errors, tmp ,releases.yaml and testdata    
+  - directory: "."
+    ignore:
+      - errors 
+      - tmp
+      - releases.yaml
+      - testdata

@@ -23,8 +23,10 @@ These colourspace transformations are included in the NRGBA64 `Set` method and w
 
 To add colour space to a widget the following json is required.
 
-```json
-"ColorSpace": {"ColorSpace" : "rec709"}
+```javascript
+"props":{
+    "ColorSpace": {"ColorSpace" : "rec709"}
+}
 ```
 
 Current available colour spaces are :

@@ -42,7 +42,7 @@ func TestBox(t *testing.T) {
 		{Box: Box{X: 1, Y: 1, Y2: "100%", X2: "100%"}},
 		{Box: Box{X: "-27px", Y: "-27px", X2: "53px", Y2: "53px"}},
 		{Box: Box{UseGridKeys: []string{"tsig:B1"}}},
-	} //, "a1:b2", "test", "(27,27)-(53,53)", "R1C02", "R2C2:R10C10", "(-27,-27)-(53,53)"}
+	} // , "a1:b2", "test", "(27,27)-(53,53)", "R1C02", "R2C2:R10C10", "(-27,-27)-(53,53)"}
 	// alias := []string{"test", "", "", "", "", "", ""}
 	expec := []image.Rectangle{image.Rect(0, 0, 100, 100), image.Rect(0, 0, 200, 200), image.Rect(0, 0, 100, 100),
 		image.Rect(0, 0, 26, 26), image.Rect(0, 0, 100, 100), image.Rect(0, 0, 900, 900), image.Rect(0, 0, 80, 80), image.Rect(0, 0, 100, 100)}
@@ -214,7 +214,7 @@ func TestBoxTSIG(t *testing.T) {
 
 	gridtarget := []Location{{Box: Box{X: 0, Y: 1}}, {Box: Box{X: 0, Y: 0, Y2: 2}}, {Box: Box{X: 1, Y: 2}},
 		{Box: Box{X: 0, Y: 0, X2: 3, Y2: 3}},
-	} //"A1", "A0:a2", "r2c3", "R1C1:R3C3"}
+	} // "A1", "A0:a2", "r2c3", "R1C1:R3C3"}
 	expectedSegment := [][]Segmenter{
 		{{ID: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}, ImportPosition: 1}},
 		{{ID: "A000", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 0}, Max: image.Point{X: 10, Y: 10}}, Tags: []string{}}, {ID: "A001", Shape: image.Rectangle{Min: image.Point{X: 0, Y: 10}, Max: image.Point{X: 10, Y: 20}}, Tags: []string{}, ImportPosition: 1}},

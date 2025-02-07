@@ -35,7 +35,7 @@ in several formats, but they all use the same fields.
 The (0,0) coordinate is located in the top left of the testcard,
 and the widget positions are generated with the following json layout.
 
-```json
+```javascript
 "location": {
         "box": {
             "x": 0,
@@ -55,7 +55,7 @@ These fields can be mixed and matched.
 The x2 and y2 fields denote the bottom right coordinate of the widget
 and can be created with the following json.
 
-```json
+```javascript
 "location": {
         "box": {
             "x": 1,
@@ -71,7 +71,7 @@ the bottom of the widget, and the width is the distance to the right of the widg
 They can be created with the following json, which creates the same result as the previous demo
 for x2 and y2.
 
-```json
+```javascript
 "location": {
         "box": {
             "x": 1,
@@ -107,7 +107,7 @@ and are called like so.
 A widget with rounded corners can be created with the
 `"border-radius"` field which is implemented like so.
 
-```json
+```javascript
 "location": {
         "box": {
             "x": 1,
@@ -152,7 +152,7 @@ instead of the default base units of the TSIG. e.g. 3 tiles that have the groups
 Will produce 2 TSIgs of A1 and A2.
 If every TSIG tile does not have the unit searched for than an error has returned.
 
-```json
+```javascript
  "TSIG": {
         "grouping":"example"
     }
@@ -223,7 +223,7 @@ TSIGs are used for generating test patterns to fit 3d shapes.
 They can be included within the canvas options json, with
 the following code.
 
-```json
+```javascript
 {
     "type": "builtin.canvas",
     ...
@@ -264,7 +264,7 @@ It has the following layout:
             "ID": "A000",
             "tags": [],
             "neighbours":[],
-            "units": {
+            "groups": {
                 "cube": "A11",
                 "grid": "A1"
             },
@@ -322,15 +322,16 @@ An example `"Tile layout"` is given below.
 
 ```json
 {
-            "Name": "A000",
-            "Tags": [],
-            "Layout": {
-                "Carve": {
-                    "Destination": "C1",
+"tileLayout":{
+            "ID": "A000",
+            "tags": [],
+            "tayout": {
+                "carve": {
+                    "destination": "C1",
                     "X": 0,
                     "Y": 0
                 },
-                "Flat": {
+                "flat": {
                     "X": 0,
                     "Y": 0
                 },
@@ -339,16 +340,25 @@ An example `"Tile layout"` is given below.
                     "Y": 10
                 }
             }
+        },
+    "dimensions": {
+        "flat": {
+            "X0": 0,
+            "Y0": 0,
+            "X1": 30,
+            "Y1": 30
         }
+    }    
+}
 ```
 
-The `"Dimensions"` contains the fields for the flat object dimensions.
+The `"dimensions"` contains the fields for the flat object dimensions.
 The example below has a size of 30 by 30 pixels, X0,Y0 are the minimum coordinates
 and X1,Y1 represent the maximum coordinates.
 
-```json
-"Dimensions": {
-        "Flat": {
+```javascript
+"dimensions": {
+        "flat": {
             "X0": 0,
             "Y0": 0,
             "X1": 30,
@@ -357,13 +367,13 @@ and X1,Y1 represent the maximum coordinates.
     }
 ```
 
-The `"Carve"` field is a map of carve name and its size, to allow
+The `"carve"` field is a map of carve name and its size, to allow
 different carve destinations to have different dimensions.
 
 e.g.
 
-```json
- "Carve": {
+```javascript
+ "carve": {
         "Carve1": {
             "X0": 0,
             "Y0": 0,
@@ -409,8 +419,8 @@ with the name of the carved image and its dimensions like so.
 In the example below the carve has one file called C1,
 it has dimensions of a width of 300 and a height of 300.
 
-```json
-"Carve": {
+```javascript
+"carve": {
         "C1": {
             "X0": 0,
             "Y0": 0,
@@ -420,24 +430,24 @@ it has dimensions of a width of 300 and a height of 300.
     }
 ```
 
-Then each tile to be carved requires a `"Carve"` field with the `"Destination"`
+Then each tile to be carved requires a `"carve"` field with the `"destination"`
 of the carve matching the name of a carve location,
 and the XY coordinate within the carved image e.g.
 
 In the example below, the tile has a flat layout at (0,0) and
 when it is carved it is assigned C1 at (10,10)
 
-```json
+```javascript
  {
-            "Name": "A000",
-            "Tags": [],
-            "Layout": {
-                "Carve": {
-                    "Destination": "C1",
+            "ID": "A000",
+            "tags": [],
+            "layout": {
+                "carve": {
+                    "destination": "C1",
                     "X": 10,
                     "Y": 10
                 },
-                "Flat": {
+                "flat": {
                     "X": 0,
                     "Y": 0
                 },

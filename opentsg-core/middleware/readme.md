@@ -15,7 +15,7 @@ It has the following fields:
 
 The following json would enable the middleware to run.
 
-```json
+```javascript
 "frame analytics" : {
     "configuration": {"enabled":true},
     "average color": {"enabled":true},
