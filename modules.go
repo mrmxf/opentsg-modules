@@ -272,6 +272,14 @@ func (s *SchemaValidator) getJsons(directory string, files []string, ignore []st
 				files = append(files, jPath)
 
 			} else if mdFile.MatchString(dir.Name()) {
+
+				// is it a file we want to read?
+				if fileFence(jPath, ignore) {
+					slog.Log(context.TODO(), slog.LevelInfo, jPath, "Staus", "Skip")
+
+					continue
+				}
+
 				files = append(files, jPath)
 			}
 
