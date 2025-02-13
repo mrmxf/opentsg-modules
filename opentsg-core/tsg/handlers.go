@@ -378,7 +378,7 @@ func (tsg *OpenTSG) Run(mnt string) {
 			carves := gridgen.Carve(frameContext, canvas, canvaswidget.GetOutputs(*frameContext))
 			for _, carvers := range carves {
 				// save.CanvasSave(canvas, canvaswidget.GetFileName(*frameContext), canvaswidget.GetFileDepth(*frameContext), mnt, i4, debug, frameLog)
-				tsg.canvasSave2(carvers.Image, carvers.Location, canvaswidget.GetFileDepth(*frameContext), mnt, &monit)
+				tsg.canvasSave(carvers.Image, carvers.Location, canvaswidget.GetFileDepth(*frameContext), mnt, &monit)
 			}
 			saveTime = time.Since(saveMeasure).Microseconds()
 
@@ -404,7 +404,7 @@ func (tsg *OpenTSG) Run(mnt string) {
 
 // CanvasSave saves the file according to the extensions provided
 // the name add is for debug to allow to identify images
-func (tsg *OpenTSG) canvasSave2(canvas draw.Image, filename []string, bitdeph int, mnt string, monit *monitor) {
+func (tsg *OpenTSG) canvasSave(canvas draw.Image, filename []string, bitdeph int, mnt string, monit *monitor) {
 	for _, name := range filename {
 		truepath, err := filepath.Abs(filepath.Join(mnt, name))
 		if err != nil {
