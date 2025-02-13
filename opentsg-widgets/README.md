@@ -50,6 +50,7 @@ This contains the design behind the widget, the fields
 and contents it uses. And an example JSON
 
 - [AddImage](./addimage/readme.md)
+- [Bowtiwe](./bowtie/readme.md)
 - [Ebu3373](./ebu3373/readme.md)
 - [Fourcolour](./fourcolour/readme.md)
 - [FrameCount](./framecount/readme.md)
@@ -57,6 +58,7 @@ and contents it uses. And an example JSON
 - [Gradients](./gradients/readme.md)
 - [Noise](./noise/readme.md)
 - [QrGen](./qrgen/readme.md)
+- [Resize](./resize/readme.md)
 - [TextBox](./textbox/readme.md)
 - [ZonePlate](./zoneplate/readme.md)
 
@@ -113,7 +115,6 @@ func (c Config) Handle(resp tsg.Response, req *tsg.Request) {
 
     draw.Draw(resp.BaseImage(), resp.BaseImage().Bounds(),  &image.Uniform{color.RGBA{G: 0xff, A: 0xff}}, image.Point{}, draw.Over)
     
-
     resp.Write(tsg.WidgetSuccess, "success")
 }
 ```
