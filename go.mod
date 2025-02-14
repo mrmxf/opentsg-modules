@@ -1,6 +1,6 @@
 module github.com/mrmxf/opentsg-modules
 
-go 1.23.1
+go 1.23.6
 
 require (
 	github.com/aws/aws-sdk-go v1.55.6
@@ -11,10 +11,10 @@ require (
 	github.com/fogleman/gg v1.3.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/matoous/go-nanoid v1.5.1
+	github.com/mrmxf/clog v0.7.3
 	github.com/mrmxf/opentsg-mhl v0.4.1-0.20240925105016-88f06c5da0b6
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/peterbourgon/mergemap v0.0.1
-	github.com/phsym/console-slog v0.3.1
 	github.com/samber/slog-multi v1.4.0
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/spf13/afero v1.12.0
@@ -40,11 +40,13 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.28.14 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.33.14 // indirect
 	github.com/aws/smithy-go v1.22.2 // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/howeyc/crc16 v0.0.0-20171223171357-2b2a61e366a6 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/samber/lo v1.49.1 // indirect
 	github.com/smarty/assertions v1.16.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
