@@ -462,7 +462,7 @@ func anyToDist(a any, dimension int, unitWidth float64) (float64, error) {
 
 	pixel := regexp.MustCompile(`^-{0,1}\d{1,}[pP][xX]$`)
 	grid := regexp.MustCompile(`^\d{1,}$`)
-	pcDefault := regexp.MustCompile(`^-{0,1}\d{0,2}\.{1}\d{0,}%$|^-{0,1}\d{0,2}%$|^-{0,1}(100)%$`)
+	pcDefault := regexp.MustCompile(`^-{0,1}\d{0,2}\.{1}\d{0,}%$|^-{0,1}\d{0,2}%$|^-{0,1}(100)%$|^100\.[0]*%$`)
 
 	switch {
 	case pixel.MatchString(dist):

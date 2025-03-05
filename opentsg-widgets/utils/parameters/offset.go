@@ -97,7 +97,7 @@ func offsetToPixels(val string, max int) (int, error) {
 
 	pixel := regexp.MustCompile(`^-{0,1}\d{1,}px$`)
 	percent := regexp.MustCompile(`^-{0,1}\d{0,2}\.{1}\d{0,}$|^-{0,1}\d{0,2}$|^-{0,1}(100)$`)
-	pcDefault := regexp.MustCompile(`^-{0,1}\d{0,2}\.{1}\d{0,}%$|^-{0,1}\d{0,2}%$|^-{0,1}(100)%$`)
+	pcDefault := regexp.MustCompile(`^-{0,1}\d{0,2}\.{1}\d{0,}%$|^-{0,1}\d{0,2}%$|^-{0,1}(100)%$|^100\.[0]*%$`)
 
 	switch {
 	case pixel.MatchString(val):
