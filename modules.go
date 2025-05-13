@@ -18,10 +18,11 @@ import (
 	"gitlab.com/golang-commonmark/markdown"
 	"gopkg.in/yaml.v3"
 
-	"github.com/phsym/console-slog"
 	. "github.com/smartystreets/goconvey/convey"
 
 	slogmulti "github.com/samber/slog-multi"
+
+	"github.com/mrmxf/clog/slogger"
 )
 
 func init() {
@@ -195,11 +196,11 @@ func NewTestLogger(w io.Writer, t *testing.T, level slog.Level) *slog.Logger {
 
 	Loggers := slog.New(
 		slogmulti.Fanout(
-			console.NewHandler(w,
-				&console.HandlerOptions{Level: level, NoColor: true}),
+			slogger.NewPrettyHandler(w,
+				&slogger.PrettyHandlerOptions{Level: level, NoColor: true}),
 			// create our logging error
-			console.NewHandler(&TestSlogger{t: t},
-				&console.HandlerOptions{Level: slog.LevelWarn, NoColor: true}),
+			slogger.NewPrettyHandler(&TestSlogger{t: t},
+				&slogger.PrettyHandlerOptions{Level: slog.LevelWarn, NoColor: true}),
 		))
 
 	return Loggers

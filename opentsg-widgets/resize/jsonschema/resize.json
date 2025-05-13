@@ -95,7 +95,7 @@
         "percent1": {
             "type": "string",
             "desciption": "pattern requires a pi then star with a number, which can be divided by a resulting number",
-            "pattern": "^-{0,1}\\d{0,2}\\.{1}\\d{0,}%$|^-{0,1}\\d{0,2}%$|^-{0,1}(100)%$",
+            "pattern": "^-{0,1}\\d{0,2}\\.{1}\\d{0,}%$|^-{0,1}\\d{0,2}%$|^-{0,1}(100)%$|^100\\.[0]*%$",
             "description": "percentage value to move the image, e.g. 25%"
         },
         "percent2": {

@@ -11,7 +11,7 @@ openTSG, err := tsg.BuildOpenTSG(inputFile string, profile string, debug bool, h
 ## Customisation
 
 OpenTSG is designed to be customisable, with the ability to include
-custom widgets and save functions, without having to touch this repo to
+custom widgets and encode functions, without having to touch this repo to
 make those changes.
 
 ## Adding widgets
@@ -24,20 +24,26 @@ the notes for developers section in the opentsg-widgets [README](./../../../open
     //handle configErr
 
     // Add the customWidget here!
-    opentsg.AddCustomWidgets(example.ExampleGenerate)
+    opentsg.HandleFunc("example.example" ,example.ExampleGenerate)
 ```
 
 ## Adding save functions
 
 You can add external save functions with the following lines
 
-First make sure the function matches the SaveFunction format in
-NameSave below.
+First make sure the function matches the Encoder type in
+below.
 
 ```go
-type NameSave struct {
- Extension    string
- SaveFunction func(io.Writer, draw.Image, int) error
+// Encoder is a function for encoding the openTSG output into a
+// specified format.
+type Encoder func(io.Writer, image.Image, EncodeOptions) error
+
+// EncodeOptions contains an extra options for encoding a file
+type EncodeOptions struct {
+    // the target bitdepth an image is saved to
+    // only relevant for DPX files
+    BitDepth int
 }
 ```
 
@@ -58,14 +64,81 @@ func main () {
     //handle configErr
 
     // Add the custom jpeg saver here!
-    opentsg.AddCustomSave([]tsg.NameSaves{{Extension: "jpg",SaveFunction: jpegEncode}})
+    opentsg.EncoderFunc("jpg",jpegEncode)
 
     // run opentsg
     opentsg.Draw(*debug, *outputmnt, *outputLog)
 }
 
 // wrap the standard library jpeg encoder
-func jpegEncode(w io.Writer, img draw.Image, _ int) error {
+func jpegEncode(w io.Writer, img draw.Image, _ tsg.EncodeOptions) error {
     return jpeg.Encode(w, img, &jpeg.Options{Quality:100})
 }
+```
+
+## Implementing middlewares
+
+OTSG has several hooks for middlewares to
+monitor, log and do whatever you fancy to the results
+of the engine running.
+
+These are handler middlewares for interacting with the request and writer
+
+```go
+
+package example
+
+import (
+    "fmt"
+    "github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
+)
+
+func main () {
+    opentsg, configErr := tsg.FileImport(commandInputs, *profile, *debug, myFlags...)
+    //handle configErr
+
+    // add a simple middleware that prints a line
+    tsg.Use(func(h tsg.Handler) tsg.Handler {
+        return tsg.HandlerFunc(func(r1 tsg.Response, r2 *tsg.Request) {
+           fmt.Println("A middleware that does something")
+           h.Handle(r1,r2)
+        })
+    })
+
+    // run opentsg
+    opentsg.Draw(*debug, *outputmnt, *outputLog)
+}
+
+```
+
+Or context middlewares that run when:
+
+- encoding a file
+- composing a widget to the test pattern
+
+```go
+
+package example
+
+import (
+    "fmt"
+    "github.com/mrmxf/opentsg-modules/opentsg-core/tsg"
+)
+
+func main () {
+    opentsg, configErr := tsg.FileImport(commandInputs, *profile, *debug, myFlags...)
+    //handle configErr
+
+    // add a simple middleware that prints a line
+    otsg.UseContextMiddleware(func(cf tsg.ContFunc) tsg.ContFunc {
+        return func(ctx context.Context) {
+            fmt.Println("hello from a context middleware")
+            cf(ctx)
+        }
+    })
+
+    // run opentsg
+    opentsg.Draw(*debug, *outputmnt, *outputLog)
+}
+
 ```
